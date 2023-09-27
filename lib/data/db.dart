@@ -7,13 +7,10 @@ class DatabaseHandler {
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
-      join(path, 'healthlog2.db'),
+      join(path, 'healthlog3.db'),
       onCreate: (database, version) async {
         await database.execute(
           'CREATE TABLE user(id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT,lastName TEXT, age INTEGER, weight INTEGER, height INTEGER)',
-        );
-        await database.execute(
-          'CREATE TABLE bloodpressure(id INTEGER PRIMARY KEY AUTOINCREMENT, user INTEGER NOT NULL, systolic INTEGER NOT NULL, diastolic INTEGER NOT NULL, heartrate INTEGER NOT NULL, arm TEXT NOT NULL, date INTEGER NOT NULL)',
         );
         await database.execute(
           'CREATE TABLE data(id INTEGER PRIMARY KEY AUTOINCREMENT, user INTEGER NOT NULL,type TEXT NOT NULL, content TEXT NOT NULL, comments TEXT NOT NULL, date INTEGER NOT NULL)',
