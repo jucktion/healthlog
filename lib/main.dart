@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/view/users.dart';
+import 'package:healthlog/view/users/users.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

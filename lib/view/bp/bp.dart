@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/view/add_user.dart';
+import 'package:healthlog/model/bloodpressure.dart';
+import 'package:healthlog/view/bp/add_bp.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/model/user.dart';
 
-class UserScreen extends StatefulWidget {
-  const UserScreen({super.key});
+class BPScreen extends StatefulWidget {
+  final String userid;
+  const BPScreen({super.key, required this.userid});
 
   @override
-  State<UserScreen> createState() => _UserScreenState();
+  State<BPScreen> createState() => _BPScreenState();
 }
 
-class _UserScreenState extends State<UserScreen> {
+class _BPScreenState extends State<BPScreen> {
   late DatabaseHandler handler;
-  late Future<List<User>> _user;
+  late Future<List<BloodPressure>> _bp;
   bool _retrived = false;
 
   @override
@@ -22,18 +23,18 @@ class _UserScreenState extends State<UserScreen> {
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;
-        _user = getList();
+        _bp = getList();
       });
     });
   }
 
-  Future<List<User>> getList() async {
-    return await handler.users();
+  Future<List<BloodPressure>> getList() async {
+    return await handler.bphistory(widget.userid);
   }
 
   Future<void> _onRefresh() async {
     setState(() {
-      _user = getList();
+      _bp = getList();
     });
   }
 
@@ -41,13 +42,16 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sqlite todos'),
+        title: const Text('Health Log'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddScreen()),
+            MaterialPageRoute(
+                builder: (context) => AddBPScreen(
+                      userid: widget.userid,
+                    )),
           );
         },
         backgroundColor: Colors.deepOrange,
@@ -55,10 +59,10 @@ class _UserScreenState extends State<UserScreen> {
       ),
       body: !_retrived
           ? const Text('Content is not loaded yet')
-          : FutureBuilder<List<User>>(
-              future: _user,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+          : FutureBuilder<List<BloodPressure>>(
+              future: _bp,
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<BloodPressure>> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -66,7 +70,7 @@ class _UserScreenState extends State<UserScreen> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  final items = snapshot.data ?? <User>[];
+                  final items = snapshot.data ?? <BloodPressure>[];
                   return Scrollbar(
                     child: RefreshIndicator(
                       onRefresh: _onRefresh,
@@ -90,11 +94,21 @@ class _UserScreenState extends State<UserScreen> {
                               });
                             },
                             child: Card(
-                                child: ListTile(
-                              contentPadding: const EdgeInsets.all(8.0),
-                              title: Text(
-                                  '${items[index].firstName} ${items[index].lastName}'),
-                              subtitle: Text(items[index].age.toString()),
+                                child: InkWell(
+                              onTap: () => {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        duration: const Duration(seconds: 1),
+                                        content: Text(
+                                            'You tapped user ${items[index].id}')))
+                              },
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(8.0),
+                                title: Text(
+                                    '${items[index].content.systolic} ${items[index].content.diastolic}'),
+                                subtitle:
+                                    Text(items[index].content.arm.toString()),
+                              ),
                             )),
                           );
                         },
