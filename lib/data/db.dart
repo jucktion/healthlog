@@ -48,16 +48,33 @@ class DatabaseHandler {
       await db.insert('data', bp.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
     } catch (e) {
-      print('Error while inserting data: $e');
+      //print('Error while inserting data: $e');
     }
+  }
+
+  Future<void> deleteBP(int id) async {
+    final db = await initializeDB();
+    await db.delete(
+      'data',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<List<BloodPressure>> bphistory(userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult =
-        await db.query('data', where: 'user=($userid)');
-    print(queryResult);
+        await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
+    //print(queryResult);
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> bpdata(userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult =
+        await db.query('data', where: 'user=($userid)', orderBy: 'date ASC');
+    //print(queryResult);
+    return queryResult;
   }
 
   void deleteAllRows(String tableName) async {

@@ -88,7 +88,7 @@ class _BPScreenState extends State<BPScreen> {
                             ),
                             key: ValueKey<int>(items[index].id),
                             onDismissed: (DismissDirection direction) async {
-                              await handler.deleteUser(items[index].id);
+                              await handler.deleteBP(items[index].id);
                               setState(() {
                                 items.remove(items[index]);
                               });
@@ -100,7 +100,7 @@ class _BPScreenState extends State<BPScreen> {
                                     SnackBar(
                                         duration: const Duration(seconds: 1),
                                         content: Text(
-                                            'You tapped user ${items[index].id}')))
+                                            'Record id: ${items[index].id}')))
                               },
                               child: ListTile(
                                 contentPadding: const EdgeInsets.all(8.0),

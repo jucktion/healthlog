@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/view/bp/bp.dart';
 import 'package:healthlog/view/users/add_user.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/user.dart';
+import 'package:healthlog/view/users/user_dash.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -101,11 +101,13 @@ class _UserScreenState extends State<UserScreen> {
                                   ),
                                 ),
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BPScreen(
-                                            userid:
-                                                items[index].age.toString())))
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => UserDash(
+                                      userid: items[index].age.toString(),
+                                    ),
+                                  ),
+                                )
                               },
                               child: ListTile(
                                 contentPadding: const EdgeInsets.all(8.0),
