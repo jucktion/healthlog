@@ -3,6 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -42,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Blood Pressure Chart'),
+        title: const Text('Blood Pressure Chart'),
       ),
       body: LineChart(
         LineChartData(
@@ -50,8 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
           maxX: 11,
           minY: 0,
           maxY: 300,
-          gridData: FlGridData(show: false),
-          titlesData: FlTitlesData(show: false),
+          gridData: const FlGridData(show: false),
+          titlesData: const FlTitlesData(show: false),
           borderData: FlBorderData(show: false),
           lineBarsData: [
             LineChartBarData(
@@ -60,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.red,
               barWidth: 4,
               isStrokeCapRound: true,
-              dotData: FlDotData(show: false),
+              dotData: const FlDotData(show: false),
             ),
             LineChartBarData(
               spots: diastolicData,
@@ -68,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.blue,
               barWidth: 4,
               isStrokeCapRound: true,
-              dotData: FlDotData(show: false),
+              dotData: const FlDotData(show: false),
             ),
           ],
         ),
