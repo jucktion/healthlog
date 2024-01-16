@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:healthlog/view/users/users.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/user.dart';
@@ -28,116 +29,149 @@ class _AddScreenState extends State<AddScreen> {
       body: Center(
         child: Form(
           key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ListView(
+            padding: const EdgeInsets.all(16.0),
             children: <Widget>[
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'First Name',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  textCapitalization: TextCapitalization.words,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'John',
+                    label: Text('First Name'),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      firstName = value;
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    firstName = value;
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Last Name',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  textCapitalization: TextCapitalization.words,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: 'Doe',
+                    label: Text('Last Name'),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      lastName = value;
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    lastName = value;
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your age';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Age',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  maxLength: 3,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your age';
+                    }
+                    return null;
+                  },
+                  decoration:
+                      const InputDecoration(hintText: '21', label: Text('Age')),
+                  onChanged: (value) {
+                    setState(() {
+                      age = int.parse(value);
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    age = int.parse(value);
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your weight';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Weight',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  maxLength: 3,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your weight';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: '60',
+                    label: Text('Weight'),
+                    suffixText: 'kg',
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      weight = double.parse(value);
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    weight = double.parse(value);
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your weight';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'height',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                  maxLength: 3,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your height';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    suffixText: 'cm',
+                    hintText: '160',
+                    label: Text('Height'),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      height = double.parse(value);
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    height = double.parse(value);
-                  });
-                },
               ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    await DatabaseHandler()
-                        .insertUser(User(
-                            firstName: firstName,
-                            lastName: lastName,
-                            age: age,
-                            weight: weight.toDouble(),
-                            height: height.toDouble(),
-                            id: Random().nextInt(50)))
-                        .whenComplete(() => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const UserScreen()),
-                            ));
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Processing Data')),
-                    );
-                  }
-                },
-                child: const Text(
-                  'Add',
-                  style: TextStyle(
-                    fontSize: 20,
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await DatabaseHandler()
+                          .insertUser(User(
+                              firstName: firstName,
+                              lastName: lastName,
+                              age: age,
+                              weight: weight.toDouble(),
+                              height: height.toDouble(),
+                              id: Random().nextInt(50)))
+                          .whenComplete(() => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const UserScreen()),
+                              ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Processing Data')),
+                      );
+                    }
+                  },
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
