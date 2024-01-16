@@ -13,25 +13,24 @@ class UserDash extends StatefulWidget {
 }
 
 class _UserDashState extends State<UserDash> {
-  List<FlSpot> systolicData = [];
-  List<FlSpot> diastolicData = [];
+  final List<FlSpot> _systolicData = [];
+  final List<FlSpot> _diastolicData = [];
+  final int _range = 30;
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
-  List<FlSpot> normalSystolic = [
-    for (int i = 0; i <= 11; i++) FlSpot(i.toDouble(), 120.toDouble())
-  ];
-  List<FlSpot> normalDiastolic = [
-    for (int i = 0; i <= 11; i++) FlSpot(i.toDouble(), 80.toDouble())
-  ];
   List<FlSpot> dateData = [];
 
   late DatabaseHandler handler;
   late Future<List<Map<String, dynamic>>> _bp;
   bool _retrived = false;
 
-  List<Color> gradientColors = [
+  List<Color> safegradientColors = [
     const Color(0xff23b6e6),
     const Color(0xff02d39a)
+  ];
+  List<Color> cautiongradientColors = [
+    const Color.fromARGB(255, 230, 178, 35),
+    const Color.fromARGB(255, 230, 207, 0)
   ];
 
   @override
@@ -61,8 +60,8 @@ class _UserDashState extends State<UserDash> {
       //print(systolic + diastolic);
 
       // Assuming you want to plot points based on their order in the dataset
-      systolicData.add(FlSpot(index.toDouble(), systolic));
-      diastolicData.add(FlSpot(index.toDouble(), diastolic));
+      _systolicData.add(FlSpot(index.toDouble(), systolic));
+      _diastolicData.add(FlSpot(index.toDouble(), diastolic));
 
       index++;
     }
@@ -114,7 +113,14 @@ class _UserDashState extends State<UserDash> {
                   final rawData = snapshot.data!;
                   //List<dynamic> jsonList = jsonDecode(rawData);
                   //print(rawData);
-
+                  List<FlSpot> normalSystolic = [
+                    for (int i = 0; i <= _range; i++)
+                      FlSpot(i.toDouble(), 120.toDouble())
+                  ];
+                  List<FlSpot> normalDiastolic = [
+                    for (int i = 0; i <= _range; i++)
+                      FlSpot(i.toDouble(), 80.toDouble())
+                  ];
                   for (int i = 0; i < rawData.length; i++) {
                     final content = jsonDecode(rawData[i]['content']);
                     //print(normalSystolic);
@@ -128,8 +134,8 @@ class _UserDashState extends State<UserDash> {
                     //print(systolic + diastolic);
 
                     //Assuming you want to plot points based on their order in the dataset
-                    systolicData.add(FlSpot(i.toDouble(), systolic));
-                    diastolicData.add(FlSpot(i.toDouble(), diastolic));
+                    _systolicData.add(FlSpot(i.toDouble(), systolic));
+                    _diastolicData.add(FlSpot(i.toDouble(), diastolic));
                   }
                   //print(systolicData);
                   return RefreshIndicator(
@@ -137,7 +143,7 @@ class _UserDashState extends State<UserDash> {
                     child: LineChart(
                       LineChartData(
                         minX: 0,
-                        maxX: 11,
+                        maxX: 30,
                         minY: 0,
                         maxY: 200,
                         gridData: const FlGridData(show: true),
@@ -159,27 +165,55 @@ class _UserDashState extends State<UserDash> {
                               show: true,
                               cutOffY: 80,
                               gradient: RadialGradient(
-                                colors: gradientColors
+                                colors: safegradientColors
                                     .map((color) => color.withOpacity(0.6))
                                     .toList(),
                               ),
                             ),
                           ),
                           LineChartBarData(
-                            spots: systolicData,
+                            spots: normalDiastolic,
                             isCurved: true,
-                            color: Colors.red,
-                            barWidth: 5,
+                            color: Colors.green,
+                            barWidth: 1,
                             isStrokeCapRound: true,
                             dotData: const FlDotData(show: false),
                           ),
                           LineChartBarData(
-                            spots: diastolicData,
+                            spots: _systolicData,
                             isCurved: true,
                             color: Colors.red,
                             barWidth: 5,
                             isStrokeCapRound: true,
                             dotData: const FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              applyCutOffY: true,
+                              show: true,
+                              cutOffY: 120,
+                              gradient: RadialGradient(
+                                colors: cautiongradientColors
+                                    .map((color) => color.withOpacity(0.6))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                          LineChartBarData(
+                            spots: _diastolicData,
+                            isCurved: true,
+                            color: Colors.red,
+                            barWidth: 5,
+                            isStrokeCapRound: true,
+                            dotData: const FlDotData(show: false),
+                            belowBarData: BarAreaData(
+                              applyCutOffY: true,
+                              show: true,
+                              cutOffY: 80,
+                              gradient: RadialGradient(
+                                colors: cautiongradientColors
+                                    .map((color) => color.withOpacity(0.6))
+                                    .toList(),
+                              ),
+                            ),
                           ),
                         ],
                       ),

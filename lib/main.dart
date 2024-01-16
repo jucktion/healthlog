@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/view/theme/input.dart';
 import 'package:healthlog/view/users/users.dart';
 
 void main() async {
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
       title: 'Health',
       theme: ThemeData(
         primarySwatch: Colors.deepOrange,
-        inputDecorationTheme: InputTheme().theme(),
       ),
       debugShowCheckedModeBanner: false,
       home: const UserScreen(),

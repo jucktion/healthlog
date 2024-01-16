@@ -14,9 +14,9 @@ class AddBPScreen extends StatefulWidget {
 
 class _AddBPScreenState extends State<AddBPScreen> {
   final _formKey = GlobalKey<FormState>();
-  String systolic = "";
-  String diastolic = "";
-  int heartrate = 0;
+  int _systolic = 120;
+  int _diastolic = 80;
+  int _heartrate = 70;
   String arm = "";
 
   @override
@@ -32,69 +32,86 @@ class _AddBPScreenState extends State<AddBPScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter systolic value';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Systolic',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter systolic value';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: '120',
+                    label: Text('Systolic'),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _systolic = int.parse(value);
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    systolic = value;
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter diastolic value';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Diastolic',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter diastolic value';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: '80',
+                    label: Text('Diastolic'),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _diastolic = int.parse(value);
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    diastolic = value;
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your heartrate';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Heartrate',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your heartrate';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    hintText: '70',
+                    label: Text('Heartrate'),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _heartrate = int.parse(value);
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    heartrate = int.parse(value);
-                  });
-                },
               ),
-              TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Select the arm';
-                  }
-                  return null;
-                },
-                decoration: const InputDecoration(
-                  hintText: 'Arm',
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Select the arm';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                      hintText: 'Left/Right', label: Text('Arm')),
+                  onChanged: (value) {
+                    setState(() {
+                      arm = value;
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    arm = value;
-                  });
-                },
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -105,9 +122,9 @@ class _AddBPScreenState extends State<AddBPScreen> {
                             user: int.parse(widget.userid),
                             type: 'bp',
                             content: BP(
-                              systolic: int.parse(systolic),
-                              diastolic: int.parse(diastolic),
-                              heartrate: heartrate,
+                              systolic: _systolic,
+                              diastolic: _diastolic,
+                              heartrate: _heartrate,
                               arm: arm,
                             ),
                             date: DateTime.now().toIso8601String(),
