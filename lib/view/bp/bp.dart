@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/view/bp/add_bp.dart';
 import 'package:healthlog/data/db.dart';
+import 'package:healthlog/view/bp/bp_graph.dart';
 
 class BPScreen extends StatefulWidget {
   final String userid;
@@ -42,7 +43,21 @@ class _BPScreenState extends State<BPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Health Log'),
+        title: const Text('User Log'),
+        actions: [
+          IconButton(
+              onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BPGraph(
+                          userid: widget.userid,
+                        ),
+                      ),
+                    )
+                  },
+              icon: const Icon(Icons.auto_graph_sharp))
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -103,6 +118,8 @@ class _BPScreenState extends State<BPScreen> {
                                             'Record id: ${items[index].id}')))
                               },
                               child: ListTile(
+                                trailing: Text(
+                                    '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                 contentPadding: const EdgeInsets.all(8.0),
                                 title: Text(
                                     '${items[index].content.systolic} ${items[index].content.diastolic}'),
