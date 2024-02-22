@@ -53,7 +53,7 @@ class _UserScreenState extends State<UserScreen> {
         DatabaseHandler().deleteDB();
         break;
       default:
-        print('Unknown');
+      //print('Unknown');
     }
   }
 
@@ -64,7 +64,7 @@ class _UserScreenState extends State<UserScreen> {
         title: const Text('Health Log'),
         actions: [
           PopupMenuButton(
-            onOpened: () => {DatabaseHandler().getDbpath()},
+            //onOpened: () => {DatabaseHandler().getDbpath()},
             itemBuilder: (BuildContext context) {
               return {'Backup', 'Restore', 'Reset'}
                   .toList()

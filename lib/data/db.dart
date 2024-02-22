@@ -1,17 +1,18 @@
 import 'dart:io';
 
 import 'package:healthlog/model/bloodpressure.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:healthlog/model/user.dart';
 
 class DatabaseHandler {
+  String dbFileName = 'healthlog';
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
-      join(path, 'healthlog3.db'),
+      join(path, '$dbFileName.db'),
       onCreate: (database, version) async {
         await database.execute(
           'CREATE TABLE user(id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT,lastName TEXT, age INTEGER, weight INTEGER, height INTEGER)',
@@ -24,12 +25,12 @@ class DatabaseHandler {
     );
   }
 
-  void getDbpath() async {
-    String databasePath = await getDatabasesPath();
-    print('Database path: $databasePath');
-    Directory? extStoragePath = await getExternalStorageDirectory();
-    print('External Storage Path: $extStoragePath');
-  }
+  // void getDbpath() async {
+  //   String databasePath = await getDatabasesPath();
+  //   print('Database path: $databasePath');
+  //   Directory? extStoragePath = await getExternalStorageDirectory();
+  //   print('External Storage Path: $extStoragePath');
+  // }
 
   void backupDB() async {
     var status = await Permission.manageExternalStorage.status;
@@ -41,14 +42,13 @@ class DatabaseHandler {
       await Permission.storage.request();
     }
     try {
-      String dbFileName = 'healthlog3';
       File dbFile =
-          File('/data/user/0/com.example.healthlog/databases/healthlog3.db');
+          File('/data/user/0/com.example.healthlog/databases/$dbFileName.db');
       Directory? folderPath = Directory('/storage/emulated/0/HealthLog');
       await folderPath.create();
-      await dbFile.copy('/storage/emulated/0/HealthLog/healthlog3.db');
+      await dbFile.copy('/storage/emulated/0/HealthLog/$dbFileName.db');
     } catch (e) {
-      print('${e.toString()}');
+      // print('${e.toString()}');
     }
   }
 
@@ -62,20 +62,21 @@ class DatabaseHandler {
       await Permission.storage.request();
     }
     try {
-      String dbFileName = 'healthlog3';
-      File savedDbFile = File('/storage/emulated/0/HealthLog/healthlog3.db');
+      File savedDbFile = File('/storage/emulated/0/HealthLog/$dbFileName.db');
       await savedDbFile
-          .copy('/data/user/0/com.example.healthlog/databases/healthlog3.db');
+          .copy('/data/user/0/com.example.healthlog/databases/$dbFileName.db');
     } catch (e) {
-      print('${e.toString()}');
+      // print('${e.toString()}');
     }
   }
 
   void deleteDB() async {
     try {
       deleteDatabase(
-          '/data/user/0/com.example.healthlog/databases/healthlog3.db');
-    } catch (e) {}
+          '/data/user/0/com.example.healthlog/databases/$dbFileName.db');
+    } catch (e) {
+      // print('${e.toString()}');
+    }
   }
 
   Future<void> insertUser(User user) async {
