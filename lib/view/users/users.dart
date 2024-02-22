@@ -38,11 +38,49 @@ class _UserScreenState extends State<UserScreen> {
     });
   }
 
+  void handleMenuOptionClick(BuildContext context, int value) {
+    switch (value) {
+      case 0:
+        //print('Backup selected');
+        DatabaseHandler().backupDB();
+        break;
+      case 1:
+        // print('Restore selected');
+        DatabaseHandler().restoreDb();
+        break;
+      case 2:
+        // print('Reset selected');
+        DatabaseHandler().deleteDB();
+        break;
+      default:
+        print('Unknown');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Health Log'),
+        actions: [
+          PopupMenuButton(
+            onOpened: () => {DatabaseHandler().getDbpath()},
+            itemBuilder: (BuildContext context) {
+              return {'Backup', 'Restore', 'Reset'}
+                  .toList()
+                  .asMap()
+                  .entries
+                  .map((choice) {
+                return PopupMenuItem<String>(
+                  onTap: () => {handleMenuOptionClick(context, choice.key)},
+                  value: choice.key.toString(),
+                  child: Text(choice.value),
+                );
+              }).toList();
+            },
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
