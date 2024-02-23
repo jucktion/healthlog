@@ -5,7 +5,7 @@ import 'package:healthlog/data/db.dart';
 import 'package:healthlog/view/bp/bp_graph.dart';
 
 class BPScreen extends StatefulWidget {
-  final String userid;
+  final int userid;
   const BPScreen({super.key, required this.userid});
 
   @override
@@ -15,6 +15,7 @@ class BPScreen extends StatefulWidget {
 class _BPScreenState extends State<BPScreen> {
   late DatabaseHandler handler;
   late Future<List<BloodPressure>> _bp;
+  late Future<String> _user;
   bool _retrived = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -32,12 +33,17 @@ class _BPScreenState extends State<BPScreen> {
       setState(() {
         _retrived = true;
         _bp = getList();
+        _user = getName();
       });
     });
   }
 
   Future<List<BloodPressure>> getList() async {
     return await handler.bphistory(widget.userid);
+  }
+
+  Future<String> getName() async {
+    return await handler.getUserName(widget.userid);
   }
 
   Future<void> _onRefresh() async {
@@ -50,7 +56,24 @@ class _BPScreenState extends State<BPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User Log'),
+        title: !_retrived
+            ? const Text('User log')
+            : FutureBuilder<String>(
+                future: _user,
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    // Check if an error occurred.
+                    if (snapshot.hasError) {
+                      return const Text('Error');
+                    }
+                    // Return the retrieved title.
+                    return Text(snapshot.data ?? 'User Log');
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
         actions: [
           IconButton(
               onPressed: () => {
@@ -183,7 +206,7 @@ class _BPScreenState extends State<BPScreen> {
                                 await DatabaseHandler()
                                     .insertBp(BloodPressure(
                                         id: Random().nextInt(50),
-                                        user: int.parse(widget.userid),
+                                        user: widget.userid,
                                         type: 'bp',
                                         content: BP(
                                             systolic: _systolic,

@@ -160,7 +160,7 @@ class _UserScreenState extends State<UserScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => BPScreen(
-                                            userid: items[index].age.toString(),
+                                            userid: items[index].id,
                                           ),
                                         ),
                                       )

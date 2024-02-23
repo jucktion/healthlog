@@ -6,7 +6,7 @@ import 'package:healthlog/data/db.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class BPGraph extends StatefulWidget {
-  final String userid;
+  final int userid;
   const BPGraph({super.key, required this.userid});
 
   @override
@@ -37,8 +37,8 @@ class _BPGraphState extends State<BPGraph> {
     const Color(0xff02d39a)
   ];
   List<Color> cautiongradientColors = [
-    const Color.fromARGB(255, 230, 178, 35),
-    const Color.fromARGB(255, 230, 207, 0)
+    const Color.fromARGB(255, 230, 74, 35),
+    const Color.fromARGB(255, 240, 182, 107)
   ];
 
   @override
@@ -208,7 +208,7 @@ class _BPGraphState extends State<BPGraph> {
                                 await DatabaseHandler()
                                     .insertBp(BloodPressure(
                                         id: Random().nextInt(50),
-                                        user: int.parse(widget.userid),
+                                        user: widget.userid,
                                         type: 'bp',
                                         content: BP(
                                             systolic: _systolic,
@@ -244,126 +244,138 @@ class _BPGraphState extends State<BPGraph> {
       ),
       body: !_retrived
           ? const Text('Content is not loaded yet')
-          : FutureBuilder<List<Map<String, dynamic>>>(
-              future: _bp,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  //final items = snapshot.data ?? <BloodPressure>[];
-                  final rawData = snapshot.data!;
-                  //List<dynamic> jsonList = jsonDecode(rawData);
-                  //print(rawData);
-                  List<FlSpot> normalSystolic = [
-                    for (int i = 0; i <= _range; i++)
-                      FlSpot(i.toDouble(), 120.toDouble())
-                  ];
-                  List<FlSpot> normalDiastolic = [
-                    for (int i = 0; i <= _range; i++)
-                      FlSpot(i.toDouble(), 80.toDouble())
-                  ];
-                  for (int i = 0; i < rawData.length; i++) {
-                    final content = jsonDecode(rawData[i]['content']);
-                    //print(normalSystolic);
-                    final systolic = content['systolic'].toDouble();
-                    //print(content['systolic'].toString());
+          : Center(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height / 2,
+                child: FutureBuilder<List<Map<String, dynamic>>>(
+                  future: _bp,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      //final items = snapshot.data ?? <BloodPressure>[];
+                      final rawData = snapshot.data!;
+                      //List<dynamic> jsonList = jsonDecode(rawData);
+                      //print(rawData);
+                      List<FlSpot> normalSystolic = [
+                        for (int i = 0; i <= _range; i++)
+                          FlSpot(i.toDouble(), 120.toDouble())
+                      ];
+                      List<FlSpot> normalDiastolic = [
+                        for (int i = 0; i <= _range; i++)
+                          FlSpot(i.toDouble(), 80.toDouble())
+                      ];
+                      for (int i = 0; i < rawData.length; i++) {
+                        final content = jsonDecode(rawData[i]['content']);
+                        //print(normalSystolic);
+                        final systolic = content['systolic'].toDouble();
+                        //print(content['systolic'].toString());
 
-                    final diastolic = content['diastolic'].toDouble();
-                    //print(content['diastolic'].toString());
-                    //final dates = item['date'].toString();
+                        final diastolic = content['diastolic'].toDouble();
+                        //print(content['diastolic'].toString());
+                        //final dates = item['date'].toString();
 
-                    //print(systolic + diastolic);
+                        //print(systolic + diastolic);
 
-                    //Assuming you want to plot points based on their order in the dataset
-                    _systolicData.add(FlSpot(i.toDouble(), systolic));
-                    _diastolicData.add(FlSpot(i.toDouble(), diastolic));
-                  }
-                  //print(systolicData);
-                  return LineChart(
-                    LineChartData(
-                      minX: 0,
-                      maxX: 30,
-                      minY: 0,
-                      maxY: 200,
-                      gridData: const FlGridData(show: true),
-                      titlesData: const FlTitlesData(show: false),
-                      borderData: FlBorderData(
-                        show: true,
-                        border: Border.all(color: Colors.black, width: 1),
-                      ),
-                      lineBarsData: [
-                        LineChartBarData(
-                          spots: normalSystolic,
-                          isCurved: true,
-                          color: Colors.green,
-                          barWidth: 1,
-                          isStrokeCapRound: true,
-                          dotData: const FlDotData(show: false),
-                          belowBarData: BarAreaData(
-                            applyCutOffY: true,
+                        //Assuming you want to plot points based on their order in the dataset
+                        _systolicData.add(FlSpot(i.toDouble(), systolic));
+                        _diastolicData.add(FlSpot(i.toDouble(), diastolic));
+                      }
+                      //print(systolicData);
+                      return LineChart(
+                        LineChartData(
+                          minX: 0,
+                          maxX: 30,
+                          minY: 0,
+                          maxY: 200,
+                          gridData: FlGridData(
+                              show: true,
+                              drawHorizontalLine: false,
+                              getDrawingVerticalLine: (value) {
+                                return const FlLine(
+                                    color: Color.fromARGB(255, 30, 255, 0),
+                                    strokeWidth: 5);
+                              },
+                              drawVerticalLine: true,
+                              verticalInterval: 1),
+                          titlesData: const FlTitlesData(show: false),
+                          borderData: FlBorderData(
                             show: true,
-                            cutOffY: 80,
-                            gradient: RadialGradient(
-                              colors: safegradientColors
-                                  .map((color) => color.withOpacity(0.6))
-                                  .toList(),
-                            ),
+                            border: Border.all(color: Colors.black, width: 1),
                           ),
-                        ),
-                        LineChartBarData(
-                          spots: normalDiastolic,
-                          isCurved: true,
-                          color: Colors.green,
-                          barWidth: 1,
-                          isStrokeCapRound: true,
-                          dotData: const FlDotData(show: false),
-                        ),
-                        LineChartBarData(
-                          spots: _systolicData,
-                          isCurved: true,
-                          color: Colors.red,
-                          barWidth: 5,
-                          isStrokeCapRound: true,
-                          dotData: const FlDotData(show: false),
-                          belowBarData: BarAreaData(
-                            applyCutOffY: true,
-                            show: true,
-                            cutOffY: 120,
-                            gradient: RadialGradient(
-                              colors: cautiongradientColors
-                                  .map((color) => color.withOpacity(0.6))
-                                  .toList(),
+                          lineBarsData: [
+                            LineChartBarData(
+                              spots: normalSystolic,
+                              color: Colors.green,
+                              barWidth: 1,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                              belowBarData: BarAreaData(
+                                applyCutOffY: true,
+                                show: true,
+                                cutOffY: 80,
+                                gradient: RadialGradient(
+                                  colors: safegradientColors
+                                      .map((color) => color.withOpacity(0.6))
+                                      .toList(),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        LineChartBarData(
-                          spots: _diastolicData,
-                          isCurved: true,
-                          color: Colors.red,
-                          barWidth: 5,
-                          isStrokeCapRound: true,
-                          dotData: const FlDotData(show: false),
-                          belowBarData: BarAreaData(
-                            applyCutOffY: true,
-                            show: true,
-                            cutOffY: 80,
-                            gradient: RadialGradient(
-                              colors: cautiongradientColors
-                                  .map((color) => color.withOpacity(0.6))
-                                  .toList(),
+                            LineChartBarData(
+                              spots: _systolicData,
+                              isCurved: true,
+                              color: Colors.red,
+                              barWidth: 2,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                              belowBarData: BarAreaData(
+                                applyCutOffY: true,
+                                show: true,
+                                cutOffY: 130,
+                                gradient: RadialGradient(
+                                  colors: cautiongradientColors
+                                      .map((color) => color.withOpacity(0.6))
+                                      .toList(),
+                                ),
+                              ),
                             ),
-                          ),
+                            LineChartBarData(
+                              spots: normalDiastolic,
+                              color: Colors.green,
+                              barWidth: 1,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                            ),
+                            LineChartBarData(
+                              spots: _diastolicData,
+                              isCurved: true,
+                              color: Colors.red,
+                              barWidth: 2,
+                              isStrokeCapRound: true,
+                              dotData: const FlDotData(show: false),
+                              belowBarData: BarAreaData(
+                                applyCutOffY: true,
+                                show: true,
+                                cutOffY: 90,
+                                gradient: RadialGradient(
+                                  colors: cautiongradientColors
+                                      .map((color) => color.withOpacity(0.6))
+                                      .toList(),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                }
-              },
+                      );
+                    }
+                  },
+                ),
+              ),
             ),
     );
   }

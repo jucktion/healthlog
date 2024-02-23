@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:healthlog/view/users/users.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/user.dart';
 
@@ -156,11 +155,7 @@ class _AddScreenState extends State<AddScreen> {
                               weight: weight.toDouble(),
                               height: height.toDouble(),
                               id: Random().nextInt(50)))
-                          .whenComplete(() => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const UserScreen()),
-                              ));
+                          .whenComplete(() => Navigator.of(context).pop());
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),

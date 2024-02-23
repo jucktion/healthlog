@@ -120,7 +120,7 @@ class DatabaseHandler {
     );
   }
 
-  Future<List<BloodPressure>> bphistory(userid) async {
+  Future<List<BloodPressure>> bphistory(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult =
         await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
@@ -128,7 +128,7 @@ class DatabaseHandler {
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
   }
 
-  Future<List<Map<String, dynamic>>> bpdata(userid) async {
+  Future<List<Map<String, dynamic>>> bpdata(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult =
         await db.query('data', where: 'user=($userid)', orderBy: 'date ASC');
@@ -139,5 +139,14 @@ class DatabaseHandler {
   void deleteAllRows(String tableName) async {
     final db = await initializeDB();
     await db.delete(tableName);
+  }
+
+  Future getUserName(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> maps =
+        await db.query('user', columns: ['firstName'], where: 'id=($userid)');
+    if (maps.isNotEmpty) {
+      return maps.first['firstName'] as String?;
+    }
   }
 }
