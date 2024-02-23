@@ -99,7 +99,7 @@ class _UserScreenState extends State<UserScreen> {
             child: !_retrived
                 ? const Text('Content is not loaded yet')
                 : SizedBox(
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height / 1.25,
                     child: FutureBuilder<List<User>>(
                       future: _user,
                       builder: (BuildContext context,
@@ -113,7 +113,7 @@ class _UserScreenState extends State<UserScreen> {
                           return Text('Error: ${snapshot.error}');
                         } else if (snapshot.data.toString() ==
                             List.empty().toString()) {
-                          print('${snapshot.data}');
+                          //print('${snapshot.data}');
                           return const Center(
                             child: Text(
                               'Add a User',
