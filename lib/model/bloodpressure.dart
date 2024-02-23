@@ -63,7 +63,7 @@ class BP {
       'systolic': systolic,
       'diastolic': diastolic,
       'heartrate': heartrate,
-      'arm': arm,
+      'arm': arm
     };
   }
 

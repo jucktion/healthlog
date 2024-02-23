@@ -22,6 +22,7 @@ class _BPScreenState extends State<BPScreen> {
   int _diastolic = 80;
   int _heartrate = 70;
   String arm = "";
+  String comment = "";
 
   @override
   void initState() {
@@ -163,6 +164,19 @@ class _BPScreenState extends State<BPScreen> {
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                  hintText: 'Before Breakfast/After Dinner',
+                                  label: Text('Comments')),
+                              onChanged: (value) {
+                                setState(() {
+                                  comment = value;
+                                });
+                              },
+                            ),
+                          ),
                           ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
@@ -172,13 +186,12 @@ class _BPScreenState extends State<BPScreen> {
                                         user: int.parse(widget.userid),
                                         type: 'bp',
                                         content: BP(
-                                          systolic: _systolic,
-                                          diastolic: _diastolic,
-                                          heartrate: _heartrate,
-                                          arm: arm,
-                                        ),
+                                            systolic: _systolic,
+                                            diastolic: _diastolic,
+                                            heartrate: _heartrate,
+                                            arm: arm),
                                         date: DateTime.now().toIso8601String(),
-                                        comments: 'new'))
+                                        comments: comment))
                                     .whenComplete(() => Navigator.pop(context));
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -204,69 +217,88 @@ class _BPScreenState extends State<BPScreen> {
         backgroundColor: Colors.deepOrange,
         child: const Icon(Icons.add),
       ),
-      body: !_retrived
-          ? const Text('Content is not loaded yet')
-          : FutureBuilder<List<BloodPressure>>(
-              future: _bp,
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<BloodPressure>> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  final items = snapshot.data ?? <BloodPressure>[];
-                  return Scrollbar(
-                    child: RefreshIndicator(
-                      onRefresh: _onRefresh,
-                      child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Dismissible(
-                            direction: DismissDirection.startToEnd,
-                            background: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: const Icon(Icons.delete_forever),
-                            ),
-                            key: ValueKey<int>(items[index].id),
-                            onDismissed: (DismissDirection direction) async {
-                              await handler.deleteBP(items[index].id);
-                              setState(() {
-                                items.remove(items[index]);
-                              });
-                            },
-                            child: Card(
-                                child: InkWell(
-                              onTap: () => {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        duration: const Duration(seconds: 1),
-                                        content: Text(
-                                            'Record id: ${items[index].id}')))
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: !_retrived
+              ? const Text('Content is not loaded yet')
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: FutureBuilder<List<BloodPressure>>(
+                    future: _bp,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<BloodPressure>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.data.toString() ==
+                          List.empty().toString()) {
+                        return const Center(
+                          child: Text(
+                            'Record a new data',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        );
+                      } else {
+                        final items = snapshot.data ?? <BloodPressure>[];
+                        return Scrollbar(
+                          child: RefreshIndicator(
+                            onRefresh: _onRefresh,
+                            child: ListView.builder(
+                              itemCount: items.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Dismissible(
+                                  direction: DismissDirection.startToEnd,
+                                  background: Container(
+                                    color: Colors.red,
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: const Icon(Icons.delete_forever),
+                                  ),
+                                  key: ValueKey<int>(items[index].id),
+                                  onDismissed:
+                                      (DismissDirection direction) async {
+                                    await handler.deleteBP(items[index].id);
+                                    setState(() {
+                                      items.remove(items[index]);
+                                    });
+                                  },
+                                  child: Card(
+                                      child: InkWell(
+                                    onTap: () => {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              duration:
+                                                  const Duration(seconds: 1),
+                                              content: Text(
+                                                  'Record id: ${items[index].id}')))
+                                    },
+                                    child: ListTile(
+                                      trailing: Text(
+                                          '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
+                                      contentPadding: const EdgeInsets.all(8.0),
+                                      title: Text(
+                                          '${items[index].content.systolic} ${items[index].content.diastolic}'),
+                                      subtitle: Text(
+                                          items[index].content.arm.toString()),
+                                    ),
+                                  )),
+                                );
                               },
-                              child: ListTile(
-                                trailing: Text(
-                                    '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
-                                contentPadding: const EdgeInsets.all(8.0),
-                                title: Text(
-                                    '${items[index].content.systolic} ${items[index].content.diastolic}'),
-                                subtitle:
-                                    Text(items[index].content.arm.toString()),
-                              ),
-                            )),
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ),
+        ),
+      ),
     );
   }
 }

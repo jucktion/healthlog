@@ -18,6 +18,7 @@ class _AddBPScreenState extends State<AddBPScreen> {
   int _diastolic = 80;
   int _heartrate = 70;
   String arm = "";
+  String comment = "";
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +114,19 @@ class _AddBPScreenState extends State<AddBPScreen> {
                   },
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                      hintText: 'Before Breakfast/After Dinner',
+                      label: Text('Comments')),
+                  onChanged: (value) {
+                    setState(() {
+                      comment = value;
+                    });
+                  },
+                ),
+              ),
               ElevatedButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
@@ -122,13 +136,12 @@ class _AddBPScreenState extends State<AddBPScreen> {
                             user: int.parse(widget.userid),
                             type: 'bp',
                             content: BP(
-                              systolic: _systolic,
-                              diastolic: _diastolic,
-                              heartrate: _heartrate,
-                              arm: arm,
-                            ),
+                                systolic: _systolic,
+                                diastolic: _diastolic,
+                                heartrate: _heartrate,
+                                arm: arm),
                             date: DateTime.now().toIso8601String(),
-                            comments: 'new'))
+                            comments: comment))
                         .whenComplete(() => Navigator.push(
                               context,
                               MaterialPageRoute(

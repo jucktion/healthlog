@@ -24,6 +24,7 @@ class _BPGraphState extends State<BPGraph> {
   int _diastolic = 80;
   int _heartrate = 70;
   String arm = "";
+  String comment = "";
 
   List<FlSpot> dateData = [];
 
@@ -78,11 +79,11 @@ class _BPGraphState extends State<BPGraph> {
     return await handler.bpdata(widget.userid);
   }
 
-  Future<void> _onRefresh() async {
-    setState(() {
-      _bp = getList();
-    });
-  }
+  // Future<void> _onRefresh() async {
+  //   setState(() {
+  //     _bp = getList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +189,19 @@ class _BPGraphState extends State<BPGraph> {
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                  hintText: 'Before Breakfast/After Dinner',
+                                  label: Text('Comments')),
+                              onChanged: (value) {
+                                setState(() {
+                                  comment = value;
+                                });
+                              },
+                            ),
+                          ),
                           ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
@@ -197,13 +211,12 @@ class _BPGraphState extends State<BPGraph> {
                                         user: int.parse(widget.userid),
                                         type: 'bp',
                                         content: BP(
-                                          systolic: _systolic,
-                                          diastolic: _diastolic,
-                                          heartrate: _heartrate,
-                                          arm: arm,
-                                        ),
+                                            systolic: _systolic,
+                                            diastolic: _diastolic,
+                                            heartrate: _heartrate,
+                                            arm: arm),
                                         date: DateTime.now().toIso8601String(),
-                                        comments: 'new'))
+                                        comments: comment))
                                     .whenComplete(() => Navigator.pop(context));
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
