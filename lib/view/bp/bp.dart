@@ -4,6 +4,7 @@ import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/view/bp/bp_graph.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
+import 'package:healthlog/view/theme/globals.dart';
 
 class BPScreen extends StatefulWidget {
   final int userid;
@@ -15,6 +16,8 @@ class BPScreen extends StatefulWidget {
 
 class _BPScreenState extends State<BPScreen> {
   late DatabaseHandler handler;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   late Future<List<BloodPressure>> _bp;
   late Future<String> _user;
   bool _retrived = false;
@@ -119,6 +122,8 @@ class _BPScreenState extends State<BPScreen> {
                       date: DateTime.now().toIso8601String(),
                       comments: _comment))
                   .whenComplete(() => Navigator.pop(context));
+              WidgetsBinding.instance.addPostFrameCallback(
+                  (_) => _refreshIndicatorKey.currentState?.show());
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Processing Data')),
@@ -130,6 +135,7 @@ class _BPScreenState extends State<BPScreen> {
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
+        key: _refreshIndicatorKey,
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -173,12 +179,21 @@ class _BPScreenState extends State<BPScreen> {
                                     child: const Icon(Icons.delete_forever),
                                   ),
                                   key: ValueKey<int>(items[index].id),
-                                  onDismissed:
-                                      (DismissDirection direction) async {
-                                    await handler.deleteBP(items[index].id);
-                                    setState(() {
-                                      items.remove(items[index]);
+                                  onDismissed: (DismissDirection direction) {
+                                    GlobalMethods().showDialogs(
+                                        context,
+                                        'Delete user',
+                                        'Do you really want to delete the user?',
+                                        () async {
+                                      await handler.deleteBP(items[index].id);
+                                      setState(() {
+                                        items.remove(items[index]);
+                                      });
                                     });
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) =>
+                                            _refreshIndicatorKey.currentState
+                                                ?.show());
                                   },
                                   child: Card(
                                       child: InkWell(
@@ -195,9 +210,9 @@ class _BPScreenState extends State<BPScreen> {
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
                                       title: Text(
-                                          '${items[index].content.systolic} ${items[index].content.diastolic}'),
+                                          '${items[index].type.toUpperCase()}: ${items[index].content.systolic}/${items[index].content.diastolic}'),
                                       subtitle: Text(
-                                          items[index].content.arm.toString()),
+                                          'Arm: ${items[index].content.arm.toString()} Comment: ${items[index].comments.toString()}'),
                                     ),
                                   )),
                                 );

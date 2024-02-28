@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/view/bp/bp.dart';
+import 'package:healthlog/view/theme/globals.dart';
 import 'package:healthlog/view/users/add_user.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/user.dart';
@@ -14,6 +15,8 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   late DatabaseHandler handler;
   late Future<List<User>> _user;
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   bool _retrived = false;
 
   @override
@@ -93,95 +96,102 @@ class _UserScreenState extends State<UserScreen> {
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: !_retrived
-                ? const Text('Content is not loaded yet')
-                : SizedBox(
-                    height: MediaQuery.of(context).size.height / 1.25,
-                    child: FutureBuilder<List<User>>(
-                      future: _user,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<User>> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else if (snapshot.data.toString() ==
-                            List.empty().toString()) {
-                          //print('${snapshot.data}');
-                          return const Center(
-                            child: Text(
-                              'Add a User',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          );
-                        } else {
-                          final items = snapshot.data ?? <User>[];
-                          return Scrollbar(
-                              child: RefreshIndicator(
-                            onRefresh: _onRefresh,
-                            child: ListView.builder(
-                              itemCount: items.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Dismissible(
-                                  direction: DismissDirection.startToEnd,
-                                  background: Container(
-                                    color: Colors.red,
-                                    alignment: Alignment.centerRight,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10.0),
-                                    child: const Icon(Icons.delete_forever),
-                                  ),
-                                  key: ValueKey<int>(items[index].id),
-                                  onDismissed:
-                                      (DismissDirection direction) async {
+        key: _refreshIndicatorKey,
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: !_retrived
+              ? const Text('Content is not loaded yet')
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height / 1.25,
+                  child: FutureBuilder<List<User>>(
+                    future: _user,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<User>> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.data.toString() ==
+                          List.empty().toString()) {
+                        //print('${snapshot.data}');
+                        return const Center(
+                          child: Text(
+                            'Add a User',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        );
+                      } else {
+                        final items = snapshot.data ?? <User>[];
+                        return Scrollbar(
+                            child: RefreshIndicator(
+                          onRefresh: _onRefresh,
+                          child: ListView.builder(
+                            itemCount: items.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Dismissible(
+                                direction: DismissDirection.startToEnd,
+                                background: Container(
+                                  color: Colors.red,
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: const Icon(Icons.delete_forever),
+                                ),
+                                key: ValueKey<int>(items[index].id),
+                                onDismissed: (DismissDirection direction) {
+                                  GlobalMethods().showDialogs(
+                                      context,
+                                      'Delete user',
+                                      'Do you really want to delete the user?',
+                                      () async {
                                     await handler.deleteUser(items[index].id);
                                     setState(() {
                                       items.remove(items[index]);
                                     });
-                                  },
-                                  child: Card(
-                                      child: InkWell(
-                                    onTap: () => {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          duration: const Duration(seconds: 1),
-                                          content: Text(
-                                              'You tapped user ${items[index].id}'),
+                                  });
+                                  WidgetsBinding.instance.addPostFrameCallback(
+                                      (_) => _refreshIndicatorKey.currentState
+                                          ?.show());
+                                },
+                                child: Card(
+                                    child: InkWell(
+                                  onTap: () => {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        duration: const Duration(seconds: 1),
+                                        content: Text(
+                                            'You tapped user ${items[index].id}'),
+                                      ),
+                                    ),
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => BPScreen(
+                                          userid: items[index].id,
                                         ),
                                       ),
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => BPScreen(
-                                            userid: items[index].id,
-                                          ),
-                                        ),
-                                      )
-                                    },
-                                    child: ListTile(
-                                      contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(
-                                          '${items[index].firstName} ${items[index].lastName}'),
-                                      subtitle:
-                                          Text(items[index].age.toString()),
-                                    ),
-                                  )),
-                                );
-                              },
-                            ),
-                          ));
-                        }
-                      },
-                    ),
+                                    )
+                                  },
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(8.0),
+                                    title: Text(
+                                        '${items[index].firstName} ${items[index].lastName}'),
+                                    subtitle: Text(items[index].age.toString()),
+                                  ),
+                                )),
+                              );
+                            },
+                          ),
+                        ));
+                      }
+                    },
                   ),
-          )),
+                ),
+        ),
+      ),
     );
   }
 }

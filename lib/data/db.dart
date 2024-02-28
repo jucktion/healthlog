@@ -98,6 +98,11 @@ class DatabaseHandler {
       where: 'id = ?',
       whereArgs: [id],
     );
+    await db.delete(
+      'data',
+      where: 'user = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<void> insertBp(BloodPressure bp) async {
