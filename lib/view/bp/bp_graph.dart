@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
@@ -15,18 +13,13 @@ class BPGraph extends StatefulWidget {
 }
 
 class _BPGraphState extends State<BPGraph> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   final List<FlSpot> _systolicData = [];
   final List<FlSpot> _diastolicData = [];
   final List<String> _dateData = [];
   final int _range = 30;
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
-
-  final _formKey = GlobalKey<FormState>();
-  int _systolic = 120;
-  int _diastolic = 80;
-  int _heartrate = 70;
-  String _arm = "";
-  String _comment = "";
 
   List<FlSpot> dateData = [];
 
@@ -95,39 +88,10 @@ class _BPGraphState extends State<BPGraph> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          BPHelper.bpBottomModal(context,
-              formKey: _formKey,
-              userid: widget.userid, systolicChange: (value) {
-            setState(() => _systolic = int.parse(value));
-          }, diastolicChange: (value) {
-            setState(() => _diastolic = int.parse(value));
-          }, heartChange: (value) {
-            setState(() => _heartrate = int.parse(value));
-          }, armChange: (value) {
-            setState(() => _arm = value);
-          }, commentChange: (value) {
-            setState(() => _comment = value);
-          }, submitForm: () async {
-            if (_formKey.currentState!.validate()) {
-              await DatabaseHandler()
-                  .insertBp(BloodPressure(
-                      id: Random().nextInt(50),
-                      user: widget.userid,
-                      type: 'bp',
-                      content: BP(
-                          systolic: _systolic,
-                          diastolic: _diastolic,
-                          heartrate: _heartrate,
-                          arm: _arm),
-                      date: DateTime.now().toIso8601String(),
-                      comments: _comment))
-                  .whenComplete(() => Navigator.pop(context));
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Processing Data')),
-              );
-            }
-          });
+          BPHelper.statefulBpBottomModal(context,
+              userid: widget.userid,
+              callback: () {},
+              refreshIndicatorKey: _refreshIndicatorKey);
         },
         backgroundColor: Colors.deepOrange,
         child: const Icon(Icons.add),

@@ -1,120 +1,309 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:healthlog/data/db.dart';
+import 'package:healthlog/model/bloodpressure.dart';
 
 class BPHelper {
   static Future<void> bpBottomModal(BuildContext context,
       {required GlobalKey<FormState> formKey,
       required int userid,
-      required Function(dynamic value) systolicChange,
-      required Function(dynamic value) diastolicChange,
-      required Function(dynamic value) heartChange,
-      required Function(dynamic value) armChange,
-      required Function(dynamic value) commentChange,
+      required String armGroup,
+      required Function(String? value) systolicChange,
+      required Function(String? value) diastolicChange,
+      required Function(String? value) heartChange,
+      required Function(String? value) armChange,
+      required Function(String? value) commentChange,
       required Function() submitForm}) async {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: ((context) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SizedBox(
+              height: 450,
+              width: MediaQuery.of(context).size.width / 1.25,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter systolic value';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '120',
+                            label: Text('Systolic'),
+                          ),
+                          onChanged: systolicChange),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter diastolic value';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '80',
+                            label: Text('Diastolic'),
+                          ),
+                          onChanged: diastolicChange),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your heartrate';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '70',
+                            label: Text('Heartrate'),
+                          ),
+                          onChanged: heartChange),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          child: RadioListTile<String>(
+                              title: const Text("Left"),
+                              value: "left",
+                              groupValue: armGroup,
+                              onChanged: armChange),
+                        ),
+                        SizedBox(
+                          width: 150,
+                          child: RadioListTile<String>(
+                            title: const Text("Right"),
+                            value: "right",
+                            groupValue: armGroup,
+                            onChanged: armChange,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: 'Before Breakfast/After Dinner',
+                              label: Text('Comments')),
+                          onChanged: commentChange
+                          // (value) {
+                          //   setState(() {
+                          //     comment = value;
+                          //   });
+                          // },
+                          ),
+                    ),
+                    ElevatedButton(
+                      onPressed: submitForm,
+                      child: const Text(
+                        'Add',
+                        style: TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }));
+  }
+
+  static Future<void> statefulBpBottomModal(BuildContext context,
+      {required int userid,
+      required Function callback,
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+    final formKey = GlobalKey<FormState>();
+    int systolic = 120;
+    int diastolic = 80;
+    int heartrate = 70;
+    String arm = "";
+    String armGroup = "";
+    String comment = "";
+
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: ((context) {
-        return Padding(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: SizedBox(
-            height: 400,
-            width: MediaQuery.of(context).size.width / 1.25,
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter systolic value';
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: '120',
-                          label: Text('Systolic'),
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SizedBox(
+              height: 450,
+              width: MediaQuery.of(context).size.width / 1.25,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter systolic value';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '120',
+                            label: Text('Systolic'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => systolic = int.parse(value.toString()));
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter diastolic value';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '80',
+                            label: Text('Diastolic'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => diastolic = int.parse(value.toString()));
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your heartrate';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '70',
+                            label: Text('Heartrate'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => heartrate = int.parse(value.toString()));
+                          }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 150,
+                          child: RadioListTile<String>(
+                              title: const Text("Left"),
+                              value: "left",
+                              groupValue: armGroup,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  arm = armGroup = value.toString();
+                                });
+                              }),
                         ),
-                        onChanged: systolicChange),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter diastolic value';
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: '80',
-                          label: Text('Diastolic'),
+                        SizedBox(
+                          width: 150,
+                          child: RadioListTile<String>(
+                            title: const Text("Right"),
+                            value: "right",
+                            groupValue: armGroup,
+                            onChanged: (String? value) {
+                              setState(() {
+                                arm = armGroup = value.toString();
+                              });
+                            },
+                          ),
                         ),
-                        onChanged: diastolicChange),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your heartrate';
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: 'Before Breakfast/After Dinner',
+                              label: Text('Comments')),
+                          onChanged: (String? value) {
+                            setState(() => comment = value.toString());
                           }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                          hintText: '70',
-                          label: Text('Heartrate'),
+                          // (value) {
+                          //   setState(() {
+                          //     comment = value;
+                          //   });
+                          // },
+                          ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          await DatabaseHandler()
+                              .insertBp(BloodPressure(
+                                  id: Random().nextInt(50),
+                                  user: userid,
+                                  type: 'bp',
+                                  content: BP(
+                                      systolic: systolic,
+                                      diastolic: diastolic,
+                                      heartrate: heartrate,
+                                      arm: arm),
+                                  date: DateTime.now().toIso8601String(),
+                                  comments: comment))
+                              .whenComplete(() {
+                            Navigator.pop(context);
+                            WidgetsBinding.instance.addPostFrameCallback((_) =>
+                                refreshIndicatorKey.currentState?.show());
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Processing Data')),
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'Add',
+                        style: TextStyle(
+                          fontSize: 20,
                         ),
-                        onChanged: heartChange),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Select the arm';
-                          }
-                          return null;
-                        },
-                        decoration: const InputDecoration(
-                            hintText: 'Left/Right', label: Text('Arm')),
-                        onChanged: armChange),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, right: 40),
-                    child: TextFormField(
-                        decoration: const InputDecoration(
-                            hintText: 'Before Breakfast/After Dinner',
-                            label: Text('Comments')),
-                        onChanged: commentChange
-                        // (value) {
-                        //   setState(() {
-                        //     comment = value;
-                        //   });
-                        // },
-                        ),
-                  ),
-                  ElevatedButton(
-                    onPressed: submitForm,
-                    child: const Text(
-                      'Add',
-                      style: TextStyle(
-                        fontSize: 20,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        );
+          );
+        });
       }),
     );
   }

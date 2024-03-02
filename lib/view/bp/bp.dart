@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/data/db.dart';
@@ -21,13 +20,6 @@ class _BPScreenState extends State<BPScreen> {
   late Future<List<BloodPressure>> _bp;
   late Future<String> _user;
   bool _retrived = false;
-
-  final _formKey = GlobalKey<FormState>();
-  int _systolic = 120;
-  int _diastolic = 80;
-  int _heartrate = 70;
-  String _arm = "";
-  String _comment = "";
 
   @override
   void initState() {
@@ -95,41 +87,10 @@ class _BPScreenState extends State<BPScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          BPHelper.bpBottomModal(context,
-              formKey: _formKey,
-              userid: widget.userid, systolicChange: (value) {
-            setState(() => _systolic = int.parse(value));
-          }, diastolicChange: (value) {
-            setState(() => _diastolic = int.parse(value));
-          }, heartChange: (value) {
-            setState(() => _heartrate = int.parse(value));
-          }, armChange: (value) {
-            setState(() => _arm = value);
-          }, commentChange: (value) {
-            setState(() => _comment = value);
-          }, submitForm: () async {
-            if (_formKey.currentState!.validate()) {
-              await DatabaseHandler()
-                  .insertBp(BloodPressure(
-                      id: Random().nextInt(50),
-                      user: widget.userid,
-                      type: 'bp',
-                      content: BP(
-                          systolic: _systolic,
-                          diastolic: _diastolic,
-                          heartrate: _heartrate,
-                          arm: _arm),
-                      date: DateTime.now().toIso8601String(),
-                      comments: _comment))
-                  .whenComplete(() => Navigator.pop(context));
-              WidgetsBinding.instance.addPostFrameCallback(
-                  (_) => _refreshIndicatorKey.currentState?.show());
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Processing Data')),
-              );
-            }
-          });
+          BPHelper.statefulBpBottomModal(context,
+              userid: widget.userid,
+              callback: () {},
+              refreshIndicatorKey: _refreshIndicatorKey);
         },
         backgroundColor: Colors.deepOrange,
         child: const Icon(Icons.add),
