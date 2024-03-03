@@ -74,6 +74,12 @@ class _BPGraphState extends State<BPGraph> {
     return await handler.bpdata(widget.userid);
   }
 
+  Future<void> _onRefresh() async {
+    setState(() {
+      _bp = getList();
+    });
+  }
+
   // Future<void> _onRefresh() async {
   //   setState(() {
   //     _bp = getList();
@@ -83,187 +89,212 @@ class _BPGraphState extends State<BPGraph> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BloodPressure Graph'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          BPHelper.statefulBpBottomModal(context,
-              userid: widget.userid,
-              callback: () {},
-              refreshIndicatorKey: _refreshIndicatorKey);
-        },
-        backgroundColor: Colors.deepOrange,
-        child: const Icon(Icons.add),
-      ),
-      body: !_retrived
-          ? const Text('Content is not loaded yet')
-          : Center(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height / 3,
-                width: MediaQuery.of(context).size.width,
-                child: FutureBuilder<List<Map<String, dynamic>>>(
-                  future: _bp,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      //final items = snapshot.data ?? <BloodPressure>[];
-                      final rawData = snapshot.data!;
-                      //List<dynamic> jsonList = jsonDecode(rawData);
-                      //print(rawData);
-                      List<FlSpot> normalSystolic = [
-                        for (int i = 0; i <= _range; i++)
-                          FlSpot(i.toDouble(), 120.toDouble())
-                      ];
-                      List<FlSpot> normalDiastolic = [
-                        for (int i = 0; i <= _range; i++)
-                          FlSpot(i.toDouble(), 80.toDouble())
-                      ];
-                      for (int i = 0; i < rawData.length; i++) {
-                        final content = jsonDecode(rawData[i]['content']);
-                        //print(normalSystolic);
-                        final systolic = content['systolic'].toDouble();
-                        //print(content['systolic'].toString());
+        appBar: AppBar(
+          title: const Text('BloodPressure Graph'),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            BPHelper.statefulBpBottomModal(context,
+                userid: widget.userid,
+                callback: () {},
+                refreshIndicatorKey: _refreshIndicatorKey);
+          },
+          backgroundColor: Colors.deepOrange,
+          child: const Icon(Icons.add),
+        ),
+        body: RefreshIndicator(
+            key: _refreshIndicatorKey,
+            onRefresh: _onRefresh,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: !_retrived
+                  ? const Text('Content is not loaded yet')
+                  : SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: Center(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height / 3,
+                          width: MediaQuery.of(context).size.width,
+                          child: FutureBuilder<List<Map<String, dynamic>>>(
+                            future: _bp,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<Map<String, dynamic>>>
+                                    snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                //final items = snapshot.data ?? <BloodPressure>[];
+                                final rawData = snapshot.data!;
+                                //List<dynamic> jsonList = jsonDecode(rawData);
+                                //print(rawData);
+                                List<FlSpot> normalSystolic = [
+                                  for (int i = 0; i <= _range; i++)
+                                    FlSpot(i.toDouble(), 120.toDouble())
+                                ];
+                                List<FlSpot> normalDiastolic = [
+                                  for (int i = 0; i <= _range; i++)
+                                    FlSpot(i.toDouble(), 80.toDouble())
+                                ];
+                                for (int i = 0; i < rawData.length; i++) {
+                                  final content =
+                                      jsonDecode(rawData[i]['content']);
+                                  //print(normalSystolic);
+                                  final systolic =
+                                      content['systolic'].toDouble();
+                                  //print(content['systolic'].toString());
 
-                        final diastolic = content['diastolic'].toDouble();
+                                  final diastolic =
+                                      content['diastolic'].toDouble();
 
-                        final dates =
-                            '${DateTime.parse((rawData[i]['date'])).month}-${DateTime.parse((rawData[i]['date'])).day}';
-                        //print(content['diastolic'].toString());
-                        //final dates = item['date'].toString();
+                                  final dates =
+                                      '${DateTime.parse((rawData[i]['date'])).month}-${DateTime.parse((rawData[i]['date'])).day}';
+                                  //print(content['diastolic'].toString());
+                                  //final dates = item['date'].toString();
 
-                        //print(systolic + diastolic);
+                                  //print(systolic + diastolic);
 
-                        //Assuming you want to plot points based on their order in the dataset
-                        _systolicData.add(FlSpot(i.toDouble(), systolic));
-                        _diastolicData.add(FlSpot(i.toDouble(), diastolic));
-                        //print(dates.toString());
-                        _dateData.add(dates.toString());
-                      }
-                      //print(systolicData);
-                      return LineChart(
-                        LineChartData(
-                          minX: 0,
-                          maxX: 30,
-                          minY: 0,
-                          maxY: 200,
-                          titlesData: FlTitlesData(
-                              show: true,
-                              topTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
-                              rightTitles: const AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false)),
-                              leftTitles: const AxisTitles(
-                                  sideTitles: SideTitles(
-                                      showTitles: true, reservedSize: 35)),
-                              bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  interval: 1,
-                                  reservedSize: 50,
-                                  showTitles: true,
-                                  getTitlesWidget: ((value, meta) {
-                                    return SideTitleWidget(
-                                      axisSide: meta.axisSide,
-                                      child: RotatedBox(
-                                        quarterTurns: 3,
-                                        child: (value >= _dateData.length)
-                                            ? const Text('')
-                                            : Text(_dateData[value.toInt()]),
+                                  //Assuming you want to plot points based on their order in the dataset
+                                  _systolicData
+                                      .add(FlSpot(i.toDouble(), systolic));
+                                  _diastolicData
+                                      .add(FlSpot(i.toDouble(), diastolic));
+                                  //print(dates.toString());
+                                  _dateData.add(dates.toString());
+                                }
+                                //print(systolicData);
+                                return LineChart(
+                                  LineChartData(
+                                    minX: 0,
+                                    maxX: 30,
+                                    minY: 0,
+                                    maxY: 200,
+                                    titlesData: FlTitlesData(
+                                        show: true,
+                                        topTitles: const AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false)),
+                                        rightTitles: const AxisTitles(
+                                            sideTitles:
+                                                SideTitles(showTitles: false)),
+                                        leftTitles: const AxisTitles(
+                                            sideTitles: SideTitles(
+                                                showTitles: true,
+                                                reservedSize: 35)),
+                                        bottomTitles: AxisTitles(
+                                          sideTitles: SideTitles(
+                                            interval: 1,
+                                            reservedSize: 50,
+                                            showTitles: true,
+                                            getTitlesWidget: ((value, meta) {
+                                              return SideTitleWidget(
+                                                axisSide: meta.axisSide,
+                                                child: RotatedBox(
+                                                  quarterTurns: 3,
+                                                  child: (value >=
+                                                          _dateData.length)
+                                                      ? const Text('')
+                                                      : Text(_dateData[
+                                                          value.toInt()]),
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        )),
+                                    gridData: FlGridData(
+                                        show: true,
+                                        drawHorizontalLine: false,
+                                        getDrawingVerticalLine: (value) {
+                                          return const FlLine(
+                                              color: Color.fromARGB(
+                                                  255, 30, 255, 0),
+                                              strokeWidth: 1);
+                                        },
+                                        drawVerticalLine: true,
+                                        verticalInterval: 1),
+                                    //titlesData: const FlTitlesData(show: true),
+                                    borderData: FlBorderData(
+                                      show: true,
+                                      border: Border.all(
+                                          color: Colors.black, width: 1),
+                                    ),
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: normalSystolic,
+                                        color: Colors.green,
+                                        barWidth: 1,
+                                        isStrokeCapRound: true,
+                                        dotData: const FlDotData(show: false),
+                                        belowBarData: BarAreaData(
+                                          applyCutOffY: true,
+                                          show: true,
+                                          cutOffY: 80,
+                                          gradient: RadialGradient(
+                                            colors: safegradientColors
+                                                .map((color) =>
+                                                    color.withOpacity(0.6))
+                                                .toList(),
+                                          ),
+                                        ),
                                       ),
-                                    );
-                                  }),
-                                ),
-                              )),
-                          gridData: FlGridData(
-                              show: true,
-                              drawHorizontalLine: false,
-                              getDrawingVerticalLine: (value) {
-                                return const FlLine(
-                                    color: Color.fromARGB(255, 30, 255, 0),
-                                    strokeWidth: 1);
-                              },
-                              drawVerticalLine: true,
-                              verticalInterval: 1),
-                          //titlesData: const FlTitlesData(show: true),
-                          borderData: FlBorderData(
-                            show: true,
-                            border: Border.all(color: Colors.black, width: 1),
+                                      LineChartBarData(
+                                        spots: _systolicData,
+                                        isCurved: true,
+                                        color: Colors.red,
+                                        barWidth: 2,
+                                        isStrokeCapRound: true,
+                                        dotData: const FlDotData(show: false),
+                                        belowBarData: BarAreaData(
+                                          applyCutOffY: true,
+                                          show: true,
+                                          cutOffY: 130,
+                                          gradient: RadialGradient(
+                                            colors: cautiongradientColors
+                                                .map((color) =>
+                                                    color.withOpacity(0.6))
+                                                .toList(),
+                                          ),
+                                        ),
+                                      ),
+                                      LineChartBarData(
+                                        spots: normalDiastolic,
+                                        color: Colors.green,
+                                        barWidth: 1,
+                                        isStrokeCapRound: true,
+                                        dotData: const FlDotData(show: false),
+                                      ),
+                                      LineChartBarData(
+                                        spots: _diastolicData,
+                                        isCurved: true,
+                                        color: Colors.red,
+                                        barWidth: 2,
+                                        isStrokeCapRound: true,
+                                        dotData: const FlDotData(show: false),
+                                        belowBarData: BarAreaData(
+                                          applyCutOffY: true,
+                                          show: true,
+                                          cutOffY: 90,
+                                          gradient: RadialGradient(
+                                            colors: cautiongradientColors
+                                                .map((color) =>
+                                                    color.withOpacity(0.6))
+                                                .toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
                           ),
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: normalSystolic,
-                              color: Colors.green,
-                              barWidth: 1,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
-                              belowBarData: BarAreaData(
-                                applyCutOffY: true,
-                                show: true,
-                                cutOffY: 80,
-                                gradient: RadialGradient(
-                                  colors: safegradientColors
-                                      .map((color) => color.withOpacity(0.6))
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            LineChartBarData(
-                              spots: _systolicData,
-                              isCurved: true,
-                              color: Colors.red,
-                              barWidth: 2,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
-                              belowBarData: BarAreaData(
-                                applyCutOffY: true,
-                                show: true,
-                                cutOffY: 130,
-                                gradient: RadialGradient(
-                                  colors: cautiongradientColors
-                                      .map((color) => color.withOpacity(0.6))
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                            LineChartBarData(
-                              spots: normalDiastolic,
-                              color: Colors.green,
-                              barWidth: 1,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
-                            ),
-                            LineChartBarData(
-                              spots: _diastolicData,
-                              isCurved: true,
-                              color: Colors.red,
-                              barWidth: 2,
-                              isStrokeCapRound: true,
-                              dotData: const FlDotData(show: false),
-                              belowBarData: BarAreaData(
-                                applyCutOffY: true,
-                                show: true,
-                                cutOffY: 90,
-                                gradient: RadialGradient(
-                                  colors: cautiongradientColors
-                                      .map((color) => color.withOpacity(0.6))
-                                      .toList(),
-                                ),
-                              ),
-                            ),
-                          ],
                         ),
-                      );
-                    }
-                  },
-                ),
-              ),
-            ),
-    );
+                      ),
+                    ),
+            )));
   }
 }
