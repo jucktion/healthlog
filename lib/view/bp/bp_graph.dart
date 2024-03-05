@@ -17,7 +17,6 @@ class _BPGraphState extends State<BPGraph> {
       GlobalKey<RefreshIndicatorState>();
   final List<FlSpot> _systolicData = [];
   final List<FlSpot> _diastolicData = [];
-  final List<String> _dateData = [];
   final int _range = 30;
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
@@ -42,8 +41,8 @@ class _BPGraphState extends State<BPGraph> {
     handler = DatabaseHandler();
     handler.initializeDB().whenComplete(() async {
       setState(() {
-        _retrived = true;
         _bp = getList();
+        _retrived = true;
       });
     });
   }
@@ -132,6 +131,7 @@ class _BPGraphState extends State<BPGraph> {
                                 final rawData = snapshot.data!;
                                 //List<dynamic> jsonList = jsonDecode(rawData);
                                 //print(rawData);
+                                List<String> dateData = [];
                                 List<FlSpot> normalSystolic = [
                                   for (int i = 0; i <= _range; i++)
                                     FlSpot(i.toDouble(), 120.toDouble())
@@ -164,7 +164,7 @@ class _BPGraphState extends State<BPGraph> {
                                   _diastolicData
                                       .add(FlSpot(i.toDouble(), diastolic));
                                   //print(dates.toString());
-                                  _dateData.add(dates.toString());
+                                  dateData.add(dates.toString());
                                 }
                                 //print(systolicData);
                                 return LineChart(
@@ -195,11 +195,11 @@ class _BPGraphState extends State<BPGraph> {
                                                 axisSide: meta.axisSide,
                                                 child: RotatedBox(
                                                   quarterTurns: 3,
-                                                  child: (value >=
-                                                          _dateData.length)
-                                                      ? const Text('')
-                                                      : Text(_dateData[
-                                                          value.toInt()]),
+                                                  child:
+                                                      (value >= dateData.length)
+                                                          ? const Text('')
+                                                          : Text(dateData[
+                                                              value.toInt()]),
                                                 ),
                                               );
                                             }),
