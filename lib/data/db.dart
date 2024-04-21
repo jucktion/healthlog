@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:healthlog/model/bloodpressure.dart';
+import 'package:healthlog/model/sugar.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sqflite/sqflite.dart';
@@ -125,12 +126,52 @@ class DatabaseHandler {
     );
   }
 
-  Future<List<BloodPressure>> bphistory(int userid) async {
+  Future<List<BloodPressure>> allhistory(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult =
         await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
     //print(queryResult);
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
+  }
+
+  Future<List<BloodPressure>> bphistory(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'bp'],
+        orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
+  }
+
+  Future<List<Sugar>> sugarhistory(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'sugar'],
+        orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => Sugar.fromMap(e)).toList();
+  }
+
+  Future<void> insertSg(Sugar sg) async {
+    final db = await initializeDB();
+
+    try {
+      await db.insert('data', sg.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+
+  Future<void> deleteSG(int id) async {
+    final db = await initializeDB();
+    await db.delete(
+      'data',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
   }
 
   Future<List<Map<String, dynamic>>> bpdata(int userid) async {

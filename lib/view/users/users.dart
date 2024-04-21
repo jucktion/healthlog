@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/view/bp/bp.dart';
+import 'package:healthlog/view/profile/profile.dart';
 import 'package:healthlog/view/theme/globals.dart';
 import 'package:healthlog/view/users/add_user.dart';
 import 'package:healthlog/data/db.dart';
@@ -169,7 +169,7 @@ class _UserScreenState extends State<UserScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => BPScreen(
+                                        builder: (context) => ProfileScreen(
                                           userid: items[index].id,
                                         ),
                                       ),
