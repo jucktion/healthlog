@@ -64,7 +64,7 @@ class _BPScreenState extends State<BPScreen> {
                       return const Text('Error');
                     }
                     // Return the retrieved title.
-                    return Text(snapshot.data ?? 'User Log');
+                    return Text("${snapshot.data}'s BP Data");
                   } else {
                     return const CircularProgressIndicator();
                   }

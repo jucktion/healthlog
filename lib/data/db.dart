@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:healthlog/model/bloodpressure.dart';
+import 'package:healthlog/model/data.dart';
 import 'package:healthlog/model/sugar.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -126,12 +127,12 @@ class DatabaseHandler {
     );
   }
 
-  Future<List<BloodPressure>> allhistory(int userid) async {
+  Future<List<Data>> allhistory(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult =
         await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
     //print(queryResult);
-    return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
+    return queryResult.map((e) => Data.fromMap(e)).toList();
   }
 
   Future<List<BloodPressure>> bphistory(int userid) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/data/db.dart';
+import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
 import 'package:healthlog/view/bp/bp_graph.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late DatabaseHandler handler;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  late Future<List<BloodPressure>> _bp;
+  late Future<List<dynamic>> _data;
   late Future<String> _user;
   bool _retrived = false;
   bool _isFabOpen = false;
@@ -30,13 +30,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;
-        _bp = getList();
+        _data = getList();
         _user = getName();
       });
     });
   }
 
-  Future<List<BloodPressure>> getList() async {
+  Future<List<Data>> getList() async {
     return await handler.allhistory(widget.userid);
   }
 
@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _onRefresh() async {
     setState(() {
-      _bp = getList();
+      _data = getList();
     });
   }
 
@@ -97,10 +97,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height / 1.25,
-                  child: FutureBuilder<List<BloodPressure>>(
-                    future: _bp,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<BloodPressure>> snapshot) {
+                  child: FutureBuilder(
+                    future: _data,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -116,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         );
                       } else {
-                        final items = snapshot.data ?? <BloodPressure>[];
+                        final items = snapshot.data ?? <List>[];
                         return Scrollbar(
                           child: RefreshIndicator(
                             onRefresh: _onRefresh,
@@ -137,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     GlobalMethods().showDialogs(
                                         context,
                                         'Delete user',
-                                        'Do you really want to delete the user?',
+                                        'Do you really want to delete the record?',
                                         () async {
                                       await handler.deleteBP(items[index].id);
                                       setState(() {
@@ -163,10 +162,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       trailing: Text(
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(
-                                          '${items[index].type.toUpperCase()}: ${items[index].content.systolic}/${items[index].content.diastolic}'),
+                                      title:
+                                          Text(items[index].type.toUpperCase()),
                                       subtitle: Text(
-                                          'Arm: ${items[index].content.arm.toString()} Comment: ${items[index].comments.toString()}'),
+                                          'Comment: ${items[index].comments.toString()}'),
                                     ),
                                   )),
                                 );
@@ -242,6 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Text(label),
           FloatingActionButton(
             mini: true,
+            heroTag: label,
             onPressed: () {
               // Handle your on press here
               doOnPressed();

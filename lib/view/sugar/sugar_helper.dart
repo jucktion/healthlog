@@ -34,25 +34,6 @@ class SGHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter blood sugar reading';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '70',
-                            label: Text('Blood Sugar'),
-                          ),
-                          onChanged: (String? value) {
-                            setState(
-                                () => reading = double.parse(value.toString()));
-                          }),
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -82,6 +63,25 @@ class SGHelper {
                           ),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter blood sugar reading';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            hintText: '70',
+                            label: Text('Blood Sugar'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => reading = double.parse(value.toString()));
+                          }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),

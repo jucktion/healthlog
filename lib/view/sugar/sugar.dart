@@ -64,7 +64,7 @@ class _SGScreenState extends State<SGScreen> {
                       return const Text('Error');
                     }
                     // Return the retrieved title.
-                    return Text(snapshot.data ?? 'User Log');
+                    return Text("${snapshot.data}'s Sugar Data");
                   } else {
                     return const CircularProgressIndicator();
                   }
