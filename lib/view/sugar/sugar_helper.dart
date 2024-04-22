@@ -11,8 +11,8 @@ class SGHelper {
     final formKey = GlobalKey<FormState>();
     double reading = 0.00;
     String beforeAfter = '60 - 110';
-    String fastingNormalReading = '60 - 110';
-    String afterFastingNormalReading = '70 - 140';
+    // String fastingNormalReading = '60 - 110';
+    // String afterFastingNormalReading = '70 - 140';
     String fastGroup = "";
     String comment = "";
 
@@ -76,6 +76,7 @@ class SGHelper {
                           },
                           decoration: const InputDecoration(
                             hintText: '70',
+                            suffixText: 'mg/dl',
                             label: Text('Blood Sugar'),
                           ),
                           onChanged: (String? value) {
