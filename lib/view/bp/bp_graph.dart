@@ -87,7 +87,7 @@ class _BPGraphState extends State<BPGraph> {
               child: !_retrived
                   ? const Text('Content is not loaded yet')
                   : SizedBox(
-                      height: MediaQuery.of(context).size.height,
+                      height: MediaQuery.of(context).size.height / 1.25,
                       child: Center(
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height / 3,
