@@ -175,14 +175,6 @@ class DatabaseHandler {
     );
   }
 
-  Future<List<Map<String, dynamic>>> bpdata(int userid) async {
-    final db = await initializeDB();
-    final List<Map<String, dynamic>> queryResult =
-        await db.query('data', where: 'user=($userid)', orderBy: 'date ASC');
-    //print(queryResult);
-    return queryResult;
-  }
-
   void deleteAllRows(String tableName) async {
     final db = await initializeDB();
     await db.delete(tableName);

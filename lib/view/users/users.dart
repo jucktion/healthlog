@@ -27,6 +27,7 @@ class _UserScreenState extends State<UserScreen> {
       setState(() {
         _retrived = true;
         _user = getList();
+        _onRefresh();
       });
     });
   }
@@ -150,11 +151,19 @@ class _UserScreenState extends State<UserScreen> {
                                     await handler.deleteUser(items[index].id);
                                     setState(() {
                                       items.remove(items[index]);
+
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) =>
+                                              _refreshIndicatorKey.currentState
+                                                  ?.show());
                                     });
-                                  });
-                                  WidgetsBinding.instance.addPostFrameCallback(
-                                      (_) => _refreshIndicatorKey.currentState
-                                          ?.show());
+                                  }).then((value) => {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) =>
+                                                _refreshIndicatorKey
+                                                    .currentState
+                                                    ?.show())
+                                      });
                                 },
                                 child: Card(
                                     child: InkWell(

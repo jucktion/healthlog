@@ -143,18 +143,25 @@ class _BPScreenState extends State<BPScreen> {
                                   onDismissed: (DismissDirection direction) {
                                     GlobalMethods().showDialogs(
                                         context,
-                                        'Delete user',
-                                        'Do you really want to delete the user?',
+                                        'Delete record',
+                                        'Do you really want to delete the record?',
                                         () async {
                                       await handler.deleteBP(items[index].id);
                                       setState(() {
                                         items.remove(items[index]);
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) =>
+                                                _refreshIndicatorKey
+                                                    .currentState
+                                                    ?.show());
                                       });
-                                    });
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) =>
-                                            _refreshIndicatorKey.currentState
-                                                ?.show());
+                                    }).then((value) => {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) =>
+                                                  _refreshIndicatorKey
+                                                      .currentState
+                                                      ?.show())
+                                        });
                                   },
                                   child: Card(
                                       child: InkWell(
@@ -173,7 +180,7 @@ class _BPScreenState extends State<BPScreen> {
                                       title: Text(
                                           '${items[index].type.toUpperCase()}: ${items[index].content.systolic}/${items[index].content.diastolic}'),
                                       subtitle: Text(
-                                          'Arm: ${items[index].content.arm.toString()} Comment: ${items[index].comments.toString()}'),
+                                          'Arm: ${items[index].content.arm.toString()}, Note: ${items[index].comments.toString()}'),
                                     ),
                                   )),
                                 );

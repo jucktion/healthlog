@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
 
 class BPGraph extends StatefulWidget {
@@ -23,7 +23,7 @@ class _BPGraphState extends State<BPGraph> {
   List<FlSpot> dateData = [];
 
   late DatabaseHandler handler;
-  late Future<List<Map<String, dynamic>>> _bp;
+  late Future<List<BloodPressure>> _bp;
   bool _retrived = false;
 
   List<Color> safegradientColors = [
@@ -47,30 +47,8 @@ class _BPGraphState extends State<BPGraph> {
     });
   }
 
-  void parseBloodPressureData(Future<List<Map<String, dynamic>>> data) {
-    final List<Map<String, dynamic>> rawData =
-        data as List<Map<String, dynamic>>;
-    //List<dynamic> jsonList = jsonDecode(rawData);
-
-    int index = 0;
-    for (var item in rawData) {
-      final content = item['content'];
-      final systolic = content['systolic'].toDouble();
-      final diastolic = content['diastolic'].toDouble();
-      //final dates = item['date'].toString();
-
-      //print(systolic + diastolic);
-
-      // Assuming you want to plot points based on their order in the dataset
-      _systolicData.add(FlSpot(index.toDouble(), systolic));
-      _diastolicData.add(FlSpot(index.toDouble(), diastolic));
-
-      index++;
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getList() async {
-    return await handler.bpdata(widget.userid);
+  Future<List<BloodPressure>> getList() async {
+    return await handler.bphistory(widget.userid);
   }
 
   Future<void> _onRefresh() async {
@@ -114,11 +92,10 @@ class _BPGraphState extends State<BPGraph> {
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height / 3,
                           width: MediaQuery.of(context).size.width,
-                          child: FutureBuilder<List<Map<String, dynamic>>>(
+                          child: FutureBuilder<List<BloodPressure>>(
                             future: _bp,
                             builder: (BuildContext context,
-                                AsyncSnapshot<List<Map<String, dynamic>>>
-                                    snapshot) {
+                                AsyncSnapshot<List<BloodPressure>> snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return const Center(
@@ -141,18 +118,18 @@ class _BPGraphState extends State<BPGraph> {
                                     FlSpot(i.toDouble(), 80.toDouble())
                                 ];
                                 for (int i = 0; i < rawData.length; i++) {
-                                  final content =
-                                      jsonDecode(rawData[i]['content']);
+                                  // final content =
+                                  //     jsonDecode(rawData[i].content.toString());
                                   //print(normalSystolic);
                                   final systolic =
-                                      content['systolic'].toDouble();
+                                      rawData[i].content.systolic.toDouble();
                                   //print(content['systolic'].toString());
 
                                   final diastolic =
-                                      content['diastolic'].toDouble();
+                                      rawData[i].content.diastolic.toDouble();
 
                                   final dates =
-                                      '${DateTime.parse((rawData[i]['date'])).month}-${DateTime.parse((rawData[i]['date'])).day}';
+                                      '${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}';
                                   //print(content['diastolic'].toString());
                                   //final dates = item['date'].toString();
 

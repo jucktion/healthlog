@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
-import 'package:healthlog/view/bp/bp_graph.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
 import 'package:healthlog/view/theme/globals.dart';
 
@@ -72,20 +71,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                 },
               ),
-        actions: [
-          IconButton(
-              onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BPGraph(
-                          userid: widget.userid,
-                        ),
-                      ),
-                    )
-                  },
-              icon: const Icon(Icons.auto_graph_sharp))
-        ],
       ),
       floatingActionButton: _buildFab(context),
       body: RefreshIndicator(
@@ -165,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       title:
                                           Text(items[index].type.toUpperCase()),
                                       subtitle: Text(
-                                          'Comment: ${items[index].comments.toString()}'),
+                                          'Note: ${items[index].comments.toString()}'),
                                     ),
                                   )),
                                 );
