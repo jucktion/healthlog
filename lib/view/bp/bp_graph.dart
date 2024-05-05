@@ -48,7 +48,7 @@ class _BPGraphState extends State<BPGraph> {
   }
 
   Future<List<BloodPressure>> getList() async {
-    return await handler.bphistory(widget.userid);
+    return await handler.bpHistoryGraph(widget.userid);
   }
 
   Future<void> _onRefresh() async {
@@ -107,7 +107,7 @@ class _BPGraphState extends State<BPGraph> {
                                 //final items = snapshot.data ?? <BloodPressure>[];
                                 final rawData = snapshot.data!;
                                 //List<dynamic> jsonList = jsonDecode(rawData);
-                                //print(rawData);
+                                //print(rawData.toList().toString());
                                 List<String> dateData = [];
                                 List<FlSpot> normalSystolic = [
                                   for (int i = 0; i <= _range; i++)
@@ -124,10 +124,8 @@ class _BPGraphState extends State<BPGraph> {
                                   final systolic =
                                       rawData[i].content.systolic.toDouble();
                                   //print(content['systolic'].toString());
-
                                   final diastolic =
                                       rawData[i].content.diastolic.toDouble();
-
                                   final dates =
                                       '${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}';
                                   //print(content['diastolic'].toString());
@@ -160,6 +158,7 @@ class _BPGraphState extends State<BPGraph> {
                                                 SideTitles(showTitles: false)),
                                         leftTitles: const AxisTitles(
                                             sideTitles: SideTitles(
+                                                interval: 10,
                                                 showTitles: true,
                                                 reservedSize: 35)),
                                         bottomTitles: AxisTitles(
@@ -184,15 +183,22 @@ class _BPGraphState extends State<BPGraph> {
                                         )),
                                     gridData: FlGridData(
                                         show: true,
-                                        drawHorizontalLine: false,
+                                        drawHorizontalLine: true,
+                                        getDrawingHorizontalLine: (value) {
+                                          return const FlLine(
+                                              color: Color.fromARGB(
+                                                  255, 30, 255, 0),
+                                              strokeWidth: .25);
+                                        },
                                         getDrawingVerticalLine: (value) {
                                           return const FlLine(
                                               color: Color.fromARGB(
                                                   255, 30, 255, 0),
-                                              strokeWidth: 1);
+                                              strokeWidth: .25);
                                         },
                                         drawVerticalLine: true,
-                                        verticalInterval: 1),
+                                        verticalInterval: 1,
+                                        horizontalInterval: 10),
                                     //titlesData: const FlTitlesData(show: true),
                                     borderData: FlBorderData(
                                       show: true,
