@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
+import 'package:healthlog/view/bp/bp_helper.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
+import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -53,6 +55,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          PopupMenuButton(
+            //onOpened: () => {DatabaseHandler().getDbpath()},
+            itemBuilder: (BuildContext context) {
+              return {'BP', 'Sugar', 'Notes'}
+                  .toList()
+                  .asMap()
+                  .entries
+                  .map((choice) {
+                return PopupMenuItem<String>(
+                  onTap: () => {handleMenuOptionClick(context, choice.key)},
+                  value: choice.key.toString(),
+                  child: Text(choice.value),
+                );
+              }).toList();
+            },
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
         title: !_retrived
             ? const Text('User log')
             : FutureBuilder<String>(
@@ -170,6 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildFab(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         if (_isFabOpen)
           _buildFabOption(
@@ -179,28 +201,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: Icons.cake,
               label: 'Sugar',
               doOnPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SGScreen(
-                      userid: widget.userid,
-                    ),
-                  ),
-                );
+                SGHelper.statefulBpBottomModal(context,
+                    userid: widget.userid,
+                    callback: () {},
+                    refreshIndicatorKey: _refreshIndicatorKey);
               }),
         if (_isFabOpen)
           _buildFabOption(
               icon: Icons.bloodtype,
               label: 'BP',
               doOnPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BPScreen(
-                      userid: widget.userid,
-                    ),
-                  ),
-                );
+                BPHelper.statefulBpBottomModal(context,
+                    userid: widget.userid,
+                    callback: () {},
+                    refreshIndicatorKey: _refreshIndicatorKey);
               }),
         FloatingActionButton(
           onPressed: () {
@@ -237,5 +251,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  void handleMenuOptionClick(BuildContext context, int value) {
+    switch (value) {
+      case 0:
+        //print('Backup selected');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BPScreen(
+              userid: widget.userid,
+            ),
+          ),
+        );
+        break;
+      case 1:
+        // print('Restore selected');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SGScreen(
+              userid: widget.userid,
+            ),
+          ),
+        );
+        break;
+      case 2:
+        // print('Reset selected');
+        DatabaseHandler().deleteDB();
+        break;
+      default:
+      //print('Unknown');
+    }
   }
 }

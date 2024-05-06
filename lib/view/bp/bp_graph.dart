@@ -57,12 +57,6 @@ class _BPGraphState extends State<BPGraph> {
     });
   }
 
-  // Future<void> _onRefresh() async {
-  //   setState(() {
-  //     _bp = getList();
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
