@@ -10,10 +10,12 @@ class SGHelper {
       required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
     final formKey = GlobalKey<FormState>();
     double reading = 0.00;
-    String beforeAfter = '60 - 110';
+    String beforeAfter = '';
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String fastGroup = "";
+    String unit = "";
+    String unitGroup = "mg/dL";
     String comment = "";
 
     showModalBottomSheet(
@@ -30,6 +32,7 @@ class SGHelper {
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,15 +77,47 @@ class SGHelper {
                             }
                             return null;
                           },
-                          decoration: const InputDecoration(
-                            hintText: '70',
-                            suffixText: 'mg/dl',
-                            label: Text('Blood Sugar'),
+                          decoration: InputDecoration(
+                            hintText:
+                                beforeAfter == 'before' ? '60-110' : '70-140',
+                            suffixText: 'mg/dL',
+                            label: const Text('Blood Sugar'),
                           ),
                           onChanged: (String? value) {
                             setState(
                                 () => reading = double.parse(value.toString()));
                           }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 160,
+                          child: RadioListTile<String>(
+                              title: const Text("mmol/L"),
+                              value: "mmol/L",
+                              groupValue: unitGroup,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  unit = unitGroup = value.toString();
+                                });
+                              }),
+                        ),
+                        SizedBox(
+                          width: 150,
+                          child: RadioListTile<String>(
+                            title: const Text("mg/dL"),
+                            selected: true,
+                            value: "mg/dL",
+                            groupValue: unitGroup,
+                            onChanged: (String? value) {
+                              setState(() {
+                                unit = unitGroup = value.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -109,7 +144,9 @@ class SGHelper {
                                   user: userid,
                                   type: 'sugar',
                                   content: SG(
-                                      reading: reading,
+                                      reading: unit == 'mg/dL'
+                                          ? reading
+                                          : reading * 18.0,
                                       beforeAfter: beforeAfter,
                                       unit: 'mg/dl'),
                                   date: DateTime.now().toIso8601String(),
