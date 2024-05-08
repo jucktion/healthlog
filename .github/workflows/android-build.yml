@@ -1,12 +1,12 @@
 name: Flutter CI
-
+on:
+  workflow_dispatch:
 # This workflow is triggered on pushes to the repository.
 
-on:
-  push:
-    branches:
-    - main
-    
+# on:
+#   push:
+#     branches:
+#     - main    
 # on: push    # Default will running for every branch.
     
 jobs:
