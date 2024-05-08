@@ -33,7 +33,7 @@ jobs:
     # Statically analyze the Dart code for any errors.
     # Run widget tests for our flutter project.
       run: |
-        flutter format --set-exit-if-changed .
+        dart format --output=none --set-exit-if-changed .
         flutter analyze .
         flutter test
     
