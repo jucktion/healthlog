@@ -1,4 +1,4 @@
-name: Flutter CI
+name: 'Flutter CI'
 on:
   workflow_dispatch:
 # This workflow is triggered on pushes to the repository.
