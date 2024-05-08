@@ -30,13 +30,12 @@ jobs:
     
     - name: 'Run Tests'
     # Check for any formatting issues in the code.
-      run: flutter format --set-exit-if-changed .
-    
     # Statically analyze the Dart code for any errors.
-      run: flutter analyze .
-    
     # Run widget tests for our flutter project.
-      run: flutter test
+      run: |
+        flutter format --set-exit-if-changed .
+        flutter analyze .
+        flutter test
     
     # Build apk.
     - name: 'Build APK'
