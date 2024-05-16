@@ -146,7 +146,7 @@ class SGHelper {
                                   content: SG(
                                       reading: unit == 'mg/dL'
                                           ? reading
-                                          : reading * 18.0,
+                                          : reading * 18.0182,
                                       beforeAfter: beforeAfter,
                                       unit: 'mg/dl'),
                                   date: DateTime.now().toIso8601String(),

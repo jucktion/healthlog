@@ -146,7 +146,8 @@ class _SGScreenState extends State<SGScreen> {
                                         'Delete record',
                                         'Do you really want to delete the record?',
                                         () async {
-                                      await handler.deleteBP(items[index].id);
+                                      await handler
+                                          .deleteRecord(items[index].id);
                                       setState(() {
                                         items.remove(items[index]);
                                         WidgetsBinding.instance
@@ -178,7 +179,7 @@ class _SGScreenState extends State<SGScreen> {
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
                                       title: Text(
-                                          '${items[index].type.toUpperCase()}: ${items[index].content.reading}/${items[index].content.beforeAfter}'),
+                                          '${items[index].type.toUpperCase()}: ${items[index].content.reading.toStringAsFixed(2)}/${items[index].content.beforeAfter}'),
                                       subtitle: Text(
                                           'Comment: ${items[index].comments.toString()}'),
                                     ),

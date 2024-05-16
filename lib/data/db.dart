@@ -118,7 +118,7 @@ class DatabaseHandler {
     }
   }
 
-  Future<void> deleteBP(int id) async {
+  Future<void> deleteRecord(int id) async {
     final db = await initializeDB();
     await db.delete(
       'data',

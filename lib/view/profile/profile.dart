@@ -144,7 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         'Delete user',
                                         'Do you really want to delete the record?',
                                         () async {
-                                      await handler.deleteBP(items[index].id);
+                                      await handler
+                                          .deleteRecord(items[index].id);
                                       setState(() {
                                         items.remove(items[index]);
                                       });
