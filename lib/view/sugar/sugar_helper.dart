@@ -148,7 +148,7 @@ class SGHelper {
                                           ? reading
                                           : reading * 18.0182,
                                       beforeAfter: beforeAfter,
-                                      unit: 'mg/dl'),
+                                      unit: 'mg/dL'),
                                   date: DateTime.now().toIso8601String(),
                                   comments: comment))
                               .whenComplete(() {
@@ -207,7 +207,7 @@ class SGHelper {
                           child: Icon(
                             Icons.receipt_rounded,
                             size: 25,
-                            color: Colors.red,
+                            color: Colors.green,
                           ),
                         ),
                         Padding(
@@ -219,20 +219,29 @@ class SGHelper {
                     content: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                              'Reading: ${entry.first.content.reading} ${entry.first.content.unit}'),
-                          SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                    'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month} - ${DateTime.parse(entry.first.date).day}'),
-                                Text(
-                                    'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
-                              ],
+                            '${entry.first.content.reading.toStringAsFixed(2)} ${entry.first.content.unit}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 25.0),
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month}-${DateTime.parse(entry.first.date).day}'),
+                                  Text(
+                                      'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
+                                ],
+                              ),
                             ),
                           )
                         ],

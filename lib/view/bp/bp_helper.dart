@@ -210,7 +210,7 @@ class BPHelper {
                           child: Icon(
                             Icons.receipt_rounded,
                             size: 25,
-                            color: Colors.red,
+                            color: Colors.green,
                           ),
                         ),
                         Padding(
@@ -224,18 +224,32 @@ class BPHelper {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Systolic: ${entry.first.content.systolic}'),
-                          Text('Diastolic: ${entry.first.content.diastolic}'),
-                          SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                    'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month} - ${DateTime.parse(entry.first.date).day}'),
-                                Text(
-                                    'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
-                              ],
+                          Text(
+                            'Systolic: ${entry.first.content.systolic}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Text(
+                            'Diastolic: ${entry.first.content.diastolic}',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 25.0),
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month}-${DateTime.parse(entry.first.date).day}'),
+                                  Text(
+                                      'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
+                                ],
+                              ),
                             ),
                           )
                         ],
