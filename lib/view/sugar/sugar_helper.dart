@@ -178,4 +178,79 @@ class SGHelper {
       }),
     );
   }
+
+  static Future<void> showRecord(BuildContext context, int entryid) async {
+    late DatabaseHandler handler;
+    late Future<List<Sugar>> sg;
+    Future<List<Sugar>> getList() async {
+      handler = DatabaseHandler();
+      return await handler.sugarEntry(entryid);
+    }
+
+    sg = getList();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder<List<Sugar>>(
+            future: sg,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final entry = snapshot.data ?? [];
+                  return AlertDialog(
+                    title: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.receipt_rounded,
+                            size: 25,
+                            color: Colors.red,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Sugar Record: $entryid'),
+                        ),
+                      ],
+                    ),
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                              'Reading: ${entry.first.content.reading} ${entry.first.content.unit}'),
+                          SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                    'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month} - ${DateTime.parse(entry.first.date).day}'),
+                                Text(
+                                    'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                }
+              } else {
+                return const CircularProgressIndicator(); // Or any loading indicator widget
+              }
+            },
+          );
+        });
+  }
 }

@@ -167,12 +167,8 @@ class _SGScreenState extends State<SGScreen> {
                                   child: Card(
                                       child: InkWell(
                                     onTap: () => {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              duration:
-                                                  const Duration(seconds: 1),
-                                              content: Text(
-                                                  'Record id: ${items[index].id}')))
+                                      SGHelper.showRecord(
+                                          context, items[index].id)
                                     },
                                     child: ListTile(
                                       trailing: Text(

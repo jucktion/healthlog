@@ -141,7 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   onDismissed: (DismissDirection direction) {
                                     GlobalMethods().showDialogs(
                                         context,
-                                        'Delete user',
+                                        'Delete entry',
                                         'Do you really want to delete the record?',
                                         () async {
                                       await handler
@@ -157,13 +157,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   },
                                   child: Card(
                                       child: InkWell(
-                                    onTap: () => {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              duration:
-                                                  const Duration(seconds: 1),
-                                              content: Text(
-                                                  'Record id: ${items[index].id}')))
+                                    onTap: () {
+                                      switch (items[index].type) {
+                                        case 'sugar':
+                                          SGHelper.showRecord(
+                                              context, items[index].id);
+                                          break;
+                                        case 'bp':
+                                          BPHelper.showRecord(
+                                              context, items[index].id);
+                                          break;
+                                      }
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(SnackBar(
+                                      //         duration:
+                                      //             const Duration(seconds: 1),
+                                      //         content: Text(
+                                      //             'Record id: ${items[index].id}')))
                                     },
                                     child: ListTile(
                                       trailing: Text(

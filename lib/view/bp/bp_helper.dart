@@ -181,4 +181,79 @@ class BPHelper {
       }),
     );
   }
+
+  static Future<void> showRecord(BuildContext context, int entryid) async {
+    late DatabaseHandler handler;
+    late Future<List<BloodPressure>> bp;
+    Future<List<BloodPressure>> getList() async {
+      handler = DatabaseHandler();
+      return await handler.bpEntry(entryid);
+    }
+
+    bp = getList();
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FutureBuilder<List<BloodPressure>>(
+            future: bp,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final entry = snapshot.data ?? [];
+                  return AlertDialog(
+                    title: Row(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.receipt_rounded,
+                            size: 25,
+                            color: Colors.red,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('BP Record: $entryid'),
+                        ),
+                      ],
+                    ),
+                    content: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Systolic: ${entry.first.content.systolic}'),
+                          Text('Diastolic: ${entry.first.content.diastolic}'),
+                          SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                    'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month} - ${DateTime.parse(entry.first.date).day}'),
+                                Text(
+                                    'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  );
+                }
+              } else {
+                return const CircularProgressIndicator(); // Or any loading indicator widget
+              }
+            },
+          );
+        });
+  }
 }
