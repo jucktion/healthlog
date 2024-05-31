@@ -224,16 +224,44 @@ class BPHelper {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            'Systolic: ${entry.first.content.systolic}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Systolic',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.systolic}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.systolic > 130)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Diastolic:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.diastolic}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.diastolic > 90)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
                           ),
                           Text(
-                            'Diastolic: ${entry.first.content.diastolic}',
+                            'HeartBeat: ${entry.first.content.heartrate}',
                             style: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 19,
                             ),
                           ),
                           Padding(

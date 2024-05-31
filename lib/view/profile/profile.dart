@@ -102,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: !_retrived
               ? const Text('Content is not loaded yet')
               : SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.25,
+                  height: MediaQuery.of(context).size.height,
                   child: FutureBuilder(
                     future: _data,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -179,8 +179,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       trailing: Text(
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
-                                      title:
-                                          Text(items[index].type.toUpperCase()),
+                                      title: titleText(
+                                          items[index].type, items[index].id),
                                       subtitle: Text(
                                           'Note: ${items[index].comments.toString()}'),
                                     ),
@@ -197,6 +197,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Widget titleText(String type, int id) {
+    Future<String> entrysg = handler.sgReading(id);
+    Future<String> entrybp = handler.bpReading(id);
+    switch (type) {
+      case 'sugar':
+        return FutureBuilder(
+            future: entrysg,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return Text(
+                  'Sugar: ${double.parse(snapshot.data).toStringAsFixed(2)} mg/dL');
+            });
+
+      case 'bp':
+        return FutureBuilder(
+            future: entrybp,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return Text('BP: ${snapshot.data}');
+            });
+      default:
+        return const Text('');
+    }
   }
 
   Widget _buildFab(BuildContext context) {

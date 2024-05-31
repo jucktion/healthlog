@@ -78,8 +78,18 @@ class SGHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText:
-                                beforeAfter == 'before' ? '60-110' : '70-140',
+                            hintText: (unit == 'mg/dL' &&
+                                    beforeAfter == 'before')
+                                ? '60-110'
+                                : (unit == 'mg/dL' && beforeAfter == 'after')
+                                    ? '70-140'
+                                    : (unitGroup == 'mmol/L' &&
+                                            beforeAfter == 'before')
+                                        ? '3.33-6.11'
+                                        : (unitGroup == 'mmol/L' &&
+                                                beforeAfter == 'after')
+                                            ? '3.88-7.77'
+                                            : '',
                             suffixText: 'mg/dL',
                             label: const Text('Blood Sugar'),
                           ),

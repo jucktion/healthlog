@@ -145,6 +145,26 @@ class DatabaseHandler {
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
   }
 
+  Future<String> bpReading(int entryid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db
+        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'bp']);
+    //print(queryResult);
+    final result = queryResult.map((e) => BloodPressure.fromMap(e)).toList();
+
+    return '${result.first.content.systolic}/${result.first.content.diastolic}';
+  }
+
+  Future<String> sgReading(int entryid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db
+        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'sugar']);
+    //print(queryResult);
+    final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
+
+    return '${result.first.content.reading}';
+  }
+
   Future<List<BloodPressure>> bpEntry(int entryid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db
