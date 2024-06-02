@@ -200,18 +200,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget titleText(String type, int id) {
-    Future<String> entrysg = handler.sgReading(id);
-    Future<String> entrybp = handler.bpReading(id);
     switch (type) {
       case 'sugar':
+        Future<String> entrysg = handler.sgReading(id);
         return FutureBuilder(
             future: entrysg,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return Text(
-                  'Sugar: ${double.parse(snapshot.data).toStringAsFixed(2)} mg/dL');
+              return Text('Sugar: ${snapshot.data}');
             });
 
       case 'bp':
+        Future<String> entrybp = handler.bpReading(id);
         return FutureBuilder(
             future: entrybp,
             builder: (BuildContext context, AsyncSnapshot snapshot) {

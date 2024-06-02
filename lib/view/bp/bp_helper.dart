@@ -225,9 +225,9 @@ class BPHelper {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              const Text('Systolic',
+                              const Text('Systolic:',
                                   style: TextStyle(
                                     fontSize: 20,
                                   )),
@@ -242,7 +242,7 @@ class BPHelper {
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               const Text('Diastolic:',
                                   style: TextStyle(
@@ -258,11 +258,22 @@ class BPHelper {
                               ),
                             ],
                           ),
-                          Text(
-                            'HeartBeat: ${entry.first.content.heartrate}',
-                            style: const TextStyle(
-                              fontSize: 19,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('Heartrate:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.heartrate}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.heartrate > 100)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 25.0),

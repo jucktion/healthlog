@@ -162,7 +162,7 @@ class DatabaseHandler {
     //print(queryResult);
     final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
 
-    return '${result.first.content.reading}';
+    return '${double.parse(result.first.content.reading.toString()).toStringAsFixed(2)} mg/dL';
   }
 
   Future<List<BloodPressure>> bpEntry(int entryid) async {

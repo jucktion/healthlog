@@ -168,13 +168,13 @@ class _UserScreenState extends State<UserScreen> {
                                 child: Card(
                                     child: InkWell(
                                   onTap: () => {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        duration: const Duration(seconds: 1),
-                                        content: Text(
-                                            'You tapped user ${items[index].id}'),
-                                      ),
-                                    ),
+                                    // ScaffoldMessenger.of(context).showSnackBar(
+                                    //   SnackBar(
+                                    //     duration: const Duration(seconds: 1),
+                                    //     content: Text(
+                                    //         'You tapped user ${items[index].id}'),
+                                    //   ),
+                                    // ),
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -187,8 +187,19 @@ class _UserScreenState extends State<UserScreen> {
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(8.0),
                                     title: Text(
-                                        '${items[index].firstName} ${items[index].lastName}'),
-                                    subtitle: Text(items[index].age.toString()),
+                                      '${items[index].firstName} ${items[index].lastName}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 19,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      'Age: ${items[index].age.toString()}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                      ),
+                                    ),
                                   ),
                                 )),
                               );
