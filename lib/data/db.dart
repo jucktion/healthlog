@@ -193,6 +193,16 @@ class DatabaseHandler {
     return queryResult.map((e) => Sugar.fromMap(e)).toList();
   }
 
+  Future<List<Sugar>> sgHistoryGraph(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'sugar'],
+        orderBy: 'date ASC');
+    //print(queryResult);
+    return queryResult.map((e) => Sugar.fromMap(e)).toList();
+  }
+
   Future<List<Sugar>> sugarEntry(int entryid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db

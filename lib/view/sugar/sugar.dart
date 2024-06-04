@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/sugar.dart';
-import 'package:healthlog/view/bp/bp_graph.dart';
+import 'package:healthlog/view/sugar/sugar_graph.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
 
@@ -76,7 +76,7 @@ class _SGScreenState extends State<SGScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BPGraph(
+                        builder: (context) => SugarGraph(
                           userid: widget.userid,
                         ),
                       ),
