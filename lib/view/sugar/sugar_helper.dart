@@ -32,7 +32,6 @@ class SGHelper {
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,

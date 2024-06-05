@@ -112,6 +112,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                 //     FlSpot(i.toDouble(), 140.toDouble())
                                 // ];
                                 String dates = '';
+                                int j = 0;
                                 for (int i = 0; i < rawData.length; i++) {
                                   // final content =
                                   //     jsonDecode(rawData[i].content.toString());
@@ -124,7 +125,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                         .reading
                                         .toStringAsFixed(2));
                                     _beforeFastData
-                                        .add(FlSpot(i.toDouble(), beforeFast));
+                                        .add(FlSpot(j.toDouble(), beforeFast));
                                   }
                                   //print(content['systolic'].toString());
                                   if (rawData[i].content.beforeAfter ==
@@ -136,13 +137,14 @@ class _SugarGraphState extends State<SugarGraph> {
                                     if ('${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}' ==
                                         dates) {
                                       _afterFastData.add(FlSpot(
-                                          (i - 1).toDouble(), afterFast));
+                                          (j - 1).toDouble(), afterFast));
+                                      j--;
                                     } else {
                                       _afterFastData.add(
-                                          FlSpot((i).toDouble(), afterFast));
+                                          FlSpot((j).toDouble(), afterFast));
                                     }
                                   }
-
+                                  j++;
                                   dates =
                                       '${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}';
 

@@ -30,7 +30,6 @@ class BPHelper {
               height: 450,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
