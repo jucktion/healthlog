@@ -3,6 +3,7 @@ import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
+import 'package:healthlog/view/cholesterol/cholesterol.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
@@ -59,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           PopupMenuButton(
             //onOpened: () => {DatabaseHandler().getDbpath()},
             itemBuilder: (BuildContext context) {
-              return {'BP', 'Sugar', 'Notes'}
+              return {'BP', 'Sugar', 'Cholesterol', 'Notes'}
                   .toList()
                   .asMap()
                   .entries
@@ -312,7 +313,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         break;
       case 2:
         // print('Reset selected');
-        DatabaseHandler().deleteDB();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CHLSTRLScreen(
+              userid: widget.userid,
+            ),
+          ),
+        );
         break;
       default:
       //print('Unknown');

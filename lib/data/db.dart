@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:healthlog/model/bloodpressure.dart';
+import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/model/sugar.dart';
 //import 'package:path_provider/path_provider.dart';
@@ -81,6 +82,30 @@ class DatabaseHandler {
     }
   }
 
+  Future<List<Data>> allhistory(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult =
+        await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => Data.fromMap(e)).toList();
+  }
+
+  Future<void> deleteRecord(int id) async {
+    final db = await initializeDB();
+    await db.delete(
+      'data',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  void deleteAllRows(String tableName) async {
+    final db = await initializeDB();
+    await db.delete(tableName);
+  }
+
+  // User Functions
+  // User Start
   Future<void> insertUser(User user) async {
     final db = await initializeDB();
     await db.insert('user', user.toMap(),
@@ -107,6 +132,29 @@ class DatabaseHandler {
     );
   }
 
+  Future getUserName(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> maps =
+        await db.query('user', columns: ['firstName'], where: 'id=($userid)');
+    if (maps.isNotEmpty) {
+      return maps.first['firstName'] as String?;
+    }
+  }
+
+  // User END
+
+// Blood Pressure
+// BP start
+  Future<List<BloodPressure>> bphistory(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'bp'],
+        orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
+  }
+
   Future<void> insertBp(BloodPressure bp) async {
     final db = await initializeDB();
 
@@ -118,33 +166,6 @@ class DatabaseHandler {
     }
   }
 
-  Future<void> deleteRecord(int id) async {
-    final db = await initializeDB();
-    await db.delete(
-      'data',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-  }
-
-  Future<List<Data>> allhistory(int userid) async {
-    final db = await initializeDB();
-    final List<Map<String, dynamic>> queryResult =
-        await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
-    //print(queryResult);
-    return queryResult.map((e) => Data.fromMap(e)).toList();
-  }
-
-  Future<List<BloodPressure>> bphistory(int userid) async {
-    final db = await initializeDB();
-    final List<Map<String, dynamic>> queryResult = await db.query('data',
-        where: 'user=? AND type=?',
-        whereArgs: [userid, 'bp'],
-        orderBy: 'date DESC');
-    //print(queryResult);
-    return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
-  }
-
   Future<String> bpReading(int entryid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db
@@ -153,16 +174,6 @@ class DatabaseHandler {
     final result = queryResult.map((e) => BloodPressure.fromMap(e)).toList();
 
     return '${result.first.content.systolic}/${result.first.content.diastolic}';
-  }
-
-  Future<String> sgReading(int entryid) async {
-    final db = await initializeDB();
-    final List<Map<String, dynamic>> queryResult = await db
-        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'sugar']);
-    //print(queryResult);
-    final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
-
-    return '${double.parse(result.first.content.reading.toString()).toStringAsFixed(2)} mg/dL';
   }
 
   Future<List<BloodPressure>> bpEntry(int entryid) async {
@@ -182,7 +193,10 @@ class DatabaseHandler {
     //print(queryResult);
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
   }
+// BP END
 
+// Blood Glucose (Sugar)
+// SG START
   Future<List<Sugar>> sugarhistory(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db.query('data',
@@ -201,6 +215,16 @@ class DatabaseHandler {
         orderBy: 'date ASC');
     //print(queryResult);
     return queryResult.map((e) => Sugar.fromMap(e)).toList();
+  }
+
+  Future<String> sgReading(int entryid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db
+        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'sugar']);
+    //print(queryResult);
+    final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
+
+    return '${double.parse(result.first.content.reading.toString()).toStringAsFixed(2)} mg/dL';
   }
 
   Future<List<Sugar>> sugarEntry(int entryid) async {
@@ -222,26 +246,57 @@ class DatabaseHandler {
     }
   }
 
-  Future<void> deleteSG(int id) async {
+// SG END
+
+// Cholesterol (Sugar)
+// CHLSTRL START
+  Future<List<Sugar>> chlstrlHistory(int userid) async {
     final db = await initializeDB();
-    await db.delete(
-      'data',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'chlstrl'],
+        orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => Sugar.fromMap(e)).toList();
   }
 
-  void deleteAllRows(String tableName) async {
+  Future<List<Cholesterol>> chlstrlHistoryGraph(int userid) async {
     final db = await initializeDB();
-    await db.delete(tableName);
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'chlstrl'],
+        orderBy: 'date ASC');
+    //print(queryResult);
+    return queryResult.map((e) => Cholesterol.fromMap(e)).toList();
   }
 
-  Future getUserName(int userid) async {
+  Future<String> chlstrlReading(int entryid) async {
     final db = await initializeDB();
-    final List<Map<String, dynamic>> maps =
-        await db.query('user', columns: ['firstName'], where: 'id=($userid)');
-    if (maps.isNotEmpty) {
-      return maps.first['firstName'] as String?;
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'id=? AND type=?', whereArgs: [entryid, 'chlstrl']);
+    //print(queryResult);
+    final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
+
+    return '${double.parse(result.first.content.reading.toString()).toStringAsFixed(2)} mg/dL';
+  }
+
+  Future<List<Sugar>> chlstrlEntry(int entryid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'id=? AND type=?', whereArgs: [entryid, 'chlstrl']);
+    //print(queryResult);
+    return queryResult.map((e) => Sugar.fromMap(e)).toList();
+  }
+
+  Future<void> insertCh(Cholesterol ch) async {
+    final db = await initializeDB();
+
+    try {
+      await db.insert('data', ch.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (e) {
+      //print('Error while inserting data: $e');
     }
   }
+// CHLSTRL END
 }
