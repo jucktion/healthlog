@@ -15,8 +15,7 @@ class SugarGraph extends StatefulWidget {
 class _SugarGraphState extends State<SugarGraph> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  final List<FlSpot> _beforeFastData = [];
-  final List<FlSpot> _afterFastData = [];
+
   //final int _range = 30;
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
@@ -99,6 +98,9 @@ class _SugarGraphState extends State<SugarGraph> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 //final items = snapshot.data ?? <BloodPressure>[];
+                                final List<FlSpot> beforeFastData = [];
+                                final List<FlSpot> afterFastData = [];
+                                const int range = 30;
                                 final rawData = snapshot.data!;
                                 //List<dynamic> jsonList = jsonDecode(rawData);
                                 //print(rawData.toList().toString());
@@ -124,7 +126,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                         .content
                                         .reading
                                         .toStringAsFixed(2));
-                                    _beforeFastData
+                                    beforeFastData
                                         .add(FlSpot(j.toDouble(), beforeFast));
                                   }
                                   //print(content['systolic'].toString());
@@ -136,11 +138,11 @@ class _SugarGraphState extends State<SugarGraph> {
                                         .toStringAsFixed(2));
                                     if ('${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}' ==
                                         dates) {
-                                      _afterFastData.add(FlSpot(
+                                      afterFastData.add(FlSpot(
                                           (j - 1).toDouble(), afterFast));
                                       j--;
                                     } else {
-                                      _afterFastData.add(
+                                      afterFastData.add(
                                           FlSpot((j).toDouble(), afterFast));
                                     }
                                   }
@@ -158,13 +160,12 @@ class _SugarGraphState extends State<SugarGraph> {
                                   //print(dates.toString());
                                   dateData.add(dates);
                                 }
-                                // print('Before: $_beforeFastData');
-                                // print('After: $_afterFastData');
-                                // print('Dates: $dateData');
+                                //
+
                                 return LineChart(
                                   LineChartData(
                                     minX: 0,
-                                    maxX: 30,
+                                    maxX: range.toDouble(),
                                     minY: 0,
                                     maxY: 200,
                                     titlesData: FlTitlesData(
@@ -226,7 +227,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                     ),
                                     lineBarsData: [
                                       LineChartBarData(
-                                        spots: _beforeFastData,
+                                        spots: beforeFastData,
                                         //isCurved: true,
                                         color: Colors.blue,
                                         barWidth: 2,
@@ -245,7 +246,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                         //dotData: const FlDotData(show: false),
                                       ),
                                       LineChartBarData(
-                                        spots: _afterFastData,
+                                        spots: afterFastData,
                                         isCurved: true,
                                         color: Colors.red,
                                         barWidth: 2,

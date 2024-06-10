@@ -15,9 +15,7 @@ class BPGraph extends StatefulWidget {
 class _BPGraphState extends State<BPGraph> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  final List<FlSpot> _systolicData = [];
-  final List<FlSpot> _diastolicData = [];
-  final int _range = 30;
+
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
   List<FlSpot> dateData = [];
@@ -99,16 +97,19 @@ class _BPGraphState extends State<BPGraph> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 //final items = snapshot.data ?? <BloodPressure>[];
+                                final List<FlSpot> systolicData = [];
+                                final List<FlSpot> diastolicData = [];
+                                const int range = 30;
                                 final rawData = snapshot.data!;
                                 //List<dynamic> jsonList = jsonDecode(rawData);
                                 //print(rawData.toList().toString());
                                 List<String> dateData = [];
                                 List<FlSpot> normalSystolic = [
-                                  for (int i = 0; i <= _range; i++)
+                                  for (int i = 0; i <= range; i++)
                                     FlSpot(i.toDouble(), 120.toDouble())
                                 ];
                                 List<FlSpot> normalDiastolic = [
-                                  for (int i = 0; i <= _range; i++)
+                                  for (int i = 0; i <= range; i++)
                                     FlSpot(i.toDouble(), 80.toDouble())
                                 ];
                                 for (int i = 0; i < rawData.length; i++) {
@@ -128,9 +129,9 @@ class _BPGraphState extends State<BPGraph> {
                                   //print(systolic + diastolic);
 
                                   //Assuming you want to plot points based on their order in the dataset
-                                  _systolicData
+                                  systolicData
                                       .add(FlSpot(i.toDouble(), systolic));
-                                  _diastolicData
+                                  diastolicData
                                       .add(FlSpot(i.toDouble(), diastolic));
                                   //print(dates.toString());
                                   dateData.add(dates.toString());
@@ -139,7 +140,7 @@ class _BPGraphState extends State<BPGraph> {
                                 return LineChart(
                                   LineChartData(
                                     minX: 0,
-                                    maxX: 30,
+                                    maxX: range.toDouble(),
                                     minY: 0,
                                     maxY: 200,
                                     titlesData: FlTitlesData(
@@ -219,7 +220,7 @@ class _BPGraphState extends State<BPGraph> {
                                         ),
                                       ),
                                       LineChartBarData(
-                                        spots: _systolicData,
+                                        spots: systolicData,
                                         isCurved: true,
                                         color: Colors.red,
                                         barWidth: 2,
@@ -245,7 +246,7 @@ class _BPGraphState extends State<BPGraph> {
                                         dotData: const FlDotData(show: false),
                                       ),
                                       LineChartBarData(
-                                        spots: _diastolicData,
+                                        spots: diastolicData,
                                         isCurved: true,
                                         color: Colors.red,
                                         barWidth: 2,
