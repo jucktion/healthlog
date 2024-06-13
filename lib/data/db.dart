@@ -250,14 +250,14 @@ class DatabaseHandler {
 
 // Cholesterol (Sugar)
 // CHLSTRL START
-  Future<List<Sugar>> chlstrlHistory(int userid) async {
+  Future<List<Cholesterol>> chlstrlHistory(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'chlstrl'],
         orderBy: 'date DESC');
     //print(queryResult);
-    return queryResult.map((e) => Sugar.fromMap(e)).toList();
+    return queryResult.map((e) => Cholesterol.fromMap(e)).toList();
   }
 
   Future<List<Cholesterol>> chlstrlHistoryGraph(int userid) async {
@@ -275,17 +275,17 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'id=? AND type=?', whereArgs: [entryid, 'chlstrl']);
     //print(queryResult);
-    final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
+    final result = queryResult.map((e) => Cholesterol.fromMap(e)).toList();
 
-    return '${double.parse(result.first.content.reading.toString()).toStringAsFixed(2)} mg/dL';
+    return 'Total/TAG/HDL/LDL : ${double.parse(result.first.content.total.toString()).toStringAsFixed(2)}/${double.parse(result.first.content.tag.toString()).toStringAsFixed(2)}/${double.parse(result.first.content.hdl.toString()).toStringAsFixed(2)}/${double.parse(result.first.content.ldl.toString()).toStringAsFixed(2)} mg/dL';
   }
 
-  Future<List<Sugar>> chlstrlEntry(int entryid) async {
+  Future<List<Cholesterol>> chlstrlEntry(int entryid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'id=? AND type=?', whereArgs: [entryid, 'chlstrl']);
     //print(queryResult);
-    return queryResult.map((e) => Sugar.fromMap(e)).toList();
+    return queryResult.map((e) => Cholesterol.fromMap(e)).toList();
   }
 
   Future<void> insertCh(Cholesterol ch) async {

@@ -64,7 +64,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            CHLSTRLHelper.statefulBpBottomModal(context,
+            CHLSTRLHelper.statefulchlstrlBottomModal(context,
                 userid: widget.userid,
                 callback: () {},
                 refreshIndicatorKey: _refreshIndicatorKey);

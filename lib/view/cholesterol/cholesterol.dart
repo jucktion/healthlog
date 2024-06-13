@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/model/sugar.dart';
-import 'package:healthlog/view/sugar/sugar_graph.dart';
-import 'package:healthlog/view/sugar/sugar_helper.dart';
+import 'package:healthlog/model/cholesterol.dart';
+import 'package:healthlog/view/cholesterol/cholesterol_graph.dart';
+import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
 
 class CHLSTRLScreen extends StatefulWidget {
@@ -17,7 +17,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
   late DatabaseHandler handler;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  late Future<List<Sugar>> _chlstrl;
+  late Future<List<Cholesterol>> _chlstrl;
   late Future<String> _user;
   bool _retrived = false;
 
@@ -34,7 +34,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
     });
   }
 
-  Future<List<Sugar>> getList() async {
+  Future<List<Cholesterol>> getList() async {
     return await handler.chlstrlHistory(widget.userid);
   }
 
@@ -64,7 +64,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                       return const Text('Error');
                     }
                     // Return the retrieved title.
-                    return Text("${snapshot.data}'s Sugar Data");
+                    return Text("${snapshot.data}'s Cholesterol Data");
                   } else {
                     return const CircularProgressIndicator();
                   }
@@ -76,7 +76,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SugarGraph(
+                        builder: (context) => CholesterolGraph(
                           userid: widget.userid,
                         ),
                       ),
@@ -87,7 +87,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          SGHelper.statefulBpBottomModal(context,
+          CHLSTRLHelper.statefulchlstrlBottomModal(context,
               userid: widget.userid,
               callback: () {},
               refreshIndicatorKey: _refreshIndicatorKey);
@@ -104,10 +104,10 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height / 1.25,
-                  child: FutureBuilder<List<Sugar>>(
+                  child: FutureBuilder<List<Cholesterol>>(
                     future: _chlstrl,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<Sugar>> snapshot) {
+                        AsyncSnapshot<List<Cholesterol>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -123,7 +123,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                           ),
                         );
                       } else {
-                        final items = snapshot.data ?? <Sugar>[];
+                        final items = snapshot.data ?? <Cholesterol>[];
                         return Scrollbar(
                           child: RefreshIndicator(
                             onRefresh: _onRefresh,
@@ -167,7 +167,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                   child: Card(
                                       child: InkWell(
                                     onTap: () => {
-                                      SGHelper.showRecord(
+                                      CHLSTRLHelper.showRecord(
                                           context, items[index].id)
                                     },
                                     child: ListTile(
@@ -175,7 +175,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
                                       title: Text(
-                                          '${items[index].type.toUpperCase()}: ${items[index].content.reading.toStringAsFixed(2)}/${items[index].content.beforeAfter}'),
+                                          '${items[index].type.toUpperCase()}: Total/HDL/LDL \n${items[index].content.total.toStringAsFixed(2)}/${items[index].content.hdl.toStringAsFixed(2)}/${items[index].content.ldl.toStringAsFixed(2)}'),
                                       subtitle: Text(
                                           'Comment: ${items[index].comments.toString()}'),
                                     ),

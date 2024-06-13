@@ -4,6 +4,7 @@ import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
 import 'package:healthlog/view/cholesterol/cholesterol.dart';
+import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
@@ -217,6 +218,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               return Text('BP: ${snapshot.data}');
             });
+      case 'chlstrl':
+        Future<String> entrych = handler.chlstrlReading(id);
+        return FutureBuilder(
+            future: entrych,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return Text('Cholesterol: ${snapshot.data}');
+            });
       default:
         return const Text('');
     }
@@ -232,6 +240,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: Icons.format_size, label: 'Notes', doOnPressed: () {}),
         if (_isFabOpen)
           _buildFabOption(
+              icon: Icons.water_drop_sharp,
+              label: 'Cholesterol',
+              doOnPressed: () {
+                CHLSTRLHelper.statefulchlstrlBottomModal(context,
+                    userid: widget.userid,
+                    callback: () {},
+                    refreshIndicatorKey: _refreshIndicatorKey);
+              }),
+        if (_isFabOpen)
+          _buildFabOption(
               icon: Icons.cake,
               label: 'Sugar',
               doOnPressed: () {
@@ -242,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }),
         if (_isFabOpen)
           _buildFabOption(
-              icon: Icons.bloodtype,
+              icon: Icons.monitor_heart,
               label: 'BP',
               doOnPressed: () {
                 BPHelper.statefulBpBottomModal(context,

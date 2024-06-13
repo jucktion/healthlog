@@ -2,10 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/cholesterol.dart';
-import 'package:healthlog/model/sugar.dart';
 
 class CHLSTRLHelper {
-  static Future<void> statefulBpBottomModal(BuildContext context,
+  static Future<void> statefulchlstrlBottomModal(BuildContext context,
       {required int userid,
       required Function callback,
       required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
@@ -173,7 +172,7 @@ class CHLSTRLHelper {
                               .insertCh(Cholesterol(
                                   id: Random().nextInt(50),
                                   user: userid,
-                                  type: 'sugar',
+                                  type: 'chlstrl',
                                   content: CHLSTRL(
                                       total: total,
                                       tag: tag,
@@ -212,18 +211,18 @@ class CHLSTRLHelper {
 
   static Future<void> showRecord(BuildContext context, int entryid) async {
     late DatabaseHandler handler;
-    late Future<List<Sugar>> sg;
-    Future<List<Sugar>> getList() async {
+    late Future<List<Cholesterol>> ch;
+    Future<List<Cholesterol>> getList() async {
       handler = DatabaseHandler();
-      return await handler.sugarEntry(entryid);
+      return await handler.chlstrlEntry(entryid);
     }
 
-    sg = getList();
+    ch = getList();
     showDialog(
         context: context,
         builder: (BuildContext context) {
-          return FutureBuilder<List<Sugar>>(
-            future: sg,
+          return FutureBuilder<List<Cholesterol>>(
+            future: ch,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasError) {
@@ -243,21 +242,82 @@ class CHLSTRLHelper {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('Sugar Record: $entryid'),
+                          child: Text('Record ID: $entryid'),
                         ),
                       ],
                     ),
                     content: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            '${entry.first.content.reading.toStringAsFixed(2)} ${entry.first.content.unit}',
-                            style: const TextStyle(
-                              fontSize: 20,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('Total:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.total}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.total > 240)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('Tracyglyclerol (TAG):',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.tag}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.tag > 500)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('HDL:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.hdl}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.hdl > 60)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('LDL:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.ldl}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.ldl > 190)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 25.0),
