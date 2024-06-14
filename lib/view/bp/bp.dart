@@ -103,7 +103,7 @@ class _BPScreenState extends State<BPScreen> {
           child: !_retrived
               ? const Text('Content is not loaded yet')
               : SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.25,
+                  height: MediaQuery.of(context).size.height,
                   child: FutureBuilder<List<BloodPressure>>(
                     future: _bp,
                     builder: (BuildContext context,

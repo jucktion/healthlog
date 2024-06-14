@@ -103,7 +103,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
           child: !_retrived
               ? const Text('Content is not loaded yet')
               : SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.25,
+                  height: MediaQuery.of(context).size.height,
                   child: FutureBuilder<List<Cholesterol>>(
                     future: _chlstrl,
                     builder: (BuildContext context,

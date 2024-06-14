@@ -103,7 +103,7 @@ class _SGScreenState extends State<SGScreen> {
           child: !_retrived
               ? const Text('Content is not loaded yet')
               : SizedBox(
-                  height: MediaQuery.of(context).size.height / 1.25,
+                  height: MediaQuery.of(context).size.height,
                   child: FutureBuilder<List<Sugar>>(
                     future: _sg,
                     builder: (BuildContext context,
