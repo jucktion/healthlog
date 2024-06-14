@@ -37,7 +37,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _sg = getList();

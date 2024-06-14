@@ -168,7 +168,7 @@ class CHLSTRLHelper {
                     ElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          await DatabaseHandler()
+                          await DatabaseHandler.instance
                               .insertCh(Cholesterol(
                                   id: Random().nextInt(50),
                                   user: userid,
@@ -213,7 +213,7 @@ class CHLSTRLHelper {
     late DatabaseHandler handler;
     late Future<List<Cholesterol>> ch;
     Future<List<Cholesterol>> getList() async {
-      handler = DatabaseHandler();
+      handler = DatabaseHandler.instance;
       return await handler.chlstrlEntry(entryid);
     }
 

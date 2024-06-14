@@ -22,7 +22,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;
@@ -46,15 +46,15 @@ class _UserScreenState extends State<UserScreen> {
     switch (value) {
       case 0:
         //print('Backup selected');
-        DatabaseHandler().backupDB();
+        DatabaseHandler.instance.backupDB();
         break;
       case 1:
         // print('Restore selected');
-        DatabaseHandler().restoreDb();
+        DatabaseHandler.instance.restoreDb();
         break;
       case 2:
         // print('Reset selected');
-        DatabaseHandler().deleteDB();
+        DatabaseHandler.instance.deleteDB();
         break;
       default:
       //print('Unknown');

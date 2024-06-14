@@ -4,7 +4,7 @@ import 'package:healthlog/view/users/users.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DatabaseHandler().initializeDB();
+  await DatabaseHandler.instance.initializeDB();
 
   runApp(const MyApp());
 }

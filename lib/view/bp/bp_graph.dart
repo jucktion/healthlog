@@ -36,7 +36,7 @@ class _BPGraphState extends State<BPGraph> {
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _bp = getList();

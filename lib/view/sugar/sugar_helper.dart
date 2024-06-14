@@ -147,7 +147,7 @@ class SGHelper {
                     ElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          await DatabaseHandler()
+                          await DatabaseHandler.instance
                               .insertSg(Sugar(
                                   id: Random().nextInt(50),
                                   user: userid,
@@ -192,7 +192,7 @@ class SGHelper {
     late DatabaseHandler handler;
     late Future<List<Sugar>> sg;
     Future<List<Sugar>> getList() async {
-      handler = DatabaseHandler();
+      handler = DatabaseHandler.instance;
       return await handler.sugarEntry(entryid);
     }
 

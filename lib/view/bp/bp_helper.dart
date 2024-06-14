@@ -141,7 +141,7 @@ class BPHelper {
                     ElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          await DatabaseHandler()
+                          await DatabaseHandler.instance
                               .insertBp(BloodPressure(
                                   id: Random().nextInt(50),
                                   user: userid,
@@ -185,7 +185,7 @@ class BPHelper {
     late DatabaseHandler handler;
     late Future<List<BloodPressure>> bp;
     Future<List<BloodPressure>> getList() async {
-      handler = DatabaseHandler();
+      handler = DatabaseHandler.instance;
       return await handler.bpEntry(entryid);
     }
 

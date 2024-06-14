@@ -24,7 +24,7 @@ class _BPScreenState extends State<BPScreen> {
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;

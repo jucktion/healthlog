@@ -11,6 +11,8 @@ import 'package:path/path.dart';
 import 'package:healthlog/model/user.dart';
 
 class DatabaseHandler {
+  static DatabaseHandler instance = DatabaseHandler._constructor();
+  DatabaseHandler._constructor();
   String dbFileName = 'healthlog';
   Future<Database> initializeDB() async {
     String path = await getDatabasesPath();

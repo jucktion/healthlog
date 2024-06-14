@@ -147,7 +147,7 @@ class _AddScreenState extends State<AddScreen> {
                 child: ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      await DatabaseHandler()
+                      await DatabaseHandler.instance
                           .insertUser(User(
                               firstName: firstName,
                               lastName: lastName,

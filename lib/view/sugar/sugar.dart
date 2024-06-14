@@ -24,7 +24,7 @@ class _SGScreenState extends State<SGScreen> {
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;
