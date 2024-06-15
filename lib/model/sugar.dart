@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 class Sugar {
-  final int id;
+  final int? id;
   final String type;
   final int user;
   final SG content;
   final String date;
   final String comments;
   Sugar(
-      {required this.id,
+      {this.id,
       required this.user,
       required this.type,
       required this.date,

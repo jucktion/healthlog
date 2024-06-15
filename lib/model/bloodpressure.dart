@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 class BloodPressure {
-  late final int id;
+  final int? id;
   final String type;
   final int user;
   final BP content;
   final String date;
   final String comments;
   BloodPressure(
-      {required this.id,
+      {this.id,
       required this.user,
       required this.type,
       required this.date,

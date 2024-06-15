@@ -20,10 +20,10 @@ class DatabaseHandler {
       join(path, '$dbFileName.db'),
       onCreate: (database, version) async {
         await database.execute(
-          'CREATE TABLE user(id INTEGER PRIMARY KEY AUTOINCREMENT, firstName TEXT,lastName TEXT, age INTEGER, weight INTEGER, height INTEGER)',
+          'CREATE TABLE user(id INTEGER PRIMARY KEY, firstName TEXT,lastName TEXT, age INTEGER, weight INTEGER, height INTEGER)',
         );
         await database.execute(
-          'CREATE TABLE data(id INTEGER PRIMARY KEY AUTOINCREMENT, user INTEGER NOT NULL,type TEXT NOT NULL, content TEXT NOT NULL, comments TEXT NOT NULL, date INTEGER NOT NULL)',
+          'CREATE TABLE data(id INTEGER PRIMARY KEY, user INTEGER NOT NULL,type TEXT NOT NULL, content TEXT NOT NULL, comments TEXT NOT NULL, date INTEGER NOT NULL)',
         );
       },
       version: 1,

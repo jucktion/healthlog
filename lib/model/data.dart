@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class Data {
-  late final int id;
+  final int id;
   final String type;
   final int user;
   final String content;

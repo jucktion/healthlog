@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 class Cholesterol {
-  late final int id;
+  final int? id;
   final String type;
   final int user;
   final CHLSTRL content;
   final String date;
   final String comments;
   Cholesterol(
-      {required this.id,
+      {this.id,
       required this.user,
       required this.type,
       required this.date,

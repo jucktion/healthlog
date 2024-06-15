@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/cholesterol.dart';
@@ -170,7 +169,6 @@ class CHLSTRLHelper {
                         if (formKey.currentState!.validate()) {
                           await DatabaseHandler.instance
                               .insertCh(Cholesterol(
-                                  id: Random().nextInt(50),
                                   user: userid,
                                   type: 'chlstrl',
                                   content: CHLSTRL(
@@ -271,7 +269,7 @@ class CHLSTRLHelper {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              const Text('Tracyglyclerol (TAG):',
+                              const Text('TAG:',
                                   style: TextStyle(
                                     fontSize: 20,
                                   )),
@@ -318,6 +316,19 @@ class CHLSTRLHelper {
                                         : Colors.green),
                               ),
                             ],
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('TAG: (Tracyglyclerol)'),
+                                ],
+                              ),
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 25.0),

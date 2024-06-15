@@ -160,6 +160,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: Card(
                                       child: InkWell(
                                     onTap: () {
+                                      // ScaffoldMessenger.of(context)
+                                      //     .showSnackBar(
+                                      //   SnackBar(
+                                      //       showCloseIcon: true,
+                                      //       content: Text(
+                                      //           'Record ID: ${items[index].id}')),
+                                      // );
                                       switch (items[index].type) {
                                         case 'sugar':
                                           SGHelper.showRecord(
@@ -167,6 +174,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           break;
                                         case 'bp':
                                           BPHelper.showRecord(
+                                              context, items[index].id);
+                                          break;
+                                        case 'chlstrl':
+                                          CHLSTRLHelper.showRecord(
                                               context, items[index].id);
                                           break;
                                       }

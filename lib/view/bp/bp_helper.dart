@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/bloodpressure.dart';
@@ -143,7 +141,6 @@ class BPHelper {
                         if (formKey.currentState!.validate()) {
                           await DatabaseHandler.instance
                               .insertBp(BloodPressure(
-                                  id: Random().nextInt(50),
                                   user: userid,
                                   type: 'bp',
                                   content: BP(

@@ -139,7 +139,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                         horizontal: 10.0),
                                     child: const Icon(Icons.delete_forever),
                                   ),
-                                  key: ValueKey<int>(items[index].id),
+                                  key: ValueKey<int>(items[index].id!),
                                   onDismissed: (DismissDirection direction) {
                                     GlobalMethods().showDialogs(
                                         context,
@@ -147,7 +147,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                         'Do you really want to delete the record?',
                                         () async {
                                       await handler
-                                          .deleteRecord(items[index].id);
+                                          .deleteRecord(items[index].id!);
                                       setState(() {
                                         items.remove(items[index]);
                                         WidgetsBinding.instance
@@ -168,7 +168,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                       child: InkWell(
                                     onTap: () => {
                                       CHLSTRLHelper.showRecord(
-                                          context, items[index].id)
+                                          context, items[index].id!)
                                     },
                                     child: ListTile(
                                       trailing: Text(
