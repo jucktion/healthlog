@@ -139,7 +139,7 @@ class _BPScreenState extends State<BPScreen> {
                                         horizontal: 10.0),
                                     child: const Icon(Icons.delete_forever),
                                   ),
-                                  key: ValueKey<int>(items[index].id!),
+                                  key: ValueKey<int>(items[index].id ?? 0),
                                   onDismissed: (DismissDirection direction) {
                                     GlobalMethods().showDialogs(
                                         context,
@@ -147,7 +147,7 @@ class _BPScreenState extends State<BPScreen> {
                                         'Do you really want to delete the record?',
                                         () async {
                                       await handler
-                                          .deleteRecord(items[index].id!);
+                                          .deleteRecord(items[index].id ?? 0);
                                       setState(() {
                                         items.remove(items[index]);
                                         WidgetsBinding.instance
@@ -172,7 +172,7 @@ class _BPScreenState extends State<BPScreen> {
                                               duration:
                                                   const Duration(seconds: 1),
                                               content: Text(
-                                                  'Record id: ${items[index].id}')))
+                                                  'Record id: ${items[index].id ?? 0}')))
                                     },
                                     child: ListTile(
                                       trailing: Text(

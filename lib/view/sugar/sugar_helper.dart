@@ -13,7 +13,7 @@ class SGHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String fastGroup = "";
-    String unit = "";
+    String unit = "mg/dL";
     String unitGroup = "mg/dL";
     String comment = "";
 
