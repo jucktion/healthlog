@@ -229,10 +229,43 @@ class SGHelper {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text(
-                            '${entry.first.content.reading.toStringAsFixed(2)} ${entry.first.content.unit}',
-                            style: const TextStyle(
-                              fontSize: 20,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                  '${entry.first.content.beforeAfter.toUpperCase()}:',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                  )),
+                              Text(
+                                '${entry.first.content.reading.toStringAsFixed(2)} ${entry.first.content.unit}',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.beforeAfter ==
+                                                    'before' &&
+                                                entry.first.content.reading >
+                                                    110) ||
+                                            (entry.first.content.beforeAfter ==
+                                                    'after' &&
+                                                entry.first.content.reading >
+                                                    140)
+                                        ? Colors.red
+                                        : Colors.green),
+                              ),
+                            ],
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 5.0),
+                            child: SizedBox(
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Fasting: 60-110 mg/dL'),
+                                  Text('After: 70-140 mg/dL')
+                                ],
+                              ),
                             ),
                           ),
                           Padding(
