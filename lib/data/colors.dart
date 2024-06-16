@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primary = contentColorCyan;
+
   static const Color menuBackground = Color(0xFF090912);
   static const Color itemsBackground = Color(0xFF1B2339);
   static const Color pageBackground = Color(0xFF282E45);
@@ -22,4 +23,32 @@ class AppColors {
   static const Color contentColorPink = Color(0xFFFF3AF2);
   static const Color contentColorRed = Color(0xFFE80054);
   static const Color contentColorCyan = Color(0xFF50E4FF);
+
+  //Floating Button
+  static const Color floatingButton = Color(0xFFC0D8E0);
+
+  //Graph
+  static const Color systolicGraph = Colors.red;
+  static const Color diastolicGraph = Colors.blue;
+
+  static const Color afterFastColor = Colors.red;
+  static const Color beforeFastColor = Colors.blue;
+
+  static const Color totalChColor = Colors.blue;
+  static const Color tagColor = Colors.yellow;
+  static const Color hdlColor = Colors.green;
+  static const Color ldlColor = Colors.red;
+  static const Color nonhdlColor = Colors.pink;
+
+  static const Color saferangeColor = Color(0xff02d39a);
+
+  static List<Color> safegradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a)
+  ];
+
+  static List<Color> cautiongradientColors = [
+    const Color.fromARGB(255, 230, 74, 35),
+    const Color.fromARGB(255, 240, 182, 107)
+  ];
 }

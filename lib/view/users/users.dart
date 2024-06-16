@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthlog/data/colors.dart';
 import 'package:healthlog/view/profile/profile.dart';
 import 'package:healthlog/view/theme/globals.dart';
 import 'package:healthlog/view/users/add_user.dart';
@@ -93,7 +94,7 @@ class _UserScreenState extends State<UserScreen> {
             MaterialPageRoute(builder: (context) => const AddScreen()),
           );
         },
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: AppColors.floatingButton,
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(

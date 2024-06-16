@@ -108,7 +108,7 @@ class CHLSTRLHelper {
                             return null;
                           },
                           decoration: const InputDecoration(
-                            hintText: '100-129',
+                            hintText: 'Less than 100',
                             suffixText: 'mg/dL',
                             label: Text('LDL Cholesterol'),
                           ),
@@ -227,6 +227,8 @@ class CHLSTRLHelper {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final entry = snapshot.data ?? [];
+                  final double nonhdl =
+                      entry.first.content.total - entry.first.content.hdl;
                   return AlertDialog(
                     title: Row(
                       children: [
@@ -256,14 +258,14 @@ class CHLSTRLHelper {
                                   style: TextStyle(
                                     fontSize: 20,
                                   )),
-                              Text(
-                                '${entry.first.content.total}',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: (entry.first.content.total > 240)
-                                        ? Colors.red
-                                        : Colors.green),
-                              ),
+                              Text('${entry.first.content.total}',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: (entry.first.content.total > 240)
+                                          ? Colors.red
+                                          : (entry.first.content.total < 200)
+                                              ? Colors.green
+                                              : Colors.brown)),
                             ],
                           ),
                           Row(
@@ -279,7 +281,9 @@ class CHLSTRLHelper {
                                     fontSize: 20,
                                     color: (entry.first.content.tag > 500)
                                         ? Colors.red
-                                        : Colors.green),
+                                        : (entry.first.content.tag < 150)
+                                            ? Colors.green
+                                            : Colors.brown),
                               ),
                             ],
                           ),
@@ -296,7 +300,12 @@ class CHLSTRLHelper {
                                     fontSize: 20,
                                     color: (entry.first.content.hdl > 60)
                                         ? Colors.red
-                                        : Colors.green),
+                                        : (entry.first.content.hdl > 40 &&
+                                                entry.first.content.hdl < 60)
+                                            ? Colors.green
+                                            : (entry.first.content.hdl < 40)
+                                                ? Colors.blue
+                                                : Colors.brown),
                               ),
                             ],
                           ),
@@ -311,9 +320,28 @@ class CHLSTRLHelper {
                                 '${entry.first.content.ldl}',
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: (entry.first.content.ldl > 190)
+                                    color: (entry.first.content.ldl > 160)
                                         ? Colors.red
-                                        : Colors.green),
+                                        : (entry.first.content.ldl < 100)
+                                            ? Colors.green
+                                            : Colors.brown),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              const Text('Non-HDL:',
+                                  style: TextStyle(fontSize: 20)),
+                              Text(
+                                '$nonhdl',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (nonhdl > 160)
+                                        ? Colors.red
+                                        : (entry.first.content.ldl < 130)
+                                            ? Colors.green
+                                            : Colors.brown),
                               ),
                             ],
                           ),

@@ -44,3 +44,78 @@ class GlobalMethods {
         });
   }
 }
+
+class LegendWidget extends StatelessWidget {
+  const LegendWidget({
+    super.key,
+    required this.name,
+    required this.color,
+  });
+  final String name;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Container(
+          width: 15,
+          height: 15,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          name,
+          style: const TextStyle(
+            color: Color(0xff757391),
+            fontSize: 15,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LegendsListWidget extends StatelessWidget {
+  const LegendsListWidget({
+    super.key,
+    required this.legends,
+    required this.width,
+  });
+  final List<Legend> legends;
+  final int width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      const Expanded(child: SizedBox()),
+      SizedBox(
+          width: MediaQuery.of(context).size.width / width,
+          child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: legends
+                  .map(
+                    (e) => LegendWidget(name: e.name, color: e.color),
+                  )
+                  .toList()))
+    ]);
+    // Wrap(
+    //   spacing: 16,
+    //   children: legends
+    //       .map(
+    //         (e) => LegendWidget(name: e.name, color: e.color),
+    //       )
+    //       .toList(),
+    // );
+  }
+}
+
+class Legend {
+  Legend(this.name, this.color);
+  final String name;
+  final Color color;
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthlog/data/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
@@ -280,6 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     refreshIndicatorKey: _refreshIndicatorKey);
               }),
         FloatingActionButton(
+          backgroundColor: AppColors.floatingButton,
           onPressed: () {
             setState(() {
               _isFabOpen = !_isFabOpen;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healthlog/data/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_graph.dart';
@@ -92,7 +93,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
               callback: () {},
               refreshIndicatorKey: _refreshIndicatorKey);
         },
-        backgroundColor: Colors.deepOrange,
+        backgroundColor: AppColors.floatingButton,
         child: const Icon(Icons.add),
       ),
       body: RefreshIndicator(
