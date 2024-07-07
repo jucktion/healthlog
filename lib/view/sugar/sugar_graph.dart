@@ -86,10 +86,11 @@ class _SugarGraphState extends State<SugarGraph> {
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
                               height: MediaQuery.of(context).size.height / 3,
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery.of(context).size.width / 1.05,
                               child: FutureBuilder<List<Sugar>>(
                                 future: _sg,
                                 builder: (BuildContext context,
@@ -232,7 +233,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                         borderData: FlBorderData(
                                           show: true,
                                           border: Border.all(
-                                              color: Colors.black, width: 1),
+                                              color: Colors.black, width: 0.25),
                                         ),
                                         lineBarsData: [
                                           LineChartBarData(

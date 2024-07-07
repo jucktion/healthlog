@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/colors.dart';
 import 'package:healthlog/view/profile/profile.dart';
+import 'package:healthlog/view/settings/settings.dart';
 import 'package:healthlog/view/theme/globals.dart';
 import 'package:healthlog/view/users/add_user.dart';
 import 'package:healthlog/data/db.dart';
@@ -57,6 +58,13 @@ class _UserScreenState extends State<UserScreen> {
         // print('Reset selected');
         DatabaseHandler.instance.deleteDB();
         break;
+      case 3:
+        // print('Reset selected');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingScreen()),
+        );
+        break;
       default:
       //print('Unknown');
     }
@@ -71,7 +79,7 @@ class _UserScreenState extends State<UserScreen> {
           PopupMenuButton(
             //onOpened: () => {DatabaseHandler().getDbpath()},
             itemBuilder: (BuildContext context) {
-              return {'Backup', 'Restore', 'Reset'}
+              return {'Backup', 'Restore', 'Reset', 'Settings'}
                   .toList()
                   .asMap()
                   .entries

@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BPGraph extends StatefulWidget {
   final int userid;
@@ -19,16 +20,18 @@ class _BPGraphState extends State<BPGraph> {
       GlobalKey<RefreshIndicatorState>();
 
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
-
+  SharedPreferences? _prefs;
   List<FlSpot> dateData = [];
 
   late DatabaseHandler handler;
   late Future<List<BloodPressure>> _bp;
   bool _retrived = false;
+  bool _prefLoaded = false;
 
   @override
   void initState() {
     super.initState();
+    _initPrefs();
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
@@ -40,6 +43,13 @@ class _BPGraphState extends State<BPGraph> {
 
   Future<List<BloodPressure>> getList() async {
     return await handler.bpHistoryGraph(widget.userid);
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
+    });
   }
 
   Future<void> _onRefresh() async {
@@ -69,17 +79,18 @@ class _BPGraphState extends State<BPGraph> {
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: !_retrived
+              child: !_retrived && !_prefLoaded
                   ? const Text('Content is not loaded yet')
                   : SizedBox(
                       height: MediaQuery.of(context).size.height / 1.25,
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
                               height: MediaQuery.of(context).size.height / 3,
-                              width: MediaQuery.of(context).size.width,
+                              width: MediaQuery.of(context).size.width / 1.05,
                               child: FutureBuilder<List<BloodPressure>>(
                                 future: _bp,
                                 builder: (BuildContext context,
@@ -200,7 +211,7 @@ class _BPGraphState extends State<BPGraph> {
                                         borderData: FlBorderData(
                                           show: true,
                                           border: Border.all(
-                                              color: Colors.black, width: 1),
+                                              color: Colors.black, width: 0.25),
                                         ),
                                         lineBarsData: [
                                           LineChartBarData(
@@ -229,8 +240,10 @@ class _BPGraphState extends State<BPGraph> {
                                             color: AppColors.systolicGraph,
                                             barWidth: 2,
                                             isStrokeCapRound: true,
-                                            dotData:
-                                                const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
@@ -258,8 +271,10 @@ class _BPGraphState extends State<BPGraph> {
                                             color: AppColors.diastolicGraph,
                                             barWidth: 2,
                                             isStrokeCapRound: true,
-                                            dotData:
-                                                const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
