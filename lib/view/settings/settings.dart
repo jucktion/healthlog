@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -37,6 +38,12 @@ class _SettingScreenState extends State<SettingScreen> {
   //     _data = _prefs?.getString('first') ?? '';
   //   });
   // }
+
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +91,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
-                      'Choose the design of the app',
+                      'Placeholder, does nothing for now',
                       style: TextStyle(fontSize: 15),
                     ),
                   ],
@@ -234,23 +241,25 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget aboutSettings() {
-    return const SizedBox(
+    String homeUrl = 'https://www.jucktion.com';
+    String gitUrl = 'https://github.com/nirose/healthlog';
+    return SizedBox(
       child: Column(
         children: [
-          Text(
+          const Text(
             'About',
             style: TextStyle(
               fontSize: 25,
             ),
           ),
-          Divider(
+          const Divider(
             indent: 20,
             endIndent: 20,
             color: Colors.black45,
             thickness: 1,
             height: 10,
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
@@ -271,26 +280,57 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Website',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'https://www.jucktion.com/',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
+          InkWell(
+            onTap: () {
+              _launchUrl(homeUrl);
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 18.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Website',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        'https://www.jucktion.com/',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              _launchUrl(gitUrl);
+            },
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 18.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Issues/Discussion',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        'https://github.com/nirose/healthlog',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
