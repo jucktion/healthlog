@@ -76,23 +76,15 @@ class _UserScreenState extends State<UserScreen> {
       appBar: AppBar(
         title: const Text('Health Log'),
         actions: [
-          PopupMenuButton(
-            //onOpened: () => {DatabaseHandler().getDbpath()},
-            itemBuilder: (BuildContext context) {
-              return {'Backup', 'Restore', 'Reset', 'Settings'}
-                  .toList()
-                  .asMap()
-                  .entries
-                  .map((choice) {
-                return PopupMenuItem<String>(
-                  onTap: () => {handleMenuOptionClick(context, choice.key)},
-                  value: choice.key.toString(),
-                  child: Text(choice.value),
-                );
-              }).toList();
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingScreen()),
+              );
             },
-            icon: const Icon(Icons.more_vert),
-          ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(

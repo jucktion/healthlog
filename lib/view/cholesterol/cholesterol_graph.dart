@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CholesterolGraph extends StatefulWidget {
   final int userid;
@@ -22,10 +23,12 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
   List<FlSpot> dateData = [];
+  SharedPreferences? _prefs;
 
   late DatabaseHandler handler;
   late Future<List<Cholesterol>> _sg;
   bool _retrived = false;
+  bool _prefLoaded = false;
 
   List<Color> normalgradientColors = [
     const Color(0xff23b6e6),
@@ -39,6 +42,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
   @override
   void initState() {
     super.initState();
+    _initPrefs();
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
@@ -50,6 +54,13 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
 
   Future<List<Cholesterol>> getList() async {
     return await handler.chlstrlHistoryGraph(widget.userid);
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
+    });
   }
 
   Future<void> _onRefresh() async {
@@ -79,7 +90,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: !_retrived
+              child: !_retrived && _prefLoaded
                   ? const Text('Content is not loaded yet')
                   : SizedBox(
                       height: MediaQuery.of(context).size.height / 1.25,
@@ -260,7 +271,10 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            //dotData: const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                           ),
                                           LineChartBarData(
                                             spots: tagData,
@@ -279,7 +293,10 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            //dotData: const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                           ),
                                           LineChartBarData(
                                             spots: hdlData,
@@ -298,7 +315,10 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            //dotData: const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                           ),
                                           LineChartBarData(
                                             spots: ldlData,
@@ -317,7 +337,10 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            //dotData: const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                           ),
                                           LineChartBarData(
                                             spots: nonhdlData,
@@ -336,7 +359,10 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            //dotData: const FlDotData(show: false),
+                                            dotData: FlDotData(
+                                                show: _prefs?.getBool(
+                                                        'graphDots') ??
+                                                    true),
                                           ),
                                         ],
                                       ),
