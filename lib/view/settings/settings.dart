@@ -15,6 +15,7 @@ class _SettingScreenState extends State<SettingScreen> {
   bool _theme = false;
   bool _graphDots = true;
   bool _prefLoaded = false;
+  bool _backupDB = false;
 
   @override
   void initState() {
@@ -115,11 +116,40 @@ class _SettingScreenState extends State<SettingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      'Save db to disk on each entry',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'Backup db on every entry',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+              Switch(
+                  value: _prefs?.getBool('alwaysbackupDB') ?? _backupDB,
+                  onChanged: (value) {
+                    _prefs?.setBool('alwaysbackupDB', value);
+                    setState(() {
+                      _backupDB = value;
+                    });
+                  })
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       'Show Dots on Graph',
                       style: TextStyle(fontSize: 20),
                     ),
                     Text(
-                      'Graph should have dots',
+                      'Graph should have dots for entries',
                       style: TextStyle(fontSize: 15),
                     ),
                   ],

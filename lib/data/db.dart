@@ -6,6 +6,7 @@ import 'package:healthlog/model/data.dart';
 import 'package:healthlog/model/sugar.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:healthlog/model/user.dart';
@@ -14,7 +15,13 @@ class DatabaseHandler {
   static DatabaseHandler instance = DatabaseHandler._constructor();
   DatabaseHandler._constructor();
   String dbFileName = 'healthlog';
+  SharedPreferences? _prefs;
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
   Future<Database> initializeDB() async {
+    _initPrefs();
     String path = await getDatabasesPath();
     return openDatabase(
       join(path, '$dbFileName.db'),
@@ -29,7 +36,6 @@ class DatabaseHandler {
       version: 1,
     );
   }
-
   // void getDbpath() async {
   //   String databasePath = await getDatabasesPath();
   //   print('Database path: $databasePath');
@@ -112,6 +118,9 @@ class DatabaseHandler {
     final db = await initializeDB();
     await db.insert('user', user.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+    if (_prefs?.getBool('alwaysbackupDB') == true) {
+      backupDB();
+    }
   }
 
   Future<List<User>> users() async {
@@ -163,6 +172,9 @@ class DatabaseHandler {
     try {
       await db.insert('data', bp.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
     } catch (e) {
       //print('Error while inserting data: $e');
     }
@@ -243,6 +255,9 @@ class DatabaseHandler {
     try {
       await db.insert('data', sg.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
     } catch (e) {
       //print('Error while inserting data: $e');
     }
@@ -296,6 +311,9 @@ class DatabaseHandler {
     try {
       await db.insert('data', ch.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
     } catch (e) {
       //print('Error while inserting data: $e');
     }
