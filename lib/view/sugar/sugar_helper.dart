@@ -151,15 +151,15 @@ class SGHelper {
                                   user: userid,
                                   type: 'sugar',
                                   content: SG(
-                                      reading: unit == 'mg/dL'
-                                          ? reading
-                                          : reading * 18.0182,
+                                      reading: reading,
                                       beforeAfter: beforeAfter,
-                                      unit: 'mg/dL'),
+                                      unit: unit),
                                   date: DateTime.now().toIso8601String(),
                                   comments: comment))
                               .whenComplete(() {
-                            Navigator.pop(context);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
                             WidgetsBinding.instance.addPostFrameCallback((_) =>
                                 refreshIndicatorKey.currentState?.show());
                           });

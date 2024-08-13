@@ -155,7 +155,11 @@ class _AddScreenState extends State<AddScreen> {
                               weight: weight.toDouble(),
                               height: height.toDouble(),
                               id: Random().nextInt(50)))
-                          .whenComplete(() => Navigator.of(context).pop());
+                          .whenComplete(() {
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Processing Data')),

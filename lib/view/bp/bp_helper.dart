@@ -151,7 +151,9 @@ class BPHelper {
                                   date: DateTime.now().toIso8601String(),
                                   comments: comment))
                               .whenComplete(() {
-                            Navigator.pop(context);
+                            if (context.mounted) {
+                              Navigator.pop(context);
+                            }
                             WidgetsBinding.instance.addPostFrameCallback((_) =>
                                 refreshIndicatorKey.currentState?.show());
                           });

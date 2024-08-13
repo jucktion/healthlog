@@ -56,7 +56,12 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             body: SingleChildScrollView(
               child: Column(
-                children: [generalSettings(), dataSettings(), aboutSettings()],
+                children: [
+                  generalSettings(),
+                  sugarSettings(),
+                  dataSettings(),
+                  aboutSettings()
+                ],
               ),
             ),
           );
@@ -134,6 +139,97 @@ class _SettingScreenState extends State<SettingScreen> {
                       _backupDB = value;
                     });
                   })
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Show Dots on Graph',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'Graph should have dots for entries',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+              Switch(
+                  value: _prefs?.getBool('graphDots') ?? _graphDots,
+                  onChanged: (value) {
+                    _prefs?.setBool('graphDots', value);
+                    setState(() {
+                      _graphDots = value;
+                    });
+                  })
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget sugarSettings() {
+    const List<String> list = <String>['mg/dL', 'mmol/L'];
+    return SizedBox(
+      child: Column(
+        children: [
+          const Text(
+            'Blood Glucose Settings',
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
+          const Divider(
+            indent: 20,
+            endIndent: 20,
+            color: Colors.black45,
+            thickness: 1,
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Preferred unit',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'mg/dL or mmol/L',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+              DropdownMenu<String>(
+                initialSelection: _prefs?.getString('sugarUnit') ?? list.first,
+                dropdownMenuEntries:
+                    list.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(
+                    value: value,
+                    label: value,
+                  );
+                }).toList(),
+                onSelected: (value) {
+                  _prefs?.setString('sugarUnit', value.toString());
+                  setState(
+                    () {
+                      value = value.toString();
+                    },
+                  );
+                },
+              ),
             ],
           ),
           Row(

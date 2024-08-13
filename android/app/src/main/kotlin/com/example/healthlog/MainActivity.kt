@@ -1,4 +1,4 @@
-package com.example.healthlog
+package com.jucktion.healthlog
 
 import io.flutter.embedding.android.FlutterActivity
 

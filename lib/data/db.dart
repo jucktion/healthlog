@@ -54,7 +54,7 @@ class DatabaseHandler {
     }
     try {
       File dbFile =
-          File('/data/user/0/com.example.healthlog/databases/$dbFileName.db');
+          File('/data/user/0/com.jucktion.healthlog/databases/$dbFileName.db');
       Directory? folderPath = Directory('/storage/emulated/0/HealthLog');
       await folderPath.create();
       await dbFile.copy('/storage/emulated/0/HealthLog/$dbFileName.db');
@@ -75,7 +75,7 @@ class DatabaseHandler {
     try {
       File savedDbFile = File('/storage/emulated/0/HealthLog/$dbFileName.db');
       await savedDbFile
-          .copy('/data/user/0/com.example.healthlog/databases/$dbFileName.db');
+          .copy('/data/user/0/com.jucktion.healthlog/databases/$dbFileName.db');
     } catch (e) {
       // print('${e.toString()}');
     }
@@ -84,7 +84,7 @@ class DatabaseHandler {
   void deleteDB() async {
     try {
       deleteDatabase(
-          '/data/user/0/com.example.healthlog/databases/$dbFileName.db');
+          '/data/user/0/com.jucktion.healthlog/databases/$dbFileName.db');
     } catch (e) {
       // print('${e.toString()}');
     }
