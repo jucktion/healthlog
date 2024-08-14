@@ -232,35 +232,6 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Show Dots on Graph',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'Graph should have dots for entries',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-              Switch(
-                  value: _prefs?.getBool('graphDots') ?? _graphDots,
-                  onChanged: (value) {
-                    _prefs?.setBool('graphDots', value);
-                    setState(() {
-                      _graphDots = value;
-                    });
-                  })
-            ],
-          ),
         ],
       ),
     );

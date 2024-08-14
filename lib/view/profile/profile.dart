@@ -9,6 +9,7 @@ import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   final int userid;
@@ -20,16 +21,19 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late DatabaseHandler handler;
+  SharedPreferences? _prefs;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   late Future<List<dynamic>> _data;
   late Future<String> _user;
   bool _retrived = false;
   bool _isFabOpen = false;
+  bool _prefLoaded = false;
 
   @override
   void initState() {
     super.initState();
+    _initPrefs();
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
@@ -37,6 +41,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _data = getList();
         _user = getName();
       });
+    });
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
     });
   }
 
@@ -102,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: !_retrived
+          child: !_retrived || !_prefLoaded
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height,
@@ -171,7 +182,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       switch (items[index].type) {
                                         case 'sugar':
                                           SGHelper.showRecord(
-                                              context, items[index].id);
+                                              context,
+                                              items[index].id,
+                                              _prefs!
+                                                  .getString('sugarUnit')
+                                                  .toString());
                                           break;
                                         case 'bp':
                                           BPHelper.showRecord(
@@ -216,7 +231,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget titleText(String type, int id) {
     switch (type) {
       case 'sugar':
-        Future<String> entrysg = handler.sgReading(id);
+        Future<String> entrysg =
+            handler.sgReading(id, _prefs!.getString('sugarUnit').toString());
         return FutureBuilder(
             future: entrysg,
             builder: (BuildContext context, AsyncSnapshot snapshot) {

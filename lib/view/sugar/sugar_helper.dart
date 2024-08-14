@@ -186,7 +186,8 @@ class SGHelper {
     );
   }
 
-  static Future<void> showRecord(BuildContext context, int entryid) async {
+  static Future<void> showRecord(
+      BuildContext context, int entryid, String unit) async {
     late DatabaseHandler handler;
     late Future<List<Sugar>> sg;
     Future<List<Sugar>> getList() async {
@@ -206,6 +207,17 @@ class SGHelper {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final entry = snapshot.data ?? [];
+                  String reading = '';
+                  if (unit == 'mmol/L' && entry.first.content.unit == 'mg/dL') {
+                    reading = (entry.first.content.reading / 18.0182)
+                        .toStringAsFixed(2);
+                  } else if (unit == 'mg/dL' &&
+                      entry.first.content.unit == 'mmol/L') {
+                    reading = (entry.first.content.reading * 18.0182)
+                        .toStringAsFixed(2);
+                  } else {
+                    reading = entry.first.content.reading.toStringAsFixed(2);
+                  }
                   return AlertDialog(
                     title: Row(
                       children: [
@@ -238,7 +250,7 @@ class SGHelper {
                                     fontSize: 20,
                                   )),
                               Text(
-                                '${entry.first.content.reading.toStringAsFixed(2)} ${entry.first.content.unit}',
+                                '$reading $unit',
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: (entry.first.content.beforeAfter ==

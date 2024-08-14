@@ -5,6 +5,7 @@ import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_graph.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SGScreen extends StatefulWidget {
   final int userid;
@@ -16,11 +17,13 @@ class SGScreen extends StatefulWidget {
 
 class _SGScreenState extends State<SGScreen> {
   late DatabaseHandler handler;
+  SharedPreferences? _prefs;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   late Future<List<Sugar>> _sg;
   late Future<String> _user;
   bool _retrived = false;
+  bool _prefLoaded = false;
 
   @override
   void initState() {
@@ -31,7 +34,15 @@ class _SGScreenState extends State<SGScreen> {
         _retrived = true;
         _sg = getList();
         _user = getName();
+        _initPrefs();
       });
+    });
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
     });
   }
 
@@ -74,11 +85,15 @@ class _SGScreenState extends State<SGScreen> {
         actions: [
           IconButton(
               onPressed: () => {
+                    // print(_prefs!.getBool('graphDots')),
+                    // print(_prefs!.getString('sugarUnit').toString()),
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SugarGraph(
                           userid: widget.userid,
+                          unit: _prefs!.getString('sugarUnit').toString(),
+                          dots: _prefs!.getBool('graphDots') ?? false,
                         ),
                       ),
                     )
@@ -101,7 +116,7 @@ class _SGScreenState extends State<SGScreen> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: !_retrived
+          child: !_retrived && !_prefLoaded
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height,
@@ -125,12 +140,32 @@ class _SGScreenState extends State<SGScreen> {
                         );
                       } else {
                         final items = snapshot.data ?? <Sugar>[];
+
                         return Scrollbar(
                           child: RefreshIndicator(
                             onRefresh: _onRefresh,
                             child: ListView.builder(
                               itemCount: items.length,
                               itemBuilder: (BuildContext context, int index) {
+                                String unit =
+                                    _prefs!.getString('sugarUnit').toString();
+                                String reading = '';
+                                if (unit == 'mmol/L' &&
+                                    items[index].content.unit == 'mg/dL') {
+                                  reading =
+                                      (items[index].content.reading / 18.0182)
+                                          .toStringAsFixed(2);
+                                } else if (unit == 'mg/dL' &&
+                                    items[index].content.unit == 'mmol/L') {
+                                  reading =
+                                      (items[index].content.reading * 18.0182)
+                                          .toStringAsFixed(2);
+                                } else {
+                                  reading = items[index]
+                                      .content
+                                      .reading
+                                      .toStringAsFixed(2);
+                                }
                                 return Dismissible(
                                   direction: DismissDirection.startToEnd,
                                   background: Container(
@@ -169,14 +204,18 @@ class _SGScreenState extends State<SGScreen> {
                                       child: InkWell(
                                     onTap: () => {
                                       SGHelper.showRecord(
-                                          context, items[index].id ?? 0)
+                                          context,
+                                          items[index].id ?? 0,
+                                          _prefs!
+                                              .getString('sugarUnit')
+                                              .toString())
                                     },
                                     child: ListTile(
                                       trailing: Text(
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
                                       title: Text(
-                                          '${items[index].type.toUpperCase()}: ${items[index].content.reading.toStringAsFixed(2)}/${items[index].content.beforeAfter}'),
+                                          '${items[index].type.toUpperCase()}: $reading $unit, ${items[index].content.beforeAfter}'),
                                       subtitle: Text(
                                           'Comment: ${items[index].comments.toString()}'),
                                     ),

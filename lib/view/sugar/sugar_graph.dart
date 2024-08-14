@@ -5,11 +5,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SugarGraph extends StatefulWidget {
   final int userid;
-  const SugarGraph({super.key, required this.userid});
+  final String unit;
+  final bool dots;
+  const SugarGraph(
+      {super.key,
+      required this.userid,
+      required this.unit,
+      required this.dots});
 
   @override
   State<SugarGraph> createState() => _SugarGraphState();
@@ -23,12 +28,9 @@ class _SugarGraphState extends State<SugarGraph> {
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
   List<FlSpot> dateData = [];
-  SharedPreferences? _prefs;
-
   late DatabaseHandler handler;
   late Future<List<Sugar>> _sg;
   bool _retrived = false;
-  bool _prefLoaded = false;
 
   List<Color> normalgradientColors = [
     const Color(0xff23b6e6),
@@ -42,7 +44,6 @@ class _SugarGraphState extends State<SugarGraph> {
   @override
   void initState() {
     super.initState();
-    _initPrefs();
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
@@ -54,13 +55,6 @@ class _SugarGraphState extends State<SugarGraph> {
 
   Future<List<Sugar>> getList() async {
     return await handler.sgHistoryGraph(widget.userid);
-  }
-
-  void _initPrefs() async {
-    _prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _prefLoaded = true;
-    });
   }
 
   Future<void> _onRefresh() async {
@@ -90,7 +84,7 @@ class _SugarGraphState extends State<SugarGraph> {
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: !_retrived && _prefLoaded
+              child: !_retrived
                   ? const Text('Content is not loaded yet')
                   : SizedBox(
                       height: MediaQuery.of(context).size.height / 1.25,
@@ -136,25 +130,55 @@ class _SugarGraphState extends State<SugarGraph> {
                                       // final content =
                                       //     jsonDecode(rawData[i].content.toString());
                                       //print(normalSystolic);
-
+                                      final String dataunit =
+                                          rawData[i].content.unit;
                                       if (rawData[i].content.beforeAfter ==
                                           'before') {
-                                        final beforeFast = double.parse(
-                                            rawData[i]
-                                                .content
-                                                .reading
-                                                .toStringAsFixed(2));
+                                        double beforeFast = 0;
+                                        if (widget.unit == 'mg/dL' &&
+                                            dataunit == 'mmol/L') {
+                                          beforeFast = double.parse(
+                                              (rawData[i].content.reading *
+                                                      18.0182)
+                                                  .toStringAsFixed(2));
+                                        } else if (widget.unit == 'mmol/L' &&
+                                            dataunit == 'mg/dL') {
+                                          beforeFast = double.parse(
+                                              (rawData[i].content.reading /
+                                                      18.0182)
+                                                  .toStringAsFixed(2));
+                                        } else {
+                                          beforeFast = double.parse(rawData[i]
+                                              .content
+                                              .reading
+                                              .toStringAsFixed(2));
+                                        }
                                         beforeFastData.add(
                                             FlSpot(j.toDouble(), beforeFast));
                                       }
                                       //print(content['systolic'].toString());
+
                                       if (rawData[i].content.beforeAfter ==
                                           'after') {
-                                        final afterFast = double.parse(
-                                            rawData[i]
-                                                .content
-                                                .reading
-                                                .toStringAsFixed(2));
+                                        double afterFast = 0;
+                                        if (widget.unit == 'mg/dL' &&
+                                            dataunit == 'mmol/L') {
+                                          afterFast = double.parse(
+                                              (rawData[i].content.reading *
+                                                      18.0182)
+                                                  .toStringAsFixed(2));
+                                        } else if (widget.unit == 'mmol/L' &&
+                                            dataunit == 'mg/dL') {
+                                          afterFast = double.parse(
+                                              (rawData[i].content.reading /
+                                                      18.0182)
+                                                  .toStringAsFixed(2));
+                                        } else {
+                                          afterFast = double.parse(rawData[i]
+                                              .content
+                                              .reading
+                                              .toStringAsFixed(2));
+                                        }
                                         if ('${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}' ==
                                             dates) {
                                           afterFastData.add(FlSpot(
@@ -186,7 +210,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                         minX: 0,
                                         maxX: range.toDouble(),
                                         minY: 0,
-                                        maxY: 200,
+                                        maxY: widget.unit == 'mg/dL' ? 200 : 20,
                                         titlesData: FlTitlesData(
                                             show: true,
                                             topTitles: const AxisTitles(
@@ -195,9 +219,12 @@ class _SugarGraphState extends State<SugarGraph> {
                                             rightTitles: const AxisTitles(
                                                 sideTitles: SideTitles(
                                                     showTitles: false)),
-                                            leftTitles: const AxisTitles(
+                                            leftTitles: AxisTitles(
                                                 sideTitles: SideTitles(
-                                                    interval: 10,
+                                                    interval:
+                                                        widget.unit == 'mg/dL'
+                                                            ? 10
+                                                            : 1,
                                                     showTitles: true,
                                                     reservedSize: 35)),
                                             bottomTitles: AxisTitles(
@@ -264,10 +291,8 @@ class _SugarGraphState extends State<SugarGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                           LineChartBarData(
                                             spots: afterFastData,
@@ -286,10 +311,8 @@ class _SugarGraphState extends State<SugarGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                         ],
                                       ),
@@ -301,9 +324,15 @@ class _SugarGraphState extends State<SugarGraph> {
                             LegendsListWidget(
                               width: 2,
                               legends: [
-                                Legend('Fasting (60-110)',
+                                Legend(
+                                    widget.unit == 'mg/dL'
+                                        ? 'Fasting (60-110)'
+                                        : 'Fasting (3.33-6.11)',
                                     AppColors.beforeFastColor),
-                                Legend('After Eating (70-140)',
+                                Legend(
+                                    widget.unit == 'mg/dL'
+                                        ? 'After (70-140)'
+                                        : 'After(3.88-7.77)',
                                     AppColors.afterFastColor),
                               ],
                             ),

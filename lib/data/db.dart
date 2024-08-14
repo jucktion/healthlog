@@ -231,14 +231,21 @@ class DatabaseHandler {
     return queryResult.map((e) => Sugar.fromMap(e)).toList();
   }
 
-  Future<String> sgReading(int entryid) async {
+  Future<String> sgReading(int entryid, String unit) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db
         .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'sugar']);
     //print(queryResult);
     final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
-
-    return '${double.parse(result.first.content.reading.toString()).toStringAsFixed(2)} mg/dL, ${result.first.content.beforeAfter.toString()}';
+    String reading = '';
+    if (unit == 'mmol/L' && result.first.content.unit == 'mg/dL') {
+      reading = (result.first.content.reading / 18.0182).toStringAsFixed(2);
+    } else if (unit == 'mg/dL' && result.first.content.unit == 'mmol/L') {
+      reading = (result.first.content.reading * 18.0182).toStringAsFixed(2);
+    } else {
+      reading = result.first.content.reading.toStringAsFixed(2);
+    }
+    return '$reading $unit, ${result.first.content.beforeAfter.toString()}';
   }
 
   Future<List<Sugar>> sugarEntry(int entryid) async {
