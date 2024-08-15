@@ -4,6 +4,7 @@ import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/model/sugar.dart';
+import 'package:healthlog/view/theme/globals.dart';
 //import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -237,14 +238,9 @@ class DatabaseHandler {
         .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'sugar']);
     //print(queryResult);
     final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
-    String reading = '';
-    if (unit == 'mmol/L' && result.first.content.unit == 'mg/dL') {
-      reading = (result.first.content.reading / 18.0182).toStringAsFixed(2);
-    } else if (unit == 'mg/dL' && result.first.content.unit == 'mmol/L') {
-      reading = (result.first.content.reading * 18.0182).toStringAsFixed(2);
-    } else {
-      reading = result.first.content.reading.toStringAsFixed(2);
-    }
+    String reading = GlobalMethods.convertUnit(
+            unit, result.first.content.unit, result.first.content.reading)
+        .toStringAsFixed(2);
     return '$reading $unit, ${result.first.content.beforeAfter.toString()}';
   }
 
@@ -294,14 +290,25 @@ class DatabaseHandler {
     return queryResult.map((e) => Cholesterol.fromMap(e)).toList();
   }
 
-  Future<String> chlstrlReading(int entryid) async {
+  Future<String> chlstrlReading(int entryid, String unit) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'id=? AND type=?', whereArgs: [entryid, 'chlstrl']);
     //print(queryResult);
     final result = queryResult.map((e) => Cholesterol.fromMap(e)).toList();
 
-    return 'Total/TAG/HDL/LDL : ${double.parse(result.first.content.total.toString()).toStringAsFixed(2)}/${double.parse(result.first.content.tag.toString()).toStringAsFixed(2)}/${double.parse(result.first.content.hdl.toString()).toStringAsFixed(2)}/${double.parse(result.first.content.ldl.toString()).toStringAsFixed(2)} mg/dL';
+    String fromUnit = result.first.content.unit;
+    String total =
+        GlobalMethods.convertUnit(unit, fromUnit, result.first.content.total)
+            .toStringAsFixed(2);
+    String hdl =
+        GlobalMethods.convertUnit(unit, fromUnit, result.first.content.hdl)
+            .toStringAsFixed(2);
+    String ldl =
+        GlobalMethods.convertUnit(unit, fromUnit, result.first.content.ldl)
+            .toStringAsFixed(2);
+
+    return 'Total/HDL/LDL : $total/$hdl/$ldl $unit';
   }
 
   Future<List<Cholesterol>> chlstrlEntry(int entryid) async {

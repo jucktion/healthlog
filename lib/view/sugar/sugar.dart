@@ -149,23 +149,12 @@ class _SGScreenState extends State<SGScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 String unit =
                                     _prefs!.getString('sugarUnit').toString();
-                                String reading = '';
-                                if (unit == 'mmol/L' &&
-                                    items[index].content.unit == 'mg/dL') {
-                                  reading =
-                                      (items[index].content.reading / 18.0182)
-                                          .toStringAsFixed(2);
-                                } else if (unit == 'mg/dL' &&
-                                    items[index].content.unit == 'mmol/L') {
-                                  reading =
-                                      (items[index].content.reading * 18.0182)
-                                          .toStringAsFixed(2);
-                                } else {
-                                  reading = items[index]
-                                      .content
-                                      .reading
-                                      .toStringAsFixed(2);
-                                }
+                                String reading = GlobalMethods.convertUnit(
+                                        unit,
+                                        items[index].content.unit,
+                                        items[index].content.reading)
+                                    .toStringAsFixed(2);
+
                                 return Dismissible(
                                   direction: DismissDirection.startToEnd,
                                   background: Container(

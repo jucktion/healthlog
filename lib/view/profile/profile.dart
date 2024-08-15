@@ -194,7 +194,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           break;
                                         case 'chlstrl':
                                           CHLSTRLHelper.showRecord(
-                                              context, items[index].id);
+                                              context,
+                                              items[index].id,
+                                              _prefs!
+                                                  .getString('chlstrlUnit')
+                                                  .toString());
                                           break;
                                       }
                                       // ScaffoldMessenger.of(context)
@@ -247,7 +251,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Text('BP: ${snapshot.data}');
             });
       case 'chlstrl':
-        Future<String> entrych = handler.chlstrlReading(id);
+        Future<String> entrych = handler.chlstrlReading(
+            id, _prefs!.getString('chlstrlUnit').toString());
         return FutureBuilder(
             future: entrych,
             builder: (BuildContext context, AsyncSnapshot snapshot) {

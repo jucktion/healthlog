@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/cholesterol.dart';
+import 'package:healthlog/view/theme/globals.dart';
 
 class CHLSTRLHelper {
   static Future<void> statefulchlstrlBottomModal(BuildContext context,
@@ -36,87 +37,6 @@ class CHLSTRLHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter total cholesterol result';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '<Less than 200, no more than 240',
-                            suffixText: 'mg/dL',
-                            label: Text('Total Cholesterol'),
-                          ),
-                          onChanged: (String? value) {
-                            setState(
-                                () => total = double.parse(value.toString()));
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter Triacyglycerol result';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText:
-                                '<Ideally less than 150, no more than 500',
-                            suffixText: 'mg/dL',
-                            label: Text('Triacyglycerol (TAG)'),
-                          ),
-                          onChanged: (String? value) {
-                            setState(
-                                () => tag = double.parse(value.toString()));
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter HDL Cholesterol result';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: '40-60',
-                            suffixText: 'mg/dL',
-                            label: Text('HDL Cholesterol'),
-                          ),
-                          onChanged: (String? value) {
-                            setState(
-                                () => hdl = double.parse(value.toString()));
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter HDL Cholesterol result';
-                            }
-                            return null;
-                          },
-                          decoration: const InputDecoration(
-                            hintText: 'Less than 100',
-                            suffixText: 'mg/dL',
-                            label: Text('LDL Cholesterol'),
-                          ),
-                          onChanged: (String? value) {
-                            setState(
-                                () => ldl = double.parse(value.toString()));
-                          }),
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -147,6 +67,87 @@ class CHLSTRLHelper {
                           ),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter total cholesterol result';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: '<Less than 200, no more than 240',
+                            suffixText: unitGroup,
+                            label: const Text('Total Cholesterol'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => total = double.parse(value.toString()));
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Triacyglycerol result';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText:
+                                '<Ideally less than 150, no more than 500',
+                            suffixText: unitGroup,
+                            label: const Text('Triacyglycerol (TAG)'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => tag = double.parse(value.toString()));
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter HDL Cholesterol result';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: '40-60',
+                            suffixText: unitGroup,
+                            label: const Text('HDL Cholesterol'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => hdl = double.parse(value.toString()));
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter LDL Cholesterol result';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Less than 100',
+                            suffixText: unitGroup,
+                            label: const Text('LDL Cholesterol'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(
+                                () => ldl = double.parse(value.toString()));
+                          }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -209,7 +210,8 @@ class CHLSTRLHelper {
     );
   }
 
-  static Future<void> showRecord(BuildContext context, int entryid) async {
+  static Future<void> showRecord(
+      BuildContext context, int entryid, String unit) async {
     late DatabaseHandler handler;
     late Future<List<Cholesterol>> ch;
     Future<List<Cholesterol>> getList() async {
@@ -229,8 +231,11 @@ class CHLSTRLHelper {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final entry = snapshot.data ?? [];
-                  final double nonhdl =
-                      entry.first.content.total - entry.first.content.hdl;
+                  final fromUnit = entry.first.content.unit;
+                  final double nonhdl = GlobalMethods.convertUnit(
+                      unit,
+                      fromUnit,
+                      (entry.first.content.total - entry.first.content.hdl));
                   return AlertDialog(
                     title: Row(
                       children: [
@@ -260,12 +265,17 @@ class CHLSTRLHelper {
                                   style: TextStyle(
                                     fontSize: 20,
                                   )),
-                              Text('${entry.first.content.total}',
+                              Text(
+                                  GlobalMethods.convertUnit(unit, fromUnit,
+                                          entry.first.content.total)
+                                      .toStringAsFixed(2),
                                   style: TextStyle(
                                       fontSize: 20,
-                                      color: (entry.first.content.total > 240)
+                                      color: (entry.first.content.total > 240 &&
+                                              unit == 'mg/dL')
                                           ? Colors.red
-                                          : (entry.first.content.total < 200)
+                                          : (entry.first.content.total < 200 &&
+                                                  unit == 'mg/dL')
                                               ? Colors.green
                                               : Colors.brown)),
                             ],
@@ -278,12 +288,16 @@ class CHLSTRLHelper {
                                     fontSize: 20,
                                   )),
                               Text(
-                                '${entry.first.content.tag}',
+                                GlobalMethods.convertUnit(
+                                        unit, fromUnit, entry.first.content.tag)
+                                    .toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: (entry.first.content.tag > 500)
+                                    color: (entry.first.content.tag > 500 &&
+                                            unit == 'mg/dL')
                                         ? Colors.red
-                                        : (entry.first.content.tag < 150)
+                                        : (entry.first.content.tag < 150 &&
+                                                unit == 'mg/dL')
                                             ? Colors.green
                                             : Colors.brown),
                               ),
@@ -297,15 +311,20 @@ class CHLSTRLHelper {
                                     fontSize: 20,
                                   )),
                               Text(
-                                '${entry.first.content.hdl}',
+                                GlobalMethods.convertUnit(
+                                        unit, fromUnit, entry.first.content.hdl)
+                                    .toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: (entry.first.content.hdl > 60)
+                                    color: (entry.first.content.hdl > 60 &&
+                                            unit == 'mg/dL')
                                         ? Colors.red
                                         : (entry.first.content.hdl > 40 &&
-                                                entry.first.content.hdl < 60)
+                                                entry.first.content.hdl < 60 &&
+                                                unit == 'mg/dL')
                                             ? Colors.green
-                                            : (entry.first.content.hdl < 40)
+                                            : (entry.first.content.hdl < 40 &&
+                                                    unit == 'mg/dL')
                                                 ? Colors.blue
                                                 : Colors.brown),
                               ),
@@ -319,12 +338,16 @@ class CHLSTRLHelper {
                                     fontSize: 20,
                                   )),
                               Text(
-                                '${entry.first.content.ldl}',
+                                GlobalMethods.convertUnit(
+                                        unit, fromUnit, entry.first.content.ldl)
+                                    .toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: (entry.first.content.ldl > 160)
+                                    color: (entry.first.content.ldl > 160 &&
+                                            unit == 'mg/dL')
                                         ? Colors.red
-                                        : (entry.first.content.ldl < 100)
+                                        : (entry.first.content.ldl < 100 &&
+                                                unit == 'mg/dL')
                                             ? Colors.green
                                             : Colors.brown),
                               ),
@@ -336,12 +359,13 @@ class CHLSTRLHelper {
                               const Text('Non-HDL:',
                                   style: TextStyle(fontSize: 20)),
                               Text(
-                                '$nonhdl',
+                                nonhdl.toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: (nonhdl > 160)
+                                    color: (nonhdl > 160 && unit == 'mg/dL')
                                         ? Colors.red
-                                        : (entry.first.content.ldl < 130)
+                                        : (entry.first.content.ldl < 130 &&
+                                                unit == 'mg/dL')
                                             ? Colors.green
                                             : Colors.brown),
                               ),

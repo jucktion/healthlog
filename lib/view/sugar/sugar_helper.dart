@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/sugar.dart';
+import 'package:healthlog/view/theme/globals.dart';
 
 class SGHelper {
   static Future<void> statefulBpBottomModal(BuildContext context,
@@ -88,7 +89,7 @@ class SGHelper {
                                                 beforeAfter == 'after')
                                             ? '3.88-7.77'
                                             : '',
-                            suffixText: 'mg/dL',
+                            suffixText: unitGroup,
                             label: const Text('Blood Sugar'),
                           ),
                           onChanged: (String? value) {
@@ -207,17 +208,10 @@ class SGHelper {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final entry = snapshot.data ?? [];
-                  String reading = '';
-                  if (unit == 'mmol/L' && entry.first.content.unit == 'mg/dL') {
-                    reading = (entry.first.content.reading / 18.0182)
-                        .toStringAsFixed(2);
-                  } else if (unit == 'mg/dL' &&
-                      entry.first.content.unit == 'mmol/L') {
-                    reading = (entry.first.content.reading * 18.0182)
-                        .toStringAsFixed(2);
-                  } else {
-                    reading = entry.first.content.reading.toStringAsFixed(2);
-                  }
+                  String reading = GlobalMethods.convertUnit(unit,
+                          entry.first.content.unit, entry.first.content.reading)
+                      .toString();
+
                   return AlertDialog(
                     title: Row(
                       children: [
@@ -266,16 +260,20 @@ class SGHelper {
                               ),
                             ],
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 5.0),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
                             child: SizedBox(
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('Fasting: 60-110 mg/dL'),
-                                  Text('After: 70-140 mg/dL')
+                                  unit == 'mg/dL'
+                                      ? const Text('Fasting: 60-110 mg/dL')
+                                      : const Text('Fasting: 3.33-6.11 mmol/L'),
+                                  unit == 'mg/dL'
+                                      ? const Text('After: 70-140 mg/dL')
+                                      : const Text('After: 3.88-7.77 mmol/L')
                                 ],
                               ),
                             ),

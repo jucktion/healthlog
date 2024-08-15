@@ -5,11 +5,16 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CholesterolGraph extends StatefulWidget {
   final int userid;
-  const CholesterolGraph({super.key, required this.userid});
+  final bool dots;
+  final String unit;
+  const CholesterolGraph(
+      {super.key,
+      required this.userid,
+      required this.dots,
+      required this.unit});
 
   @override
   State<CholesterolGraph> createState() => _CholesterolGraphState();
@@ -23,7 +28,6 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
 
   List<FlSpot> dateData = [];
-  SharedPreferences? _prefs;
 
   late DatabaseHandler handler;
   late Future<List<Cholesterol>> _sg;
@@ -57,7 +61,6 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
   }
 
   void _initPrefs() async {
-    _prefs = await SharedPreferences.getInstance();
     setState(() {
       _prefLoaded = true;
     });
@@ -135,38 +138,50 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                     // ];
                                     String dates = '';
                                     int j = 0;
+                                    final fromUnit = rawData[0].content.unit;
                                     for (int i = 0; i < rawData.length; i++) {
                                       // final content =
                                       //     jsonDecode(rawData[i].content.toString());
                                       //print(normalSystolic);
 
-                                      final total = double.parse(rawData[i]
-                                          .content
-                                          .total
-                                          .toStringAsFixed(2));
+                                      final total = double.parse(
+                                          GlobalMethods.convertUnit(
+                                                  widget.unit,
+                                                  fromUnit,
+                                                  rawData[i].content.total)
+                                              .toStringAsFixed(2));
                                       totalData
                                           .add(FlSpot(j.toDouble(), total));
 
-                                      final tag = double.parse(rawData[i]
-                                          .content
-                                          .tag
-                                          .toStringAsFixed(2));
+                                      final tag = double.parse(
+                                          GlobalMethods.convertUnit(
+                                                  widget.unit,
+                                                  fromUnit,
+                                                  rawData[i].content.tag)
+                                              .toStringAsFixed(2));
                                       tagData.add(FlSpot(j.toDouble(), tag));
 
-                                      final hdl = double.parse(rawData[i]
-                                          .content
-                                          .hdl
-                                          .toStringAsFixed(2));
+                                      final hdl = double.parse(
+                                          GlobalMethods.convertUnit(
+                                                  widget.unit,
+                                                  fromUnit,
+                                                  rawData[i].content.hdl)
+                                              .toStringAsFixed(2));
                                       hdlData.add(FlSpot(j.toDouble(), hdl));
-                                      final ldl = double.parse(rawData[i]
-                                          .content
-                                          .ldl
-                                          .toStringAsFixed(2));
+                                      final ldl = double.parse(
+                                          GlobalMethods.convertUnit(
+                                                  widget.unit,
+                                                  fromUnit,
+                                                  rawData[i].content.ldl)
+                                              .toStringAsFixed(2));
                                       ldlData.add(FlSpot(j.toDouble(), ldl));
 
                                       final nonhdl = double.parse(
-                                          (rawData[i].content.total -
-                                                  rawData[i].content.hdl)
+                                          GlobalMethods.convertUnit(
+                                                  widget.unit,
+                                                  fromUnit,
+                                                  (rawData[i].content.total -
+                                                      rawData[i].content.hdl))
                                               .toStringAsFixed(2));
                                       nonhdlData
                                           .add(FlSpot(j.toDouble(), nonhdl));
@@ -193,7 +208,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                         minX: 0,
                                         maxX: range.toDouble(),
                                         minY: 0,
-                                        maxY: 500,
+                                        maxY: widget.unit == 'mg/dL' ? 500 : 15,
                                         titlesData: FlTitlesData(
                                             show: true,
                                             topTitles: const AxisTitles(
@@ -202,9 +217,12 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                             rightTitles: const AxisTitles(
                                                 sideTitles: SideTitles(
                                                     showTitles: false)),
-                                            leftTitles: const AxisTitles(
+                                            leftTitles: AxisTitles(
                                                 sideTitles: SideTitles(
-                                                    interval: 50,
+                                                    interval:
+                                                        widget.unit == 'mg/dL'
+                                                            ? 50
+                                                            : 1,
                                                     showTitles: true,
                                                     reservedSize: 35)),
                                             bottomTitles: AxisTitles(
@@ -271,10 +289,8 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                           LineChartBarData(
                                             spots: tagData,
@@ -293,10 +309,8 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                           LineChartBarData(
                                             spots: hdlData,
@@ -315,10 +329,8 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                           LineChartBarData(
                                             spots: ldlData,
@@ -337,10 +349,8 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                           LineChartBarData(
                                             spots: nonhdlData,
@@ -359,10 +369,8 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                                     .toList(),
                                               ),
                                             ),
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                         ],
                                       ),

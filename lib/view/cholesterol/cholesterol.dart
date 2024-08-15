@@ -5,6 +5,7 @@ import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_graph.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CHLSTRLScreen extends StatefulWidget {
   final int userid;
@@ -16,11 +17,13 @@ class CHLSTRLScreen extends StatefulWidget {
 
 class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
   late DatabaseHandler handler;
+  SharedPreferences? _prefs;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   late Future<List<Cholesterol>> _chlstrl;
   late Future<String> _user;
   bool _retrived = false;
+  bool _prefLoaded = false;
 
   @override
   void initState() {
@@ -31,7 +34,15 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
         _retrived = true;
         _chlstrl = getList();
         _user = getName();
+        _initPrefs();
       });
+    });
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
     });
   }
 
@@ -79,6 +90,8 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                       MaterialPageRoute(
                         builder: (context) => CholesterolGraph(
                           userid: widget.userid,
+                          unit: _prefs!.getString('chlstrlUnit').toString(),
+                          dots: _prefs!.getBool('graphDots') ?? false,
                         ),
                       ),
                     )
@@ -101,7 +114,7 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: !_retrived
+          child: !_retrived && !_prefLoaded
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height,
@@ -131,6 +144,18 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                             child: ListView.builder(
                               itemCount: items.length,
                               itemBuilder: (BuildContext context, int index) {
+                                String unit =
+                                    _prefs!.getString('chlstrlUnit').toString();
+                                String fromUnit = items[index].content.unit;
+                                String total = GlobalMethods.convertUnit(unit,
+                                        fromUnit, items[index].content.total)
+                                    .toStringAsFixed(2);
+                                String hdl = GlobalMethods.convertUnit(unit,
+                                        fromUnit, items[index].content.hdl)
+                                    .toStringAsFixed(2);
+                                String ldl = GlobalMethods.convertUnit(unit,
+                                        fromUnit, items[index].content.ldl)
+                                    .toStringAsFixed(2);
                                 return Dismissible(
                                   direction: DismissDirection.startToEnd,
                                   background: Container(
@@ -169,14 +194,14 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                       child: InkWell(
                                     onTap: () => {
                                       CHLSTRLHelper.showRecord(
-                                          context, items[index].id ?? 0)
+                                          context, items[index].id ?? 0, unit)
                                     },
                                     child: ListTile(
                                       trailing: Text(
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
                                       title: Text(
-                                          '${items[index].type.toUpperCase()}: Total/HDL/LDL \n${items[index].content.total.toStringAsFixed(2)}/${items[index].content.hdl.toStringAsFixed(2)}/${items[index].content.ldl.toStringAsFixed(2)}'),
+                                          '${items[index].type.toUpperCase()}: Total/HDL/LDL \n$total/$hdl/$ldl $unit'),
                                       subtitle: Text(
                                           'Comment: ${items[index].comments.toString()}'),
                                     ),

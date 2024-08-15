@@ -134,25 +134,12 @@ class _SugarGraphState extends State<SugarGraph> {
                                           rawData[i].content.unit;
                                       if (rawData[i].content.beforeAfter ==
                                           'before') {
-                                        double beforeFast = 0;
-                                        if (widget.unit == 'mg/dL' &&
-                                            dataunit == 'mmol/L') {
-                                          beforeFast = double.parse(
-                                              (rawData[i].content.reading *
-                                                      18.0182)
-                                                  .toStringAsFixed(2));
-                                        } else if (widget.unit == 'mmol/L' &&
-                                            dataunit == 'mg/dL') {
-                                          beforeFast = double.parse(
-                                              (rawData[i].content.reading /
-                                                      18.0182)
-                                                  .toStringAsFixed(2));
-                                        } else {
-                                          beforeFast = double.parse(rawData[i]
-                                              .content
-                                              .reading
-                                              .toStringAsFixed(2));
-                                        }
+                                        double beforeFast = double.parse(
+                                            GlobalMethods.convertUnit(
+                                                    widget.unit,
+                                                    dataunit,
+                                                    rawData[i].content.reading)
+                                                .toStringAsFixed(2));
                                         beforeFastData.add(
                                             FlSpot(j.toDouble(), beforeFast));
                                       }
@@ -160,25 +147,13 @@ class _SugarGraphState extends State<SugarGraph> {
 
                                       if (rawData[i].content.beforeAfter ==
                                           'after') {
-                                        double afterFast = 0;
-                                        if (widget.unit == 'mg/dL' &&
-                                            dataunit == 'mmol/L') {
-                                          afterFast = double.parse(
-                                              (rawData[i].content.reading *
-                                                      18.0182)
-                                                  .toStringAsFixed(2));
-                                        } else if (widget.unit == 'mmol/L' &&
-                                            dataunit == 'mg/dL') {
-                                          afterFast = double.parse(
-                                              (rawData[i].content.reading /
-                                                      18.0182)
-                                                  .toStringAsFixed(2));
-                                        } else {
-                                          afterFast = double.parse(rawData[i]
-                                              .content
-                                              .reading
-                                              .toStringAsFixed(2));
-                                        }
+                                        double afterFast = double.parse(
+                                            GlobalMethods.convertUnit(
+                                                    widget.unit,
+                                                    dataunit,
+                                                    rawData[i].content.reading)
+                                                .toStringAsFixed(2));
+
                                         if ('${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}' ==
                                             dates) {
                                           afterFastData.add(FlSpot(
@@ -283,7 +258,9 @@ class _SugarGraphState extends State<SugarGraph> {
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
-                                              cutOffY: 110,
+                                              cutOffY: widget.unit == 'mg/dL'
+                                                  ? 110
+                                                  : 6.11,
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
@@ -303,7 +280,9 @@ class _SugarGraphState extends State<SugarGraph> {
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
-                                              cutOffY: 140,
+                                              cutOffY: widget.unit == 'mg/dL'
+                                                  ? 140
+                                                  : 7.77,
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>

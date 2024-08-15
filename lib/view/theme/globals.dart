@@ -43,6 +43,16 @@ class GlobalMethods {
           );
         });
   }
+
+  static double convertUnit(String unit, String fromUnit, double reading) {
+    if (unit == 'mmol/L' && fromUnit == 'mg/dL') {
+      return (reading / 18.0182);
+    } else if (unit == 'mg/dL' && fromUnit == 'mmol/L') {
+      return (reading * 18.0182);
+    } else {
+      return reading;
+    }
+  }
 }
 
 class LegendWidget extends StatelessWidget {
