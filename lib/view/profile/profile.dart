@@ -162,12 +162,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .deleteRecord(items[index].id);
                                       setState(() {
                                         items.remove(items[index]);
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) =>
+                                                _refreshIndicatorKey
+                                                    .currentState
+                                                    ?.show());
                                       });
                                     });
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) =>
-                                            _refreshIndicatorKey.currentState
-                                                ?.show());
                                   },
                                   child: Card(
                                       child: InkWell(
