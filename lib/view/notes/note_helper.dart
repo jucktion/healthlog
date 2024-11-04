@@ -148,25 +148,18 @@ class NoteHelper {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              const Text('Note:',
+                              Text(entry.first.content.note,
                                   style: TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 17,
                                   )),
-                              Text(entry.first.content.note),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text('Type:',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              Text(entry.first.content.type),
                             ],
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
+                            padding: const EdgeInsets.all(25.0),
+                            child: Text('Type: ${entry.first.content.type}'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
                             child: SizedBox(
                               child: Row(
                                 mainAxisAlignment:
