@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/model/data.dart';
+import 'package:healthlog/model/notes.dart';
 import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/theme/globals.dart';
 //import 'package:path_provider/path_provider.dart';
@@ -93,8 +94,8 @@ class DatabaseHandler {
 
   Future<List<Data>> allhistory(int userid) async {
     final db = await initializeDB();
-    final List<Map<String, dynamic>> queryResult =
-        await db.query('data', where: 'user=($userid)', orderBy: 'date DESC');
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=($userid) AND type != "note"', orderBy: 'date DESC');
     //print(queryResult);
     return queryResult.map((e) => Data.fromMap(e)).toList();
   }
@@ -333,4 +334,38 @@ class DatabaseHandler {
     }
   }
 // CHLSTRL END
+
+// Note
+// Note
+  Future<List<Notes>> getnotes(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'note'],
+        orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => Notes.fromMap(e)).toList();
+  }
+
+  Future<void> insertNote(Notes note) async {
+    final db = await initializeDB();
+
+    try {
+      await db.insert('data', note.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+
+  Future<List<Notes>> noteEntry(int entryid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db
+        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'note']);
+    //print(queryResult);
+    return queryResult.map((e) => Notes.fromMap(e)).toList();
+  }
 }

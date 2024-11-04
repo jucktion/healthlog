@@ -6,6 +6,8 @@ import 'package:healthlog/view/bp/bp.dart';
 import 'package:healthlog/view/bp/bp_helper.dart';
 import 'package:healthlog/view/cholesterol/cholesterol.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
+import 'package:healthlog/view/notes/note.dart';
+import 'package:healthlog/view/notes/note_helper.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
@@ -271,7 +273,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         if (_isFabOpen)
           _buildFabOption(
-              icon: Icons.format_size, label: 'Notes', doOnPressed: () {}),
+              icon: Icons.format_size,
+              label: 'Notes',
+              doOnPressed: () {
+                NoteHelper.statefulNoteBottomModal(context,
+                    userid: widget.userid,
+                    callback: () {},
+                    refreshIndicatorKey: _refreshIndicatorKey);
+              }),
         if (_isFabOpen)
           _buildFabOption(
               icon: Icons.water_drop_sharp,
@@ -370,6 +379,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => CHLSTRLScreen(
+              userid: widget.userid,
+            ),
+          ),
+        );
+        break;
+      case 3:
+        // print('Reset selected');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoteScreen(
               userid: widget.userid,
             ),
           ),

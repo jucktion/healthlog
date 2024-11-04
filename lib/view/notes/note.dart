@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/colors.dart';
-import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/view/bp/bp_graph.dart';
-import 'package:healthlog/view/bp/bp_helper.dart';
+import 'package:healthlog/model/notes.dart';
+import 'package:healthlog/view/notes/note_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
 
-class BPScreen extends StatefulWidget {
+class NoteScreen extends StatefulWidget {
   final int userid;
-  const BPScreen({super.key, required this.userid});
+  const NoteScreen({super.key, required this.userid});
 
   @override
-  State<BPScreen> createState() => _BPScreenState();
+  State<NoteScreen> createState() => _NoteScreenState();
 }
 
-class _BPScreenState extends State<BPScreen> {
+class _NoteScreenState extends State<NoteScreen> {
   late DatabaseHandler handler;
-
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  late Future<List<BloodPressure>> _bp;
+  late Future<List<Notes>> _note;
   late Future<String> _user;
   bool _retrived = false;
 
@@ -30,14 +28,14 @@ class _BPScreenState extends State<BPScreen> {
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;
-        _bp = getList();
+        _note = getList();
         _user = getName();
       });
     });
   }
 
-  Future<List<BloodPressure>> getList() async {
-    return await handler.bphistory(widget.userid);
+  Future<List<Notes>> getList() async {
+    return await handler.getnotes(widget.userid);
   }
 
   Future<String> getName() async {
@@ -46,7 +44,7 @@ class _BPScreenState extends State<BPScreen> {
 
   Future<void> _onRefresh() async {
     setState(() {
-      _bp = getList();
+      _note = getList();
     });
   }
 
@@ -54,42 +52,27 @@ class _BPScreenState extends State<BPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: !_retrived
-            ? const Text('User log')
-            : FutureBuilder<String>(
-                future: _user,
-                builder:
-                    (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    // Check if an error occurred.
-                    if (snapshot.hasError) {
-                      return const Text('Error');
+          title: !_retrived
+              ? const Text('User log')
+              : FutureBuilder<String>(
+                  future: _user,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // Check if an error occurred.
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      }
+                      // Return the retrieved title.
+                      return Text("${snapshot.data}'s Notes");
+                    } else {
+                      return const CircularProgressIndicator();
                     }
-                    // Return the retrieved title.
-                    return Text("${snapshot.data}'s BP Data");
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
-        actions: [
-          IconButton(
-              onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BPGraph(
-                          userid: widget.userid,
-                        ),
-                      ),
-                    )
                   },
-              icon: const Icon(Icons.auto_graph_sharp))
-        ],
-      ),
+                )),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          BPHelper.statefulBpBottomModal(context,
+          NoteHelper.statefulNoteBottomModal(context,
               userid: widget.userid,
               callback: () {},
               refreshIndicatorKey: _refreshIndicatorKey);
@@ -106,10 +89,10 @@ class _BPScreenState extends State<BPScreen> {
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height,
-                  child: FutureBuilder<List<BloodPressure>>(
-                    future: _bp,
+                  child: FutureBuilder<List<Notes>>(
+                    future: _note,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<BloodPressure>> snapshot) {
+                        AsyncSnapshot<List<Notes>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -125,7 +108,7 @@ class _BPScreenState extends State<BPScreen> {
                           ),
                         );
                       } else {
-                        final items = snapshot.data ?? <BloodPressure>[];
+                        final items = snapshot.data ?? <Notes>[];
                         return Scrollbar(
                           child: RefreshIndicator(
                             onRefresh: _onRefresh,
@@ -169,19 +152,19 @@ class _BPScreenState extends State<BPScreen> {
                                   child: Card(
                                       child: InkWell(
                                     onTap: () => {
-                                      BPHelper.showRecord(
-                                        context,
-                                        items[index].id ?? 0,
-                                      )
+                                      NoteHelper.showRecord(
+                                          context, items[index].id ?? 0)
                                     },
                                     child: ListTile(
                                       trailing: Text(
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(
-                                          '${items[index].type.toUpperCase()}: ${items[index].content.systolic}/${items[index].content.diastolic}'),
+                                      title: Text(items[index]
+                                          .content
+                                          .title
+                                          .toUpperCase()),
                                       subtitle: Text(
-                                          'Arm: ${items[index].content.arm.toString()}, Note: ${items[index].comments.toString()}'),
+                                          'Note: ${items[index].content.note}'),
                                     ),
                                   )),
                                 );
