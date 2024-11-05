@@ -4,6 +4,7 @@ import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/notes.dart';
 import 'package:healthlog/view/notes/note_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoteScreen extends StatefulWidget {
   final int userid;
@@ -46,6 +47,12 @@ class _NoteScreenState extends State<NoteScreen> {
     setState(() {
       _note = getList();
     });
+  }
+
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   @override
@@ -152,8 +159,11 @@ class _NoteScreenState extends State<NoteScreen> {
                                   child: Card(
                                       child: InkWell(
                                     onTap: () => {
-                                      NoteHelper.showRecord(
-                                          context, items[index].id ?? 0)
+                                      items[index].content.notetype != 'Phone'
+                                          ? NoteHelper.showRecord(
+                                              context, items[index].id ?? 0)
+                                          : _launchUrl(
+                                              'tel:${items[index].content.note}')
                                     },
                                     child: ListTile(
                                       trailing: Text(
