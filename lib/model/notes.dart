@@ -48,21 +48,22 @@ class Notes {
 class Note {
   final String title;
   final String note;
-  final String type;
+  final String notetype;
 
-  Note({required this.title, required this.note, required this.type});
+  Note({required this.title, required this.note, required this.notetype});
 
   Map<String, dynamic> toMap() {
-    return {'title': title, 'note': note, 'type': type};
+    return {'title': title, 'note': note, 'notetype': notetype};
   }
 
   factory Note.fromJson(String json) {
     var map = jsonDecode(json);
-    return Note(title: map["title"], note: map["note"], type: map["type"]);
+    return Note(
+        title: map["title"], note: map["note"], notetype: map["notetype"]);
   }
 
   Note.fromMap(Map<String, dynamic> res)
       : title = res['title'],
         note = res['note'],
-        type = res['type'];
+        notetype = res['type'];
 }

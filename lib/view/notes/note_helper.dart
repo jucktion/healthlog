@@ -10,8 +10,9 @@ class NoteHelper {
     final formKey = GlobalKey<FormState>();
     String note = "";
     String title = "";
-    String type = "note";
+    String? selectedValue;
     String comment = "";
+    final List<String> items = ['Note', 'Phone', 'Medicine'];
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -49,11 +50,37 @@ class NoteHelper {
                             setState(() => note = value.toString());
                           }),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text('Type:',
+                            style: TextStyle(
+                              fontSize: 17,
+                            )),
+                        DropdownButton<String>(
+                          hint: Text('Select an option'), // Hint text
+                          value: selectedValue, // Currently selected value
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedValue =
+                                  newValue; // Update the selected value
+                            });
+                          },
+                          items: items
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value), // Display each item
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           decoration: const InputDecoration(
-                              hintText: 'Before Breakfast/After Dinner',
+                              hintText: 'Additional comment',
                               label: Text('Comments')),
                           onChanged: (String? value) {
                             setState(() => comment = value.toString());
@@ -69,7 +96,7 @@ class NoteHelper {
                                   content: Note(
                                     title: title,
                                     note: note,
-                                    type: type,
+                                    notetype: selectedValue.toString(),
                                   ),
                                   date: DateTime.now().toIso8601String(),
                                   comments: comment))
@@ -156,7 +183,8 @@ class NoteHelper {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(25.0),
-                            child: Text('Type: ${entry.first.content.type}'),
+                            child:
+                                Text('Type: ${entry.first.content.notetype}'),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 5.0),
