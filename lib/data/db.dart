@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/model/data.dart';
@@ -95,7 +94,9 @@ class DatabaseHandler {
   Future<List<Data>> allhistory(int userid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db.query('data',
-        where: 'user=($userid) AND type != "note"', orderBy: 'date DESC');
+        where: 'user = ?  AND type != ?',
+        whereArgs: [userid, 'note'],
+        orderBy: 'date DESC');
     //print(queryResult);
     return queryResult.map((e) => Data.fromMap(e)).toList();
   }
@@ -205,7 +206,8 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'bp'],
-        orderBy: 'date ASC');
+        orderBy: 'date ASC',
+        limit: 30);
     //print(queryResult);
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
   }
@@ -228,7 +230,8 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'sugar'],
-        orderBy: 'date ASC');
+        orderBy: 'date ASC',
+        limit: 30);
     //print(queryResult);
     return queryResult.map((e) => Sugar.fromMap(e)).toList();
   }
@@ -286,7 +289,8 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'chlstrl'],
-        orderBy: 'date ASC');
+        orderBy: 'date ASC',
+        limit: 30);
     //print(queryResult);
     return queryResult.map((e) => Cholesterol.fromMap(e)).toList();
   }
