@@ -166,6 +166,13 @@ class _NoteScreenState extends State<NoteScreen> {
                                               'tel:${items[index].content.note}')
                                     },
                                     child: ListTile(
+                                      leading: items[index].content.notetype ==
+                                              'Phone'
+                                          ? Icon(Icons.phone)
+                                          : items[index].content.notetype ==
+                                                  'Medicine'
+                                              ? Icon(Icons.medication)
+                                              : Icon(Icons.abc_outlined),
                                       trailing: Text(
                                           '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                       contentPadding: const EdgeInsets.all(8.0),

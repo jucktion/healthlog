@@ -274,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         if (_isFabOpen)
           _buildFabOption(
               icon: Icons.format_size,
-              label: 'Notes',
+              label: 'Note',
               doOnPressed: () {
                 NoteHelper.statefulNoteBottomModal(context,
                     userid: widget.userid,

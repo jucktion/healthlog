@@ -10,7 +10,7 @@ class NoteHelper {
     final formKey = GlobalKey<FormState>();
     String note = "";
     String title = "";
-    String? selectedValue;
+    String? selectedValue = "Note";
     String comment = "";
     final List<String> items = ['Note', 'Phone', 'Medicine'];
 
@@ -168,10 +168,23 @@ class NoteHelper {
                       ],
                     ),
                     content: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 8.0, bottom: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(entry.first.content.title,
+                                    style: TextStyle(
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
