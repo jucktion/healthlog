@@ -208,9 +208,10 @@ class SGHelper {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final entry = snapshot.data ?? [];
+                  //Convert the units as required from settings
                   String reading = GlobalMethods.convertUnit(unit,
                           entry.first.content.unit, entry.first.content.reading)
-                      .toString();
+                      .toStringAsFixed(2);
 
                   return AlertDialog(
                     title: Row(
@@ -245,16 +246,19 @@ class SGHelper {
                                   )),
                               Text(
                                 '$reading $unit',
+                                //Color the readings based on range
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color: (entry.first.content.beforeAfter ==
+                                    color: (unit == 'mg/dL' &&
+                                                entry.first.content
+                                                        .beforeAfter ==
                                                     'before' &&
-                                                entry.first.content.reading >
-                                                    110) ||
-                                            (entry.first.content.beforeAfter ==
+                                                double.parse(reading) > 110) ||
+                                            (unit == 'mg/dL' &&
+                                                entry.first.content
+                                                        .beforeAfter ==
                                                     'after' &&
-                                                entry.first.content.reading >
-                                                    140)
+                                                double.parse(reading) > 140)
                                         ? Colors.red
                                         : Colors.green),
                               ),

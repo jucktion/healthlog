@@ -185,7 +185,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                         minX: 0,
                                         maxX: range.toDouble(),
                                         minY: 0,
-                                        maxY: widget.unit == 'mg/dL' ? 200 : 20,
+                                        maxY: widget.unit == 'mg/dL' ? 350 : 20,
                                         titlesData: FlTitlesData(
                                             show: true,
                                             topTitles: const AxisTitles(
@@ -198,7 +198,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                                 sideTitles: SideTitles(
                                                     interval:
                                                         widget.unit == 'mg/dL'
-                                                            ? 10
+                                                            ? 20
                                                             : 1,
                                                     showTitles: true,
                                                     reservedSize: 35)),
