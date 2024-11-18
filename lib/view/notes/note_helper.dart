@@ -32,24 +32,6 @@ class NoteHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          decoration: const InputDecoration(
-                              hintText: 'Enter a Title', label: Text('Title')),
-                          onChanged: (String? value) {
-                            setState(() => title = value.toString());
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 40, right: 40),
-                      child: TextFormField(
-                          decoration: const InputDecoration(
-                              hintText: 'Enter a note', label: Text('Note')),
-                          onChanged: (String? value) {
-                            setState(() => note = value.toString());
-                          }),
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -75,6 +57,38 @@ class NoteHelper {
                           }).toList(),
                         ),
                       ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: selectedValue == 'Phone'
+                                ? 'Name of the Person/Institution'
+                                : selectedValue == 'Medicine'
+                                    ? 'Medicine Name'
+                                    : 'Enter a Title',
+                            label: selectedValue == 'Phone'
+                                ? Text('Name')
+                                : selectedValue == 'Medicine'
+                                    ? Text('Medicine')
+                                    : Text('Title'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(() => title = value.toString());
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          decoration: InputDecoration(
+                              label: selectedValue == 'Phone'
+                                  ? Text('Phone No')
+                                  : selectedValue == 'Medicine'
+                                      ? Text('Direction of Use')
+                                      : Text('Enter a note')),
+                          onChanged: (String? value) {
+                            setState(() => note = value.toString());
+                          }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
