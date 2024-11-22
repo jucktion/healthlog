@@ -108,7 +108,9 @@ class _BPGraphState extends State<BPGraph> {
                                     final List<FlSpot> systolicData = [];
                                     final List<FlSpot> diastolicData = [];
                                     const int range = 30;
-                                    final rawData = snapshot.data!;
+                                    //Reverse the list so graph appears left to right
+                                    final rawData =
+                                        snapshot.data!.reversed.toList();
                                     //List<dynamic> jsonList = jsonDecode(rawData);
                                     //print(rawData.toList().toString());
                                     List<String> dateData = [];

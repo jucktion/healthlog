@@ -206,7 +206,7 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'bp'],
-        orderBy: 'date ASC',
+        orderBy: 'date DESC',
         limit: 30);
     //print(queryResult);
     return queryResult.map((e) => BloodPressure.fromMap(e)).toList();
@@ -230,7 +230,7 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'sugar'],
-        orderBy: 'date ASC',
+        orderBy: 'date DESC',
         limit: 30);
     //print(queryResult);
     return queryResult.map((e) => Sugar.fromMap(e)).toList();
@@ -289,10 +289,14 @@ class DatabaseHandler {
     final List<Map<String, dynamic>> queryResult = await db.query('data',
         where: 'user=? AND type=?',
         whereArgs: [userid, 'chlstrl'],
-        orderBy: 'date ASC',
+        orderBy: 'date DESC',
         limit: 30);
     //print(queryResult);
-    return queryResult.map((e) => Cholesterol.fromMap(e)).toList();
+    return queryResult
+        .map((e) => Cholesterol.fromMap(e))
+        .toList()
+        .reversed
+        .toList();
   }
 
   Future<String> chlstrlReading(int entryid, String unit) async {

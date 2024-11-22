@@ -124,7 +124,9 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                     final List<FlSpot> ldlData = [];
                                     final List<FlSpot> nonhdlData = [];
                                     const int range = 30;
-                                    final rawData = snapshot.data!;
+                                    //Reverse the list so graph appears left to right
+                                    final rawData =
+                                        snapshot.data!.reversed.toList();
                                     //List<dynamic> jsonList = jsonDecode(rawData);
                                     //print(rawData.toList().toString());
                                     Set<String> dateData = {};
