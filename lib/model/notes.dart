@@ -19,7 +19,7 @@ class Notes extends HealthRecord<Note> {
         id: map["id"],
         user: map["user"],
         type: map["type"],
-        content: Note.fromJson(map["content"]),
+        content: Note.fromMap(jsonDecode(map["content"])),
         date: map['date'],
         comments: map['comments']);
   }
@@ -34,10 +34,6 @@ class Note {
 
   Map<String, dynamic> toMap() {
     return {'title': title, 'note': note, 'notetype': notetype};
-  }
-
-  factory Note.fromJson(String json) {
-    return Note.fromMap(jsonDecode(json));
   }
 
   factory Note.fromMap(Map<String, dynamic> map) {

@@ -20,7 +20,7 @@ class BloodPressure extends HealthRecord<BP> {
       id: map["id"],
       user: map["user"],
       type: map["type"],
-      content: BP.fromJson(map["content"]),
+      content: BP.fromMap(jsonDecode(map["content"])),
       date: map["date"],
       comments: map["comments"],
     );
@@ -47,10 +47,6 @@ class BP {
       'heartrate': heartrate,
       'arm': arm
     };
-  }
-
-  factory BP.fromJson(String json) {
-    return BP.fromMap(jsonDecode(json));
   }
 
   factory BP.fromMap(Map<String, dynamic> map) {

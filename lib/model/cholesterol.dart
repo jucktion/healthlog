@@ -19,7 +19,7 @@ class Cholesterol extends HealthRecord<CHLSTRL> {
         id: map["id"],
         user: map["user"],
         type: map["type"],
-        content: CHLSTRL.fromJson(map["content"]),
+        content: CHLSTRL.fromMap(jsonDecode(map["content"])),
         date: map['date'],
         comments: map['comments']);
   }
