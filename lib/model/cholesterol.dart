@@ -11,8 +11,7 @@ class Cholesterol extends HealthRecord<CHLSTRL> {
       required super.comments});
 
   factory Cholesterol.fromJson(String json) {
-    var map = jsonDecode(json);
-    return Cholesterol.fromMap(map);
+    return Cholesterol.fromMap(jsonDecode(json));
   }
 
   factory Cholesterol.fromMap(Map<String, dynamic> map) {
@@ -20,7 +19,7 @@ class Cholesterol extends HealthRecord<CHLSTRL> {
         id: map["id"],
         user: map["user"],
         type: map["type"],
-        content: CHLSTRL.fromJson(jsonDecode(map["content"])),
+        content: CHLSTRL.fromJson(map["content"]),
         date: map['date'],
         comments: map['comments']);
   }
@@ -45,19 +44,15 @@ class CHLSTRL {
   }
 
   factory CHLSTRL.fromJson(String json) {
-    var map = jsonDecode(json);
-    return CHLSTRL(
-        total: map["total"],
-        tag: map["tag"],
-        hdl: map["hdl"],
-        ldl: map["ldl"],
-        unit: map["unit"]);
+    return CHLSTRL.fromMap(jsonDecode(json));
   }
 
-  CHLSTRL.fromMap(Map<String, dynamic> res)
-      : total = res['total'],
-        tag = res['tag'],
-        hdl = res['hdl'],
-        ldl = res['ldl'],
-        unit = res['unit'];
+  factory CHLSTRL.fromMap(Map<String, dynamic> map) {
+    return CHLSTRL(
+        total: map['total'],
+        tag: map['tag'],
+        hdl: map['hdl'],
+        ldl: map['ldl'],
+        unit: map['unit']);
+  }
 }

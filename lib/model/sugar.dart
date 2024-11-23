@@ -12,19 +12,17 @@ class Sugar extends HealthRecord<SG> {
   });
 
   factory Sugar.fromJson(String json) {
-    var map = jsonDecode(json);
-    return Sugar.fromMap(map);
+    return Sugar.fromMap(jsonDecode(json));
   }
 
   factory Sugar.fromMap(Map<String, dynamic> map) {
     return Sugar(
-      id: map["id"],
-      user: map["user"],
-      type: map["type"],
-      content: SG.fromMap(jsonDecode(map["content"])),
-      date: map["date"],
-      comments: map["comments"],
-    );
+        id: map["id"],
+        user: map["user"],
+        type: map["type"],
+        content: SG.fromJson(map["content"]),
+        date: map["date"],
+        comments: map["comments"]);
   }
 }
 
@@ -44,15 +42,13 @@ class SG {
   }
 
   factory SG.fromJson(String json) {
-    var map = jsonDecode(json);
-    return SG(
-        reading: map["reading"],
-        beforeAfter: map["beforeAfter"],
-        unit: map["unit"]);
+    return SG.fromMap(jsonDecode(json));
   }
 
-  SG.fromMap(Map<String, dynamic> res)
-      : reading = res['reading'],
-        beforeAfter = res['beforeAfter'],
-        unit = res['unit'];
+  factory SG.fromMap(Map<String, dynamic> map) {
+    return SG(
+        reading: map['reading'],
+        beforeAfter: map['beforeAfter'],
+        unit: map['unit']);
+  }
 }

@@ -11,18 +11,17 @@ class Notes extends HealthRecord<Note> {
       required super.comments});
 
   factory Notes.fromJson(String json) {
-    var map = jsonDecode(json);
-    return Notes.fromMap(map);
+    return Notes.fromMap(jsonDecode(json));
   }
 
-  factory Notes.fromMap(Map<String, dynamic> res) {
+  factory Notes.fromMap(Map<String, dynamic> map) {
     return Notes(
-        id: res["id"],
-        user: res["user"],
-        type: res["type"],
-        content: Note.fromJson(jsonDecode(res["content"])),
-        date: res['date'],
-        comments: res['comments']);
+        id: map["id"],
+        user: map["user"],
+        type: map["type"],
+        content: Note.fromJson(map["content"]),
+        date: map['date'],
+        comments: map['comments']);
   }
 }
 
@@ -38,13 +37,11 @@ class Note {
   }
 
   factory Note.fromJson(String json) {
-    var map = jsonDecode(json);
-    return Note(
-        title: map["title"], note: map["note"], notetype: map["notetype"]);
+    return Note.fromMap(jsonDecode(json));
   }
 
-  Note.fromMap(Map<String, dynamic> map)
-      : title = map['title'],
-        note = map['note'],
-        notetype = map['type'];
+  factory Note.fromMap(Map<String, dynamic> map) {
+    return Note(
+        title: map['title'], note: map['note'], notetype: map['notetype']);
+  }
 }

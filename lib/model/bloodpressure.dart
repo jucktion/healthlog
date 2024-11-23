@@ -12,8 +12,7 @@ class BloodPressure extends HealthRecord<BP> {
   });
 
   factory BloodPressure.fromJson(String json) {
-    var map = jsonDecode(json);
-    return BloodPressure.fromMap(map);
+    return BloodPressure.fromMap(jsonDecode(json));
   }
 
   factory BloodPressure.fromMap(Map<String, dynamic> map) {
@@ -21,7 +20,7 @@ class BloodPressure extends HealthRecord<BP> {
       id: map["id"],
       user: map["user"],
       type: map["type"],
-      content: BP.fromMap(jsonDecode(map["content"])),
+      content: BP.fromJson(map["content"]),
       date: map["date"],
       comments: map["comments"],
     );
@@ -51,17 +50,14 @@ class BP {
   }
 
   factory BP.fromJson(String json) {
-    var map = jsonDecode(json);
-    return BP(
-        systolic: map["systolic"],
-        diastolic: map["diastolic"],
-        heartrate: map["heartrate"],
-        arm: map["arm"]);
+    return BP.fromMap(jsonDecode(json));
   }
 
-  BP.fromMap(Map<String, dynamic> res)
-      : systolic = res['systolic'],
-        diastolic = res['diastolic'],
-        heartrate = res['heartrate'],
-        arm = res['arm'];
+  factory BP.fromMap(Map<String, dynamic> map) {
+    return BP(
+        systolic: map['systolic'],
+        diastolic: map['diastolic'],
+        heartrate: map['heartrate'],
+        arm: map['arm']);
+  }
 }
