@@ -1,48 +1,29 @@
 import 'dart:convert';
+import 'package:healthlog/model/record.dart';
 
-class Notes {
-  final int? id;
-  final String type;
-  final int user;
-  final Note content;
-  final String date;
-  final String comments;
+class Notes extends HealthRecord<Note> {
   Notes(
-      {this.id,
-      required this.user,
-      required this.type,
-      required this.date,
-      required this.content,
-      required this.comments});
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'user': user,
-      'type': type,
-      'content': jsonEncode(content.toMap()),
-      'date': date,
-      'comments': comments
-    };
-  }
+      {super.id,
+      required super.user,
+      required super.type,
+      required super.date,
+      required super.content,
+      required super.comments});
 
   factory Notes.fromJson(String json) {
     var map = jsonDecode(json);
-    return Notes(
-        id: map["id"],
-        user: map["user"],
-        type: map["type"],
-        content: map["content"],
-        date: map["date"],
-        comments: map["comments"]);
+    return Notes.fromMap(map);
   }
 
-  Notes.fromMap(Map<String, dynamic> res)
-      : id = res["id"],
-        user = res["user"],
-        type = res["type"],
-        content = Note.fromJson(res["content"]),
-        date = res['date'],
-        comments = res['comments'];
+  factory Notes.fromMap(Map<String, dynamic> res) {
+    return Notes(
+        id: res["id"],
+        user: res["user"],
+        type: res["type"],
+        content: Note.fromJson(jsonDecode(res["content"])),
+        date: res['date'],
+        comments: res['comments']);
+  }
 }
 
 class Note {
@@ -62,8 +43,8 @@ class Note {
         title: map["title"], note: map["note"], notetype: map["notetype"]);
   }
 
-  Note.fromMap(Map<String, dynamic> res)
-      : title = res['title'],
-        note = res['note'],
-        notetype = res['type'];
+  Note.fromMap(Map<String, dynamic> map)
+      : title = map['title'],
+        note = map['note'],
+        notetype = map['type'];
 }

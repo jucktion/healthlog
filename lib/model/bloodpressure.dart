@@ -1,48 +1,32 @@
 import 'dart:convert';
 
-class BloodPressure {
-  final int? id;
-  final String type;
-  final int user;
-  final BP content;
-  final String date;
-  final String comments;
-  BloodPressure(
-      {this.id,
-      required this.user,
-      required this.type,
-      required this.date,
-      required this.content,
-      required this.comments});
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'user': user,
-      'type': type,
-      'content': jsonEncode(content.toMap()),
-      'date': date,
-      'comments': comments
-    };
-  }
+import 'package:healthlog/model/record.dart';
+
+class BloodPressure extends HealthRecord<BP> {
+  BloodPressure({
+    super.id,
+    required super.user,
+    required super.type,
+    required super.date,
+    required super.content,
+    required super.comments,
+  });
 
   factory BloodPressure.fromJson(String json) {
     var map = jsonDecode(json);
-    return BloodPressure(
-        id: map["id"],
-        user: map["user"],
-        type: map["type"],
-        content: map["content"],
-        date: map["date"],
-        comments: map["comments"]);
+    return BloodPressure.fromMap(map);
   }
 
-  BloodPressure.fromMap(Map<String, dynamic> res)
-      : id = res["id"],
-        user = res["user"],
-        type = res["type"],
-        content = BP.fromJson(res["content"]),
-        date = res['date'],
-        comments = res['comments'];
+  factory BloodPressure.fromMap(Map<String, dynamic> map) {
+    return BloodPressure(
+      id: map["id"],
+      user: map["user"],
+      type: map["type"],
+      content: BP.fromMap(jsonDecode(map["content"])),
+      date: map["date"],
+      comments: map["comments"],
+    );
+  }
 }
 
 class BP {
