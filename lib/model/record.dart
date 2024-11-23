@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-// Define a generic class for common properties
 class HealthRecord<T> {
   final int? id;
   final String type;

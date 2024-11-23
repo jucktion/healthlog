@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:healthlog/model/record.dart';
 
 class BloodPressure extends HealthRecord<BP> {
