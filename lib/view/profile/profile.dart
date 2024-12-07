@@ -243,7 +243,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return FutureBuilder(
             future: entrysg,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return Text('Sugar: ${snapshot.data}');
+              return Text('Sugar: ${snapshot.data}',
+                  style: TextStyle(fontSize: 19));
             });
 
       case 'bp':
@@ -251,7 +252,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return FutureBuilder(
             future: entrybp,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return Text('BP: ${snapshot.data}');
+              return Text('BP: ${snapshot.data}',
+                  style: TextStyle(fontSize: 19));
             });
       case 'chlstrl':
         Future<String> entrych = handler.chlstrlReading(
@@ -259,7 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return FutureBuilder(
             future: entrych,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return Text('Cholesterol: ${snapshot.data}');
+              return Text('Cholesterol: ${snapshot.data}',
+                  style: TextStyle(fontSize: 19));
             });
       default:
         return const Text('');

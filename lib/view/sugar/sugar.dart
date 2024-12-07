@@ -149,12 +149,6 @@ class _SGScreenState extends State<SGScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 String unit =
                                     _prefs!.getString('sugarUnit').toString();
-                                String reading = GlobalMethods.convertUnit(
-                                        unit,
-                                        items[index].content.unit,
-                                        items[index].content.reading)
-                                    .toStringAsFixed(2);
-
                                 return Dismissible(
                                   direction: DismissDirection.startToEnd,
                                   background: Container(
@@ -191,24 +185,16 @@ class _SGScreenState extends State<SGScreen> {
                                   },
                                   child: Card(
                                       child: InkWell(
-                                    onTap: () => {
-                                      SGHelper.showRecord(
-                                          context,
-                                          items[index].id ?? 0,
-                                          _prefs!
-                                              .getString('sugarUnit')
-                                              .toString())
-                                    },
-                                    child: ListTile(
-                                      trailing: Text(
-                                          '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
-                                      contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(
-                                          '${items[index].type.toUpperCase()}: $reading $unit, ${items[index].content.beforeAfter}'),
-                                      subtitle: Text(
-                                          'Comment: ${items[index].comments.toString()}'),
-                                    ),
-                                  )),
+                                          onTap: () => {
+                                                SGHelper.showRecord(
+                                                    context,
+                                                    items[index].id ?? 0,
+                                                    _prefs!
+                                                        .getString('sugarUnit')
+                                                        .toString())
+                                              },
+                                          child: SGHelper.tileSugar(
+                                              context, items[index], unit))),
                                 );
                               },
                             ),

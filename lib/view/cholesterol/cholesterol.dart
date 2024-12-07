@@ -146,16 +146,6 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                               itemBuilder: (BuildContext context, int index) {
                                 String unit =
                                     _prefs!.getString('chlstrlUnit').toString();
-                                String fromUnit = items[index].content.unit;
-                                String total = GlobalMethods.convertUnit(unit,
-                                        fromUnit, items[index].content.total)
-                                    .toStringAsFixed(2);
-                                String hdl = GlobalMethods.convertUnit(unit,
-                                        fromUnit, items[index].content.hdl)
-                                    .toStringAsFixed(2);
-                                String ldl = GlobalMethods.convertUnit(unit,
-                                        fromUnit, items[index].content.ldl)
-                                    .toStringAsFixed(2);
                                 return Dismissible(
                                   direction: DismissDirection.startToEnd,
                                   background: Container(
@@ -191,21 +181,14 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                         });
                                   },
                                   child: Card(
-                                      child: InkWell(
-                                    onTap: () => {
-                                      CHLSTRLHelper.showRecord(
-                                          context, items[index].id ?? 0, unit)
-                                    },
-                                    child: ListTile(
-                                      trailing: Text(
-                                          '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
-                                      contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(
-                                          '${items[index].type.toUpperCase()}: Total/HDL/LDL \n$total/$hdl/$ldl $unit'),
-                                      subtitle: Text(
-                                          'Comment: ${items[index].comments.toString()}'),
-                                    ),
-                                  )),
+                                    child: InkWell(
+                                        onTap: () => {
+                                              CHLSTRLHelper.showRecord(context,
+                                                  items[index].id ?? 0, unit)
+                                            },
+                                        child: CHLSTRLHelper.tileCHLSTRL(
+                                            context, items[index], unit)),
+                                  ),
                                 );
                               },
                             ),

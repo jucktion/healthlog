@@ -198,122 +198,143 @@ class SGHelper {
 
     sg = getList();
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return FutureBuilder<List<Sugar>>(
-            future: sg,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  final entry = snapshot.data ?? [];
-                  //Convert the units as required from settings
-                  String reading = GlobalMethods.convertUnit(unit,
-                          entry.first.content.unit, entry.first.content.reading)
-                      .toStringAsFixed(2);
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder<List<Sugar>>(
+          future: sg,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final entry = snapshot.data ?? [];
+                //Convert the units as required from settings
+                String reading = GlobalMethods.convertUnit(unit,
+                        entry.first.content.unit, entry.first.content.reading)
+                    .toStringAsFixed(2);
 
-                  return AlertDialog(
-                    title: Row(
+                return AlertDialog(
+                  title: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.receipt_rounded,
+                          size: 25,
+                          color: Colors.green,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Sugar Record: $entryid'),
+                      ),
+                    ],
+                  ),
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.receipt_rounded,
-                            size: 25,
-                            color: Colors.green,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                                '${entry.first.content.beforeAfter.toUpperCase()}:',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text(
+                              '$reading $unit',
+                              //Color the readings based on range
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: (unit == 'mg/dL' &&
+                                              entry.first.content.beforeAfter ==
+                                                  'before' &&
+                                              double.parse(reading) > 110) ||
+                                          (unit == 'mg/dL' &&
+                                              entry.first.content.beforeAfter ==
+                                                  'after' &&
+                                              double.parse(reading) > 140)
+                                      ? Colors.red
+                                      : Colors.green),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: SizedBox(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                unit == 'mg/dL'
+                                    ? const Text('Fasting: 60-110 mg/dL')
+                                    : const Text('Fasting: 3.33-6.11 mmol/L'),
+                                unit == 'mg/dL'
+                                    ? const Text('After: 70-140 mg/dL')
+                                    : const Text('After: 3.88-7.77 mmol/L')
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Sugar Record: $entryid'),
-                        ),
+                          padding: const EdgeInsets.only(top: 25.0),
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                    'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month}-${DateTime.parse(entry.first.date).day}'),
+                                Text(
+                                    'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
-                    content: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Text(
-                                  '${entry.first.content.beforeAfter.toUpperCase()}:',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              Text(
-                                '$reading $unit',
-                                //Color the readings based on range
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: (unit == 'mg/dL' &&
-                                                entry.first.content
-                                                        .beforeAfter ==
-                                                    'before' &&
-                                                double.parse(reading) > 110) ||
-                                            (unit == 'mg/dL' &&
-                                                entry.first.content
-                                                        .beforeAfter ==
-                                                    'after' &&
-                                                double.parse(reading) > 140)
-                                        ? Colors.red
-                                        : Colors.green),
-                              ),
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: SizedBox(
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  unit == 'mg/dL'
-                                      ? const Text('Fasting: 60-110 mg/dL')
-                                      : const Text('Fasting: 3.33-6.11 mmol/L'),
-                                  unit == 'mg/dL'
-                                      ? const Text('After: 70-140 mg/dL')
-                                      : const Text('After: 3.88-7.77 mmol/L')
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month}-${DateTime.parse(entry.first.date).day}'),
-                                  Text(
-                                      'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  );
-                }
-              } else {
-                return const CircularProgressIndicator(); // Or any loading indicator widget
+                  ],
+                );
               }
-            },
-          );
-        });
+            } else {
+              return const CircularProgressIndicator(); // Or any loading indicator widget
+            }
+          },
+        );
+      },
+    );
+  }
+
+  static ListTile tileSugar(BuildContext context, Sugar items, unit) {
+    String reading = GlobalMethods.convertUnit(
+            unit, items.content.unit, items.content.reading)
+        .toStringAsFixed(2);
+    return ListTile(
+      trailing: Text(
+        '${DateTime.parse(items.date).year}-${DateTime.parse(items.date).month}-${DateTime.parse(items.date).day} ${DateTime.parse(items.date).hour}:${DateTime.parse(items.date).minute}',
+      ),
+      contentPadding: const EdgeInsets.all(8.0),
+      title: RichText(
+          text: TextSpan(
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+                fontSize: 19,
+              ),
+              children: [
+            TextSpan(
+                text: '$reading $unit, ${items.content.beforeAfter}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ])),
+      subtitle: Text('Note: ${items.comments.toString()}'),
+    );
   }
 }

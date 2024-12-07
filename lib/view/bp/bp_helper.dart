@@ -307,4 +307,29 @@ class BPHelper {
           );
         });
   }
+
+  static ListTile tileBP(BuildContext context, BloodPressure items) {
+    return ListTile(
+      trailing: Text(
+        '${DateTime.parse(items.date).year}-${DateTime.parse(items.date).month}-${DateTime.parse(items.date).day} ${DateTime.parse(items.date).hour}:${DateTime.parse(items.date).minute}',
+      ),
+      contentPadding: const EdgeInsets.all(8.0),
+      title: RichText(
+          text: TextSpan(
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+                fontSize: 19,
+              ),
+              children: [
+            TextSpan(
+              text: '${items.type.toUpperCase()}:',
+            ),
+            TextSpan(
+                text: '${items.content.systolic}/${items.content.diastolic}',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ])),
+      subtitle: Text(
+          'Arm: ${items.content.arm.toString()}, Note: ${items.comments.toString()}'),
+    );
+  }
 }

@@ -221,201 +221,227 @@ class CHLSTRLHelper {
 
     ch = getList();
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return FutureBuilder<List<Cholesterol>>(
-            future: ch,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  final entry = snapshot.data ?? [];
-                  final fromUnit = entry.first.content.unit;
-                  final double nonhdl = GlobalMethods.convertUnit(
-                      unit,
-                      fromUnit,
-                      (entry.first.content.total - entry.first.content.hdl));
-                  return AlertDialog(
-                    title: Row(
+      context: context,
+      builder: (BuildContext context) {
+        return FutureBuilder<List<Cholesterol>>(
+          future: ch,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final entry = snapshot.data ?? [];
+                final fromUnit = entry.first.content.unit;
+                final double nonhdl = GlobalMethods.convertUnit(unit, fromUnit,
+                    (entry.first.content.total - entry.first.content.hdl));
+                return AlertDialog(
+                  title: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.receipt_rounded,
+                          size: 25,
+                          color: Colors.green,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Record ID: $entryid'),
+                      ),
+                    ],
+                  ),
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('Total:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text(
+                                GlobalMethods.convertUnit(unit, fromUnit,
+                                        entry.first.content.total)
+                                    .toStringAsFixed(2),
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: (entry.first.content.total > 240 &&
+                                            unit == 'mg/dL')
+                                        ? Colors.red
+                                        : (entry.first.content.total < 200 &&
+                                                unit == 'mg/dL')
+                                            ? Colors.green
+                                            : Colors.brown)),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('TAG:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text(
+                              GlobalMethods.convertUnit(
+                                      unit, fromUnit, entry.first.content.tag)
+                                  .toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: (entry.first.content.tag > 500 &&
+                                          unit == 'mg/dL')
+                                      ? Colors.red
+                                      : (entry.first.content.tag < 150 &&
+                                              unit == 'mg/dL')
+                                          ? Colors.green
+                                          : Colors.brown),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('HDL:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text(
+                              GlobalMethods.convertUnit(
+                                      unit, fromUnit, entry.first.content.hdl)
+                                  .toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: (entry.first.content.hdl > 60 &&
+                                          unit == 'mg/dL')
+                                      ? Colors.red
+                                      : (entry.first.content.hdl > 40 &&
+                                              entry.first.content.hdl < 60 &&
+                                              unit == 'mg/dL')
+                                          ? Colors.green
+                                          : (entry.first.content.hdl < 40 &&
+                                                  unit == 'mg/dL')
+                                              ? Colors.blue
+                                              : Colors.brown),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('LDL:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text(
+                              GlobalMethods.convertUnit(
+                                      unit, fromUnit, entry.first.content.ldl)
+                                  .toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: (entry.first.content.ldl > 160 &&
+                                          unit == 'mg/dL')
+                                      ? Colors.red
+                                      : (entry.first.content.ldl < 100 &&
+                                              unit == 'mg/dL')
+                                          ? Colors.green
+                                          : Colors.brown),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('Non-HDL:',
+                                style: TextStyle(fontSize: 20)),
+                            Text(
+                              nonhdl.toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: (nonhdl > 160 && unit == 'mg/dL')
+                                      ? Colors.red
+                                      : (entry.first.content.ldl < 130 &&
+                                              unit == 'mg/dL')
+                                          ? Colors.green
+                                          : Colors.brown),
+                            ),
+                          ],
+                        ),
                         const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.receipt_rounded,
-                            size: 25,
-                            color: Colors.green,
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('TAG: (Tracyglyclerol)'),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Record ID: $entryid'),
-                        ),
+                          padding: const EdgeInsets.only(top: 25.0),
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                    'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month}-${DateTime.parse(entry.first.date).day}'),
+                                Text(
+                                    'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
+                              ],
+                            ),
+                          ),
+                        )
                       ],
                     ),
-                    content: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text('Total:',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              Text(
-                                  GlobalMethods.convertUnit(unit, fromUnit,
-                                          entry.first.content.total)
-                                      .toStringAsFixed(2),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: (entry.first.content.total > 240 &&
-                                              unit == 'mg/dL')
-                                          ? Colors.red
-                                          : (entry.first.content.total < 200 &&
-                                                  unit == 'mg/dL')
-                                              ? Colors.green
-                                              : Colors.brown)),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text('TAG:',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              Text(
-                                GlobalMethods.convertUnit(
-                                        unit, fromUnit, entry.first.content.tag)
-                                    .toStringAsFixed(2),
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: (entry.first.content.tag > 500 &&
-                                            unit == 'mg/dL')
-                                        ? Colors.red
-                                        : (entry.first.content.tag < 150 &&
-                                                unit == 'mg/dL')
-                                            ? Colors.green
-                                            : Colors.brown),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text('HDL:',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              Text(
-                                GlobalMethods.convertUnit(
-                                        unit, fromUnit, entry.first.content.hdl)
-                                    .toStringAsFixed(2),
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: (entry.first.content.hdl > 60 &&
-                                            unit == 'mg/dL')
-                                        ? Colors.red
-                                        : (entry.first.content.hdl > 40 &&
-                                                entry.first.content.hdl < 60 &&
-                                                unit == 'mg/dL')
-                                            ? Colors.green
-                                            : (entry.first.content.hdl < 40 &&
-                                                    unit == 'mg/dL')
-                                                ? Colors.blue
-                                                : Colors.brown),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text('LDL:',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  )),
-                              Text(
-                                GlobalMethods.convertUnit(
-                                        unit, fromUnit, entry.first.content.ldl)
-                                    .toStringAsFixed(2),
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: (entry.first.content.ldl > 160 &&
-                                            unit == 'mg/dL')
-                                        ? Colors.red
-                                        : (entry.first.content.ldl < 100 &&
-                                                unit == 'mg/dL')
-                                            ? Colors.green
-                                            : Colors.brown),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              const Text('Non-HDL:',
-                                  style: TextStyle(fontSize: 20)),
-                              Text(
-                                nonhdl.toStringAsFixed(2),
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: (nonhdl > 160 && unit == 'mg/dL')
-                                        ? Colors.red
-                                        : (entry.first.content.ldl < 130 &&
-                                                unit == 'mg/dL')
-                                            ? Colors.green
-                                            : Colors.brown),
-                              ),
-                            ],
-                          ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 10.0),
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('TAG: (Tracyglyclerol)'),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: SizedBox(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                      'Date: ${DateTime.parse(entry.first.date).year}-${DateTime.parse(entry.first.date).month}-${DateTime.parse(entry.first.date).day}'),
-                                  Text(
-                                      'Time: ${DateTime.parse(entry.first.date).hour}:${DateTime.parse(entry.first.date).minute}')
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  );
-                }
-              } else {
-                return const CircularProgressIndicator(); // Or any loading indicator widget
+                  ],
+                );
               }
-            },
-          );
-        });
+            } else {
+              return const CircularProgressIndicator(); // Or any loading indicator widget
+            }
+          },
+        );
+      },
+    );
+  }
+
+  static ListTile tileCHLSTRL(BuildContext context, Cholesterol items, unit) {
+    String fromUnit = items.content.unit;
+    String total =
+        GlobalMethods.convertUnit(unit, fromUnit, items.content.total)
+            .toStringAsFixed(2);
+    String hdl = GlobalMethods.convertUnit(unit, fromUnit, items.content.hdl)
+        .toStringAsFixed(2);
+    String ldl = GlobalMethods.convertUnit(unit, fromUnit, items.content.ldl)
+        .toStringAsFixed(2);
+    return ListTile(
+      trailing: Text(
+        '${DateTime.parse(items.date).year}-${DateTime.parse(items.date).month}-${DateTime.parse(items.date).day} ${DateTime.parse(items.date).hour}:${DateTime.parse(items.date).minute}',
+      ),
+      contentPadding: const EdgeInsets.all(8.0),
+      title: RichText(
+          text: TextSpan(
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+                fontSize: 19,
+              ),
+              children: [
+            TextSpan(
+                text: 'Total/HDL/LDL: \n$total/$hdl/$ldl $unit',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+          ])),
+      subtitle: Text('Note: ${items.comments.toString()}'),
+    );
   }
 }

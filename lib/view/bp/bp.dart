@@ -167,23 +167,16 @@ class _BPScreenState extends State<BPScreen> {
                                         });
                                   },
                                   child: Card(
-                                      child: InkWell(
-                                    onTap: () => {
-                                      BPHelper.showRecord(
-                                        context,
-                                        items[index].id ?? 0,
-                                      )
-                                    },
-                                    child: ListTile(
-                                      trailing: Text(
-                                          '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
-                                      contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(
-                                          '${items[index].type.toUpperCase()}: ${items[index].content.systolic}/${items[index].content.diastolic}'),
-                                      subtitle: Text(
-                                          'Arm: ${items[index].content.arm.toString()}, Note: ${items[index].comments.toString()}'),
-                                    ),
-                                  )),
+                                    child: InkWell(
+                                        onTap: () => {
+                                              BPHelper.showRecord(
+                                                context,
+                                                items[index].id ?? 0,
+                                              )
+                                            },
+                                        child: BPHelper.tileBP(
+                                            context, items[index])),
+                                  ),
                                 );
                               },
                             ),
