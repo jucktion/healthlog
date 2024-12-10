@@ -247,7 +247,12 @@ class CHLSTRLHelper {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Record ID: $entryid'),
+                        child: Text(
+                          'Record ID: $entryid',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),

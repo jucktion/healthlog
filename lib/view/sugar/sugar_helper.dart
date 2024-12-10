@@ -226,7 +226,12 @@ class SGHelper {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Sugar Record: $entryid'),
+                        child: Text(
+                          'Sugar Record: $entryid',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),

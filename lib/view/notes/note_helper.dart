@@ -177,7 +177,12 @@ class NoteHelper {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('Note ID: $entryid'),
+                          child: Text(
+                            'Note ID: $entryid',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -210,8 +215,10 @@ class NoteHelper {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(25.0),
-                            child:
-                                Text('Type: ${entry.first.content.notetype}'),
+                            child: Text(
+                              'Note: ${entry.first.comments}',
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 5.0),
@@ -235,6 +242,13 @@ class NoteHelper {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(context),
+                        style: ButtonStyle(
+                            backgroundColor: Theme.of(context)
+                                .elevatedButtonTheme
+                                .style
+                                ?.backgroundColor
+                            // Fallback color
+                            ),
                         child: const Text('OK'),
                       ),
                     ],

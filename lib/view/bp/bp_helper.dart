@@ -213,7 +213,12 @@ class BPHelper {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text('BP Record: $entryid'),
+                          child: Text(
+                            'BP Record: $entryid',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -310,6 +315,7 @@ class BPHelper {
 
   static ListTile tileBP(BuildContext context, BloodPressure items) {
     return ListTile(
+      tileColor: Theme.of(context).listTileTheme.tileColor,
       trailing: Text(
         '${DateTime.parse(items.date).year}-${DateTime.parse(items.date).month}-${DateTime.parse(items.date).day} ${DateTime.parse(items.date).hour}:${DateTime.parse(items.date).minute}',
       ),
