@@ -405,7 +405,7 @@ class CHLSTRLHelper {
                     ),
                   ),
                   actions: [
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () => Navigator.pop(context),
                       child: const Text('OK'),
                     ),

@@ -28,11 +28,11 @@ class GlobalMethods {
               child: Text(subtitle),
             ),
             actions: [
-              TextButton(
+              ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Cancel'),
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   func();
                   Navigator.pop(context);

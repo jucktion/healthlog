@@ -39,20 +39,21 @@ class NoteHelper {
                             style: TextStyle(
                               fontSize: 17,
                             )),
-                        DropdownButton<String>(
-                          hint: Text('Select an option'), // Hint text
-                          value: selectedValue, // Currently selected value
-                          onChanged: (String? newValue) {
+                        DropdownMenu<String>(
+                          // Hint text
+                          initialSelection:
+                              selectedValue, // Currently selected value
+                          onSelected: (String? newValue) {
                             setState(() {
                               selectedValue =
                                   newValue; // Update the selected value
                             });
                           },
-                          items: items
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
+                          dropdownMenuEntries: items
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
                               value: value,
-                              child: Text(value), // Display each item
+                              label: value, // Display each item
                             );
                           }).toList(),
                         ),
@@ -240,15 +241,8 @@ class NoteHelper {
                       ),
                     ),
                     actions: [
-                      TextButton(
+                      ElevatedButton(
                         onPressed: () => Navigator.pop(context),
-                        style: ButtonStyle(
-                            backgroundColor: Theme.of(context)
-                                .elevatedButtonTheme
-                                .style
-                                ?.backgroundColor
-                            // Fallback color
-                            ),
                         child: const Text('OK'),
                       ),
                     ],

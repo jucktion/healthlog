@@ -303,7 +303,7 @@ class SGHelper {
                     ),
                   ),
                   actions: [
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () => Navigator.pop(context),
                       child: const Text('OK'),
                     ),

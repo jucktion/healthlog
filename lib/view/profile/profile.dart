@@ -338,7 +338,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-                color: Theme.of(context).primaryColorDark,
+                color: Theme.of(context).splashColor,
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
