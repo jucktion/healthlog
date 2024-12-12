@@ -193,7 +193,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           break;
                                         case 'bp':
                                           BPHelper.showRecord(
-                                              context, items[index].id);
+                                              context,
+                                              items[index].id,
+                                              _refreshIndicatorKey);
                                           break;
                                         case 'chlstrl':
                                           CHLSTRLHelper.showRecord(

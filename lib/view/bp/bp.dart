@@ -170,9 +170,9 @@ class _BPScreenState extends State<BPScreen> {
                                     child: InkWell(
                                         onTap: () => {
                                               BPHelper.showRecord(
-                                                context,
-                                                items[index].id ?? 0,
-                                              )
+                                                  context,
+                                                  items[index].id ?? 0,
+                                                  _refreshIndicatorKey)
                                             },
                                         child: BPHelper.tileBP(
                                             context, items[index])),

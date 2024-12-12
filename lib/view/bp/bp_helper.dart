@@ -180,7 +180,226 @@ class BPHelper {
     );
   }
 
-  static Future<void> showRecord(BuildContext context, int entryid) async {
+  static Future<void> statefulUpdateBpModal(BuildContext context,
+      {required int userid,
+      required int entryid,
+      required Function callback,
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+    final formKey = GlobalKey<FormState>();
+
+    late DatabaseHandler handler;
+    late Future<List<BloodPressure>> bp;
+    Future<List<BloodPressure>> getList() async {
+      handler = DatabaseHandler.instance;
+      return await handler.bpEntry(entryid);
+    }
+
+    int systolic = 120;
+    int diastolic = 80;
+    int heartrate = 70;
+    String arm = "";
+    String armGroup = "";
+    String comment = "";
+    bp = getList();
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: ((context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SizedBox(
+              height: 450,
+              width: MediaQuery.of(context).size.width / 1.25,
+              child: FutureBuilder<List<BloodPressure>>(
+                future: bp,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      final entry = snapshot.data ?? [];
+                      final bpd = entry.first.content;
+                      armGroup = bpd.arm;
+                      return Form(
+                        key: formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40, right: 40),
+                              child: TextFormField(
+                                  initialValue: bpd.systolic.toString(),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter systolic value';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: '120',
+                                    label: Text('Systolic'),
+                                  ),
+                                  onChanged: (String? value) {
+                                    setState(() =>
+                                        systolic = int.parse(value.toString()));
+                                  }),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40, right: 40),
+                              child: TextFormField(
+                                  initialValue: bpd.diastolic.toString(),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter diastolic value';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: '80',
+                                    label: Text('Diastolic'),
+                                  ),
+                                  onChanged: (String? value) {
+                                    setState(() => diastolic =
+                                        int.parse(value.toString()));
+                                  }),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40, right: 40),
+                              child: TextFormField(
+                                  initialValue: bpd.heartrate.toString(),
+                                  keyboardType: TextInputType.number,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your heartrate';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: const InputDecoration(
+                                    hintText: '70',
+                                    label: Text('Heartrate'),
+                                  ),
+                                  onChanged: (String? value) {
+                                    setState(() => heartrate =
+                                        int.parse(value.toString()));
+                                  }),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: 150,
+                                  child: RadioListTile<String>(
+                                      title: const Text("Left"),
+                                      value: "left",
+                                      groupValue: armGroup,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          arm = armGroup = value.toString();
+                                        });
+                                      }),
+                                ),
+                                SizedBox(
+                                  width: 150,
+                                  child: RadioListTile<String>(
+                                    title: const Text("Right"),
+                                    value: "right",
+                                    groupValue: armGroup,
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        arm = armGroup = value.toString();
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40, right: 40),
+                              child: TextFormField(
+                                  initialValue: entry.first.comments,
+                                  decoration: const InputDecoration(
+                                      hintText: 'Before Breakfast/After Dinner',
+                                      label: Text('Comments')),
+                                  onChanged: (String? value) {
+                                    setState(() => comment = value.toString());
+                                  }
+                                  // (value) {
+                                  //   setState(() {
+                                  //     comment = value;
+                                  //   });
+                                  // },
+                                  ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (formKey.currentState!.validate()) {
+                                  await DatabaseHandler.instance
+                                      .updateBp(
+                                          BloodPressure(
+                                              id: entry.first.id,
+                                              user: userid,
+                                              type: 'bp',
+                                              content: BP(
+                                                  systolic: systolic,
+                                                  diastolic: diastolic,
+                                                  heartrate: heartrate,
+                                                  arm: arm),
+                                              date: entry.first.date,
+                                              comments: comment),
+                                          userid,
+                                          entryid)
+                                      .whenComplete(() {
+                                    if (context.mounted) {
+                                      Navigator.pop(context);
+                                    }
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) =>
+                                            refreshIndicatorKey.currentState
+                                                ?.show());
+                                  });
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Processing Data')),
+                                  );
+                                }
+                              },
+                              child: const Text(
+                                'Update',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  } else {
+                    return const CircularProgressIndicator(); // Or any loading indicator widget
+                  }
+                },
+              ),
+            ),
+          );
+        });
+      }),
+    );
+  }
+
+  static Future<void> showRecord(BuildContext context, int entryid,
+      GlobalKey<RefreshIndicatorState> refresh) async {
     late DatabaseHandler handler;
     late Future<List<BloodPressure>> bp;
     Future<List<BloodPressure>> getList() async {
@@ -200,6 +419,7 @@ class BPHelper {
                   return Text('Error: ${snapshot.error}');
                 } else {
                   final entry = snapshot.data ?? [];
+                  final userid = entry.first.user;
                   return AlertDialog(
                     title: Row(
                       children: [
@@ -298,9 +518,21 @@ class BPHelper {
                       ),
                     ),
                     actions: [
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => statefulUpdateBpModal(context,
+                                userid: userid,
+                                entryid: entryid,
+                                callback: () {},
+                                refreshIndicatorKey: refresh),
+                            child: const Text('Update'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('OK'),
+                          ),
+                        ],
                       ),
                     ],
                   );

@@ -183,6 +183,22 @@ class DatabaseHandler {
     }
   }
 
+  Future<void> updateBp(BloodPressure bp, int userid, int entryid) async {
+    final db = await initializeDB();
+
+    try {
+      await db.update('data', bp.toMap(),
+          where: 'id=? AND user=?',
+          whereArgs: [entryid, userid],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+
   Future<String> bpReading(int entryid) async {
     final db = await initializeDB();
     final List<Map<String, dynamic>> queryResult = await db
