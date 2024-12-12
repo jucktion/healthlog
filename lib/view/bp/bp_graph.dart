@@ -231,7 +231,7 @@ class _BPGraphState extends State<BPGraph> {
                                                 colors: AppColors
                                                     .safegradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.6))
+                                                        color.withAlpha(153))
                                                     .toList(),
                                               ),
                                             ),
@@ -254,7 +254,7 @@ class _BPGraphState extends State<BPGraph> {
                                                 colors: AppColors
                                                     .cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.6))
+                                                        color.withAlpha(153))
                                                     .toList(),
                                               ),
                                             ),
@@ -285,7 +285,7 @@ class _BPGraphState extends State<BPGraph> {
                                                 colors: AppColors
                                                     .cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.6))
+                                                        color.withAlpha(153))
                                                     .toList(),
                                               ),
                                             ),

@@ -266,7 +266,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
@@ -288,7 +288,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),

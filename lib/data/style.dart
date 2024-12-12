@@ -23,6 +23,9 @@ final ThemeData healthDark = ThemeData(
     headlineLarge: TextStyle(color: Colors.white),
     headlineMedium: TextStyle(color: Colors.white),
     headlineSmall: TextStyle(color: Colors.white),
+    labelLarge: TextStyle(color: Colors.white),
+    labelMedium: TextStyle(color: Colors.white),
+    labelSmall: TextStyle(color: Colors.white),
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: Colors.black54,

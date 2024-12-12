@@ -287,7 +287,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
@@ -307,7 +307,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
@@ -327,7 +327,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
@@ -347,7 +347,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
@@ -367,7 +367,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withOpacity(0.3))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
