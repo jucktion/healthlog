@@ -189,7 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               items[index].id,
                                               _prefs!
                                                   .getString('sugarUnit')
-                                                  .toString());
+                                                  .toString(),
+                                              _refreshIndicatorKey);
                                           break;
                                         case 'bp':
                                           BPHelper.showRecord(
@@ -203,7 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               items[index].id,
                                               _prefs!
                                                   .getString('chlstrlUnit')
-                                                  .toString());
+                                                  .toString(),
+                                              _refreshIndicatorKey);
                                           break;
                                       }
                                       // ScaffoldMessenger.of(context)

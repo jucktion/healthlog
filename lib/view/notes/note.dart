@@ -161,7 +161,9 @@ class _NoteScreenState extends State<NoteScreen> {
                                     onTap: () => {
                                       items[index].content.notetype != 'Phone'
                                           ? NoteHelper.showRecord(
-                                              context, items[index].id ?? 0)
+                                              context,
+                                              items[index].id ?? 0,
+                                              _refreshIndicatorKey)
                                           : _launchUrl(
                                               'tel:${items[index].content.note}')
                                     },

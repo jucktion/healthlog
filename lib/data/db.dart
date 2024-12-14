@@ -286,6 +286,22 @@ class DatabaseHandler {
     }
   }
 
+  Future<void> updateSg(Sugar sg, int userid, int entryid) async {
+    final db = await initializeDB();
+
+    try {
+      await db.update('data', sg.toMap(),
+          where: 'id=? AND user=?',
+          whereArgs: [entryid, userid],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+
 // SG END
 
 // Cholesterol (Sugar)
@@ -357,6 +373,22 @@ class DatabaseHandler {
       //print('Error while inserting data: $e');
     }
   }
+
+  Future<void> updateCh(Cholesterol ch, int userid, int entryid) async {
+    final db = await initializeDB();
+
+    try {
+      await db.update('data', ch.toMap(),
+          where: 'id=? AND user=?',
+          whereArgs: [entryid, userid],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
 // CHLSTRL END
 
 // Note
@@ -376,6 +408,22 @@ class DatabaseHandler {
 
     try {
       await db.insert('data', note.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+
+  Future<void> updateNote(Notes nt, int userid, int entryid) async {
+    final db = await initializeDB();
+
+    try {
+      await db.update('data', nt.toMap(),
+          where: 'id=? AND user=?',
+          whereArgs: [entryid, userid],
           conflictAlgorithm: ConflictAlgorithm.replace);
       if (_prefs?.getBool('alwaysbackupDB') == true) {
         backupDB();

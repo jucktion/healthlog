@@ -187,8 +187,231 @@ class SGHelper {
     );
   }
 
-  static Future<void> showRecord(
-      BuildContext context, int entryid, String unit) async {
+  static Future<void> statefulSgUpdateModal(BuildContext context,
+      {required int userid,
+      required int entryid,
+      required Function callback,
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+    late DatabaseHandler handler;
+    late Future<List<Sugar>> sg;
+    Future<List<Sugar>> getList() async {
+      handler = DatabaseHandler.instance;
+      return await handler.sugarEntry(entryid);
+    }
+
+    sg = getList();
+
+    final formKey = GlobalKey<FormState>();
+    double reading = 0.00;
+    String beforeAfter = '';
+    // String fastingNormalReading = '60 - 110';
+    // String afterFastingNormalReading = '70 - 140';
+    String fastGroup = "";
+    String unit = "mg/dL";
+    String unitGroup = "mg/dL";
+    String comment = "";
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: ((context) {
+        return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+          return Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: SizedBox(
+              height: 450,
+              width: MediaQuery.of(context).size.width / 1.25,
+              child: FutureBuilder<List<Sugar>>(
+                  future: sg,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        final entry = snapshot.data ?? [];
+                        final sgd = entry.first.content;
+                        return Form(
+                          key: formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 150,
+                                    child: RadioListTile<String>(
+                                        title: const Text("Before"),
+                                        value: "before",
+                                        groupValue: fastGroup,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            beforeAfter =
+                                                fastGroup = value.toString();
+                                          });
+                                        }),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: RadioListTile<String>(
+                                      title: const Text("After"),
+                                      value: "after",
+                                      groupValue: fastGroup,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          beforeAfter =
+                                              fastGroup = value.toString();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                    initialValue: sgd.reading.toString(),
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter blood sugar reading';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: (unit == 'mg/dL' &&
+                                              beforeAfter == 'before')
+                                          ? '60-110'
+                                          : (unit == 'mg/dL' &&
+                                                  beforeAfter == 'after')
+                                              ? '70-140'
+                                              : (unitGroup == 'mmol/L' &&
+                                                      beforeAfter == 'before')
+                                                  ? '3.33-6.11'
+                                                  : (unitGroup == 'mmol/L' &&
+                                                          beforeAfter ==
+                                                              'after')
+                                                      ? '3.88-7.77'
+                                                      : '',
+                                      suffixText: unitGroup,
+                                      label: const Text('Blood Sugar'),
+                                    ),
+                                    onChanged: (String? value) {
+                                      setState(() => reading =
+                                          double.parse(value.toString()));
+                                    }),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 160,
+                                    child: RadioListTile<String>(
+                                        title: const Text("mmol/L"),
+                                        value: "mmol/L",
+                                        groupValue: unitGroup,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            unit = unitGroup = value.toString();
+                                          });
+                                        }),
+                                  ),
+                                  SizedBox(
+                                    width: 150,
+                                    child: RadioListTile<String>(
+                                      title: const Text("mg/dL"),
+                                      selected: true,
+                                      value: "mg/dL",
+                                      groupValue: unitGroup,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          unit = unitGroup = value.toString();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                    decoration: const InputDecoration(
+                                        hintText: 'What did you eat',
+                                        label: Text('Comments')),
+                                    onChanged: (String? value) {
+                                      setState(
+                                          () => comment = value.toString());
+                                    }
+                                    // (value) {
+                                    //   setState(() {
+                                    //     comment = value;
+                                    //   });
+                                    // },
+                                    ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    await DatabaseHandler.instance
+                                        .updateSg(
+                                            Sugar(
+                                                id: entry.first.id,
+                                                user: userid,
+                                                type: 'sugar',
+                                                content: SG(
+                                                    reading: reading,
+                                                    beforeAfter: beforeAfter,
+                                                    unit: unit),
+                                                date: DateTime.now()
+                                                    .toIso8601String(),
+                                                comments: comment),
+                                            userid,
+                                            entryid)
+                                        .whenComplete(() {
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) =>
+                                              refreshIndicatorKey.currentState
+                                                  ?.show());
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Processing Data')),
+                                    );
+                                  }
+                                },
+                                child: const Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                    } else {
+                      return const CircularProgressIndicator(); // Or any loading indicator widget
+                    }
+                  }),
+            ),
+          );
+        });
+      }),
+    );
+  }
+
+  static Future<void> showRecord(BuildContext context, int entryid, String unit,
+      GlobalKey<RefreshIndicatorState> refresh) async {
     late DatabaseHandler handler;
     late Future<List<Sugar>> sg;
     Future<List<Sugar>> getList() async {
@@ -208,6 +431,7 @@ class SGHelper {
                 return Text('Error: ${snapshot.error}');
               } else {
                 final entry = snapshot.data ?? [];
+                final userid = entry.first.user;
                 //Convert the units as required from settings
                 String reading = GlobalMethods.convertUnit(unit,
                         entry.first.content.unit, entry.first.content.reading)
@@ -303,9 +527,25 @@ class SGHelper {
                     ),
                   ),
                   actions: [
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => {
+                            Navigator.pop(context),
+                            statefulSgUpdateModal(context,
+                                userid: userid,
+                                entryid: entryid,
+                                callback: () {},
+                                refreshIndicatorKey: refresh)
+                          },
+                          child: const Text('Update'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('OK'),
+                        ),
+                      ],
                     ),
                   ],
                 );

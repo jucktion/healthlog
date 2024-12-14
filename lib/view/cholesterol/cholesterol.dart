@@ -183,8 +183,11 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                   child: Card(
                                     child: InkWell(
                                         onTap: () => {
-                                              CHLSTRLHelper.showRecord(context,
-                                                  items[index].id ?? 0, unit)
+                                              CHLSTRLHelper.showRecord(
+                                                  context,
+                                                  items[index].id ?? 0,
+                                                  unit,
+                                                  _refreshIndicatorKey)
                                             },
                                         child: CHLSTRLHelper.tileCHLSTRL(
                                             context, items[index], unit)),

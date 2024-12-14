@@ -223,7 +223,6 @@ class BPHelper {
                     } else {
                       final entry = snapshot.data ?? [];
                       final bpd = entry.first.content;
-                      armGroup = bpd.arm;
                       return Form(
                         key: formKey,
                         child: Column(
@@ -299,6 +298,8 @@ class BPHelper {
                                 SizedBox(
                                   width: 150,
                                   child: RadioListTile<String>(
+                                      fillColor:
+                                          WidgetStatePropertyAll(Colors.green),
                                       title: const Text("Left"),
                                       value: "left",
                                       groupValue: armGroup,
@@ -329,7 +330,7 @@ class BPHelper {
                               child: TextFormField(
                                   initialValue: entry.first.comments,
                                   decoration: const InputDecoration(
-                                      hintText: 'Before Breakfast/After Dinner',
+                                      hintText: 'Notes you want to include',
                                       label: Text('Comments')),
                                   onChanged: (String? value) {
                                     setState(() => comment = value.toString());
@@ -519,13 +520,17 @@ class BPHelper {
                     ),
                     actions: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
-                            onPressed: () => statefulUpdateBpModal(context,
-                                userid: userid,
-                                entryid: entryid,
-                                callback: () {},
-                                refreshIndicatorKey: refresh),
+                            onPressed: () => {
+                              Navigator.pop(context),
+                              statefulUpdateBpModal(context,
+                                  userid: userid,
+                                  entryid: entryid,
+                                  callback: () {},
+                                  refreshIndicatorKey: refresh)
+                            },
                             child: const Text('Update'),
                           ),
                           ElevatedButton(

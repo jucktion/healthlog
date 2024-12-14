@@ -191,7 +191,8 @@ class _SGScreenState extends State<SGScreen> {
                                                     items[index].id ?? 0,
                                                     _prefs!
                                                         .getString('sugarUnit')
-                                                        .toString())
+                                                        .toString(),
+                                                    _refreshIndicatorKey)
                                               },
                                           child: SGHelper.tileSugar(
                                               context, items[index], unit))),
