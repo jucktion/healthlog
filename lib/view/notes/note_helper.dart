@@ -24,7 +24,7 @@ class NoteHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 450,
+              height: 400,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -32,32 +32,35 @@ class NoteHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Text('Type:',
-                            style: TextStyle(
-                              fontSize: 17,
-                            )),
-                        DropdownMenu<String>(
-                          // Hint text
-                          initialSelection:
-                              selectedValue, // Currently selected value
-                          onSelected: (String? newValue) {
-                            setState(() {
-                              selectedValue =
-                                  newValue; // Update the selected value
-                            });
-                          },
-                          dropdownMenuEntries: items
-                              .map<DropdownMenuEntry<String>>((String value) {
-                            return DropdownMenuEntry<String>(
-                              value: value,
-                              label: value, // Display each item
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const Text('Type:',
+                              style: TextStyle(
+                                fontSize: 17,
+                              )),
+                          DropdownMenu<String>(
+                            // Hint text
+                            initialSelection:
+                                selectedValue, // Currently selected value
+                            onSelected: (String? newValue) {
+                              setState(() {
+                                selectedValue =
+                                    newValue; // Update the selected value
+                              });
+                            },
+                            dropdownMenuEntries: items
+                                .map<DropdownMenuEntry<String>>((String value) {
+                              return DropdownMenuEntry<String>(
+                                value: value,
+                                label: value, // Display each item
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -101,37 +104,41 @@ class NoteHelper {
                             setState(() => comment = value.toString());
                           }),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await DatabaseHandler.instance
-                              .insertNote(Notes(
-                                  user: userid,
-                                  type: 'note',
-                                  content: Note(
-                                    title: title,
-                                    note: note,
-                                    notetype: selectedValue.toString(),
-                                  ),
-                                  date: DateTime.now().toIso8601String(),
-                                  comments: comment))
-                              .whenComplete(() {
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                            WidgetsBinding.instance.addPostFrameCallback((_) =>
-                                refreshIndicatorKey.currentState?.show());
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(
-                          fontSize: 20,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            await DatabaseHandler.instance
+                                .insertNote(Notes(
+                                    user: userid,
+                                    type: 'note',
+                                    content: Note(
+                                      title: title,
+                                      note: note,
+                                      notetype: selectedValue.toString(),
+                                    ),
+                                    date: DateTime.now().toIso8601String(),
+                                    comments: comment))
+                                .whenComplete(() {
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                  (_) =>
+                                      refreshIndicatorKey.currentState?.show());
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Processing Data')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Add',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -176,7 +183,7 @@ class NoteHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 450,
+              height: 400,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<Notes>>(
                   future: nt,
@@ -253,7 +260,7 @@ class NoteHelper {
                                             ? Text('Phone No')
                                             : selectedValue == 'Medicine'
                                                 ? Text('Direction of Use')
-                                                : Text('Enter a note')),
+                                                : Text('Enter a short note')),
                                     onChanged: (String? value) {
                                       setState(() => note = value.toString());
                                     }),
@@ -270,45 +277,49 @@ class NoteHelper {
                                           () => comment = value.toString());
                                     }),
                               ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    await DatabaseHandler.instance
-                                        .updateNote(
-                                            Notes(
-                                                id: entry.first.id,
-                                                user: userid,
-                                                type: 'note',
-                                                content: Note(
-                                                  title: title,
-                                                  note: note,
-                                                  notetype:
-                                                      selectedValue.toString(),
-                                                ),
-                                                date: entry.first.date,
-                                                comments: comment),
-                                            userid,
-                                            entryid)
-                                        .whenComplete(() {
-                                      if (context.mounted) {
-                                        Navigator.pop(context);
-                                      }
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) =>
-                                              refreshIndicatorKey.currentState
-                                                  ?.show());
-                                    });
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text('Processing Data')),
-                                    );
-                                  }
-                                },
-                                child: const Text(
-                                  'Update',
-                                  style: TextStyle(
-                                    fontSize: 20,
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await DatabaseHandler.instance
+                                          .updateNote(
+                                              Notes(
+                                                  id: entry.first.id,
+                                                  user: userid,
+                                                  type: 'note',
+                                                  content: Note(
+                                                    title: title,
+                                                    note: note,
+                                                    notetype: selectedValue
+                                                        .toString(),
+                                                  ),
+                                                  date: entry.first.date,
+                                                  comments: comment),
+                                              userid,
+                                              entryid)
+                                          .whenComplete(() {
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                        }
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) =>
+                                                refreshIndicatorKey.currentState
+                                                    ?.show());
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Processing Data')),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Update',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),

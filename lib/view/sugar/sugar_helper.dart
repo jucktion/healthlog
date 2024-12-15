@@ -28,7 +28,7 @@ class SGHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 450,
+              height: 325,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -144,36 +144,40 @@ class SGHelper {
                           // },
                           ),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await DatabaseHandler.instance
-                              .insertSg(Sugar(
-                                  user: userid,
-                                  type: 'sugar',
-                                  content: SG(
-                                      reading: reading,
-                                      beforeAfter: beforeAfter,
-                                      unit: unit),
-                                  date: DateTime.now().toIso8601String(),
-                                  comments: comment))
-                              .whenComplete(() {
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                            WidgetsBinding.instance.addPostFrameCallback((_) =>
-                                refreshIndicatorKey.currentState?.show());
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(
-                          fontSize: 20,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            await DatabaseHandler.instance
+                                .insertSg(Sugar(
+                                    user: userid,
+                                    type: 'sugar',
+                                    content: SG(
+                                        reading: reading,
+                                        beforeAfter: beforeAfter,
+                                        unit: unit),
+                                    date: DateTime.now().toIso8601String(),
+                                    comments: comment))
+                                .whenComplete(() {
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                  (_) =>
+                                      refreshIndicatorKey.currentState?.show());
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Processing Data')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Add',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -221,7 +225,7 @@ class SGHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 450,
+              height: 325,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<Sugar>>(
                   future: sg,
@@ -354,44 +358,48 @@ class SGHelper {
                                     // },
                                     ),
                               ),
-                              ElevatedButton(
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    await DatabaseHandler.instance
-                                        .updateSg(
-                                            Sugar(
-                                                id: entry.first.id,
-                                                user: userid,
-                                                type: 'sugar',
-                                                content: SG(
-                                                    reading: reading,
-                                                    beforeAfter: beforeAfter,
-                                                    unit: unit),
-                                                date: DateTime.now()
-                                                    .toIso8601String(),
-                                                comments: comment),
-                                            userid,
-                                            entryid)
-                                        .whenComplete(() {
-                                      if (context.mounted) {
-                                        Navigator.pop(context);
-                                      }
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) =>
-                                              refreshIndicatorKey.currentState
-                                                  ?.show());
-                                    });
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text('Processing Data')),
-                                    );
-                                  }
-                                },
-                                child: const Text(
-                                  'Update',
-                                  style: TextStyle(
-                                    fontSize: 20,
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (formKey.currentState!.validate()) {
+                                      await DatabaseHandler.instance
+                                          .updateSg(
+                                              Sugar(
+                                                  id: entry.first.id,
+                                                  user: userid,
+                                                  type: 'sugar',
+                                                  content: SG(
+                                                      reading: reading,
+                                                      beforeAfter: beforeAfter,
+                                                      unit: unit),
+                                                  date: DateTime.now()
+                                                      .toIso8601String(),
+                                                  comments: comment),
+                                              userid,
+                                              entryid)
+                                          .whenComplete(() {
+                                        if (context.mounted) {
+                                          Navigator.pop(context);
+                                        }
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) =>
+                                                refreshIndicatorKey.currentState
+                                                    ?.show());
+                                      });
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text('Processing Data')),
+                                      );
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Update',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),

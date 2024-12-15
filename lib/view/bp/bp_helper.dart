@@ -25,7 +25,7 @@ class BPHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 450,
+              height: 375,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -136,37 +136,41 @@ class BPHelper {
                           // },
                           ),
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await DatabaseHandler.instance
-                              .insertBp(BloodPressure(
-                                  user: userid,
-                                  type: 'bp',
-                                  content: BP(
-                                      systolic: systolic,
-                                      diastolic: diastolic,
-                                      heartrate: heartrate,
-                                      arm: arm),
-                                  date: DateTime.now().toIso8601String(),
-                                  comments: comment))
-                              .whenComplete(() {
-                            if (context.mounted) {
-                              Navigator.pop(context);
-                            }
-                            WidgetsBinding.instance.addPostFrameCallback((_) =>
-                                refreshIndicatorKey.currentState?.show());
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(
-                          fontSize: 20,
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            await DatabaseHandler.instance
+                                .insertBp(BloodPressure(
+                                    user: userid,
+                                    type: 'bp',
+                                    content: BP(
+                                        systolic: systolic,
+                                        diastolic: diastolic,
+                                        heartrate: heartrate,
+                                        arm: arm),
+                                    date: DateTime.now().toIso8601String(),
+                                    comments: comment))
+                                .whenComplete(() {
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                              WidgetsBinding.instance.addPostFrameCallback(
+                                  (_) =>
+                                      refreshIndicatorKey.currentState?.show());
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Processing Data')),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Add',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -212,7 +216,7 @@ class BPHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 450,
+              height: 375,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<BloodPressure>>(
                 future: bp,
@@ -298,8 +302,6 @@ class BPHelper {
                                 SizedBox(
                                   width: 150,
                                   child: RadioListTile<String>(
-                                      fillColor:
-                                          WidgetStatePropertyAll(Colors.green),
                                       title: const Text("Left"),
                                       value: "left",
                                       groupValue: armGroup,
@@ -342,44 +344,47 @@ class BPHelper {
                                   // },
                                   ),
                             ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                if (formKey.currentState!.validate()) {
-                                  await DatabaseHandler.instance
-                                      .updateBp(
-                                          BloodPressure(
-                                              id: entry.first.id,
-                                              user: userid,
-                                              type: 'bp',
-                                              content: BP(
-                                                  systolic: systolic,
-                                                  diastolic: diastolic,
-                                                  heartrate: heartrate,
-                                                  arm: arm),
-                                              date: entry.first.date,
-                                              comments: comment),
-                                          userid,
-                                          entryid)
-                                      .whenComplete(() {
-                                    if (context.mounted) {
-                                      Navigator.pop(context);
-                                    }
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback((_) =>
-                                            refreshIndicatorKey.currentState
-                                                ?.show());
-                                  });
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Processing Data')),
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                'Update',
-                                style: TextStyle(
-                                  fontSize: 20,
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  if (formKey.currentState!.validate()) {
+                                    await DatabaseHandler.instance
+                                        .updateBp(
+                                            BloodPressure(
+                                                id: entry.first.id,
+                                                user: userid,
+                                                type: 'bp',
+                                                content: BP(
+                                                    systolic: systolic,
+                                                    diastolic: diastolic,
+                                                    heartrate: heartrate,
+                                                    arm: arm),
+                                                date: entry.first.date,
+                                                comments: comment),
+                                            userid,
+                                            entryid)
+                                        .whenComplete(() {
+                                      if (context.mounted) {
+                                        Navigator.pop(context);
+                                      }
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback((_) =>
+                                              refreshIndicatorKey.currentState
+                                                  ?.show());
+                                    });
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                          content: Text('Processing Data')),
+                                    );
+                                  }
+                                },
+                                child: const Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                             ),
