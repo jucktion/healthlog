@@ -168,23 +168,32 @@ class _NoteScreenState extends State<NoteScreen> {
                                               'tel:${items[index].content.note}')
                                     },
                                     child: ListTile(
-                                      leading: items[index].content.notetype ==
-                                              'Phone'
-                                          ? Icon(Icons.phone)
-                                          : items[index].content.notetype ==
-                                                  'Medicine'
-                                              ? Icon(Icons.medication)
-                                              : Icon(Icons.abc_outlined),
-                                      trailing: Text(
-                                          '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
-                                      contentPadding: const EdgeInsets.all(8.0),
-                                      title: Text(items[index]
-                                          .content
-                                          .title
-                                          .toUpperCase()),
-                                      subtitle: Text(
-                                          'Note: ${items[index].content.note}'),
-                                    ),
+                                        leading: items[index]
+                                                    .content
+                                                    .notetype ==
+                                                'Phone'
+                                            ? Icon(Icons.phone)
+                                            : items[index].content.notetype ==
+                                                    'Medicine'
+                                                ? Icon(Icons.medication)
+                                                : Icon(Icons.abc_outlined),
+                                        trailing: Text(
+                                            '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
+                                        contentPadding:
+                                            const EdgeInsets.all(8.0),
+                                        title: Text(items[index]
+                                            .content
+                                            .title
+                                            .toUpperCase()),
+                                        subtitle: Column(
+                                          children: [
+                                            Divider(
+                                                color: Colors.grey,
+                                                height: 2,
+                                                thickness: 1),
+                                            Text(items[index].content.note),
+                                          ],
+                                        )),
                                   )),
                                 );
                               },

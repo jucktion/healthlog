@@ -303,6 +303,7 @@ class BPHelper {
                                   width: 150,
                                   child: RadioListTile<String>(
                                       title: const Text("Left"),
+                                      selected: bpd.arm == 'left',
                                       value: "left",
                                       groupValue: armGroup,
                                       onChanged: (String? value) {
@@ -315,6 +316,7 @@ class BPHelper {
                                   width: 150,
                                   child: RadioListTile<String>(
                                     title: const Text("Right"),
+                                    selected: bpd.arm == 'right',
                                     value: "right",
                                     groupValue: armGroup,
                                     onChanged: (String? value) {

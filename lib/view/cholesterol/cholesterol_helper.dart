@@ -259,7 +259,7 @@ class CHLSTRLHelper {
                         return Text('Error: ${snapshot.error}');
                       } else {
                         final entry = snapshot.data ?? [];
-                        final chstrl = entry.first.content;
+                        final chd = entry.first.content;
                         return Form(
                           key: formKey,
                           child: Column(
@@ -273,6 +273,7 @@ class CHLSTRLHelper {
                                     width: 160,
                                     child: RadioListTile<String>(
                                         title: const Text("mmol/L"),
+                                        selected: chd.unit == 'mmol/L',
                                         value: "mmol/L",
                                         groupValue: unitGroup,
                                         onChanged: (String? value) {
@@ -285,7 +286,7 @@ class CHLSTRLHelper {
                                     width: 150,
                                     child: RadioListTile<String>(
                                       title: const Text("mg/dL"),
-                                      selected: true,
+                                      selected: chd.unit == 'mg/dL',
                                       value: "mg/dL",
                                       groupValue: unitGroup,
                                       onChanged: (String? value) {
@@ -301,7 +302,7 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chstrl.total.toString(),
+                                    initialValue: chd.total.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -324,7 +325,7 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chstrl.tag.toString(),
+                                    initialValue: chd.tag.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -347,7 +348,7 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chstrl.hdl.toString(),
+                                    initialValue: chd.hdl.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
@@ -369,7 +370,7 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chstrl.ldl.toString(),
+                                    initialValue: chd.ldl.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {

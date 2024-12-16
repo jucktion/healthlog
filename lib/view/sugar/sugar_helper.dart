@@ -210,9 +210,9 @@ class SGHelper {
     String beforeAfter = '';
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
-    String fastGroup = "";
-    String unit = "mg/dL";
-    String unitGroup = "mg/dL";
+    String fastGroup = '';
+    String unit = '';
+    String unitGroup = '';
     String comment = "";
 
     showModalBottomSheet(
@@ -249,6 +249,7 @@ class SGHelper {
                                     width: 150,
                                     child: RadioListTile<String>(
                                         title: const Text("Before"),
+                                        selected: sgd.beforeAfter == 'before',
                                         value: "before",
                                         groupValue: fastGroup,
                                         onChanged: (String? value) {
@@ -262,6 +263,7 @@ class SGHelper {
                                     width: 150,
                                     child: RadioListTile<String>(
                                       title: const Text("After"),
+                                      selected: sgd.beforeAfter == 'after',
                                       value: "after",
                                       groupValue: fastGroup,
                                       onChanged: (String? value) {
@@ -316,6 +318,7 @@ class SGHelper {
                                     width: 160,
                                     child: RadioListTile<String>(
                                         title: const Text("mmol/L"),
+                                        selected: sgd.unit == 'mmol/L',
                                         value: "mmol/L",
                                         groupValue: unitGroup,
                                         onChanged: (String? value) {
@@ -328,7 +331,7 @@ class SGHelper {
                                     width: 150,
                                     child: RadioListTile<String>(
                                       title: const Text("mg/dL"),
-                                      selected: true,
+                                      selected: sgd.unit == 'mg/dL',
                                       value: "mg/dL",
                                       groupValue: unitGroup,
                                       onChanged: (String? value) {

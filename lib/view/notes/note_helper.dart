@@ -8,6 +8,7 @@ class NoteHelper {
       required Function callback,
       required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
     final formKey = GlobalKey<FormState>();
+    final TextEditingController textcontrol = TextEditingController();
     String note = "";
     String title = "";
     String? selectedValue = "Note";
@@ -65,6 +66,13 @@ class NoteHelper {
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             hintText: selectedValue == 'Phone'
                                 ? 'Name of the Person/Institution'
@@ -84,12 +92,23 @@ class NoteHelper {
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
+                          keyboardType: TextInputType.multiline,
+                          controller: textcontrol,
+                          minLines: 2,
+                          maxLines: 3,
+                          textInputAction: TextInputAction.newline,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter some text';
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                               label: selectedValue == 'Phone'
                                   ? Text('Phone No')
                                   : selectedValue == 'Medicine'
                                       ? Text('Direction of Use')
-                                      : Text('Enter a note')),
+                                      : Text('Enter a short note')),
                           onChanged: (String? value) {
                             setState(() => note = value.toString());
                           }),
@@ -254,6 +273,9 @@ class NoteHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
+                                    keyboardType: TextInputType.multiline,
+                                    minLines: 2,
+                                    maxLines: 3,
                                     initialValue: ntd.note,
                                     decoration: InputDecoration(
                                         label: selectedValue == 'Phone'
