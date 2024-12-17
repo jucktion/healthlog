@@ -23,6 +23,16 @@ jobs:
       with:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
+
+    - name: Decode android/neumodore_key.jks
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/keystore.jks
+
+    - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEYSTORE_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=keystore.jks" >> android/key.properties
     
     # Get flutter dependencies.
     - name: 'Get packages'
@@ -37,12 +47,59 @@ jobs:
         flutter analyze .
     
     # Build apk.
-    - name: 'Build APK'
-      run: flutter build apk
+    - name: 'Build Universal APK'
+      run: |
+        flutter build apk
+        cd build/app/outputs/flutter-apk/
+        mv app-release.apk Healthlog-universal.apk
+
+    - name: 'Build 64bit APK'
+      run: |
+        flutter build apk --target-platform android-arm64
+        cd build/app/outputs/flutter-apk/
+        mv app-release.apk Healthlog-arm64.apk
+
+    - name: 'Build 32bit APK'
+      run: |
+        flutter build apk --target-platform android-arm
+        cd build/app/outputs/flutter-apk/
+        mv app-release.apk Healthlog-arm.apk
+
     
     # Upload generated apk to the artifacts.
     - name: 'Upload APK'
       uses: actions/upload-artifact@v4
       with:
         name: release-apk
-        path: build/app/outputs/apk/release/app-release.apk
+        path: |
+          build/app/outputs/flutter-apk/Healthlog-arm64.apk
+          build/app/outputs/flutter-apk/Healthlog-arm.apk
+          build/app/outputs/flutter-apk/Healthlog-universal.apk
+    
+    - name: Extract version from pubspec.yaml
+      id: extract_version
+      run: |
+        version=$(grep '^version: ' pubspec.yaml | cut -d ' ' -f 2 | tr -d '\r')
+        echo "VERSION=$version" >> $GITHUB_ENV
+
+    - name: Check if Tag Exists
+      id: check_tag
+      run: |
+        if git rev-parse "v${{ env.VERSION }}" >/dev/null 2>&1; then
+          echo "TAG_EXISTS=true" >> $GITHUB_ENV
+        else
+          echo "TAG_EXISTS=false" >> $GITHUB_ENV
+        fi
+    - name: Modify Tag
+      if: env.TAG_EXISTS == 'true'
+      id: modify_tag
+      run: |
+        new_version="${{ env.VERSION }}-build-${{ github.run_number }}"
+        echo "VERSION=$new_version" >> $GITHUB_ENV
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "build/app/outputs/flutter-apk/Healthlog-arm64.apk,build/app/outputs/flutter-apk/Healthlog-arm.apk,build/app/outputs/flutter-apk/Healthlog-universal.apk"
+        tag: v${{ env.VERSION }}
+        token: ${{ secrets.TOKEN }}
