@@ -24,7 +24,7 @@ jobs:
         channel: 'stable' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
 
-    - name: Decode android/neumodore_key.jks
+    - name: Decode and create keystore
       run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/keystore.jks
 
     - name: Create key.properties
