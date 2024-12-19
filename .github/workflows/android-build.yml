@@ -70,7 +70,7 @@ jobs:
     - name: 'Upload APK'
       uses: actions/upload-artifact@v4
       with:
-        name: release-apk
+        name: Releases
         path: |
           build/app/outputs/flutter-apk/Healthlog-arm64.apk
           build/app/outputs/flutter-apk/Healthlog-arm.apk

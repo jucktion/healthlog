@@ -124,7 +124,7 @@ class BPHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           decoration: const InputDecoration(
-                              hintText: 'Before Breakfast/After Dinner',
+                              hintText: 'Any notes you want to include',
                               label: Text('Comments')),
                           onChanged: (String? value) {
                             setState(() => comment = value.toString());
