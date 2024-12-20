@@ -310,7 +310,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }),
         if (_isFabOpen)
           _buildFabOption(
-              icon: Icons.monitor_rounded,
+              icon: Icons.filter_alt_sharp,
               label: 'RFT',
               doOnPressed: () {
                 RFTHelper.statefulRftBottomModal(context,

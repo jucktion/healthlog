@@ -1,16 +1,22 @@
-# healthlog
+# Healthlog
 
-A new Flutter project.
+Keep track of your medical test records for monitoring your health and progress.
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
+### Home Screen - List of users
 
-A few resources to get you started if this is your first Flutter project:
+![List of Users](https://i.imgur.com/bsMoS6G.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### User Profile - List of recordings for user
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![List of recordings for user](https://i.imgur.com/dlRo8VG.png)
+
+### Bottom popup for easy record addition
+
+![Bottom popup for easy addition](https://i.imgur.com/VY0XTnj.png)
+
+###Record Graph - Graph showing the recording
+
+![Graph showing the recording](https://i.imgur.com/qMAh2Lk.png
+)
