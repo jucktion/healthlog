@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/model/data.dart';
+import 'package:healthlog/model/kidney.dart';
 import 'package:healthlog/model/notes.dart';
 import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/theme/globals.dart';
@@ -259,7 +260,7 @@ class DatabaseHandler {
     //print(queryResult);
     final result = queryResult.map((e) => Sugar.fromMap(e)).toList();
     String reading = GlobalMethods.convertUnit(
-            unit, result.first.content.unit, result.first.content.reading)
+            result.first.content.unit, result.first.content.reading, unit)
         .toStringAsFixed(2);
     return '$reading $unit, ${result.first.content.beforeAfter.toString()}';
   }
@@ -340,13 +341,13 @@ class DatabaseHandler {
 
     String fromUnit = result.first.content.unit;
     String total =
-        GlobalMethods.convertUnit(unit, fromUnit, result.first.content.total)
+        GlobalMethods.convertUnit(fromUnit, result.first.content.total, unit)
             .toStringAsFixed(2);
     String hdl =
-        GlobalMethods.convertUnit(unit, fromUnit, result.first.content.hdl)
+        GlobalMethods.convertUnit(fromUnit, result.first.content.hdl, unit)
             .toStringAsFixed(2);
     String ldl =
-        GlobalMethods.convertUnit(unit, fromUnit, result.first.content.ldl)
+        GlobalMethods.convertUnit(fromUnit, result.first.content.ldl, unit)
             .toStringAsFixed(2);
 
     return 'Total/HDL/LDL : $total/$hdl/$ldl $unit';
@@ -390,6 +391,109 @@ class DatabaseHandler {
     }
   }
 // CHLSTRL END
+
+// RFT (Kidney/Renal Function Test)
+// RFT START
+  Future<List<RenalFunction>> rftHistory(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'rft'],
+        orderBy: 'date DESC');
+    //print(queryResult);
+    return queryResult.map((e) => RenalFunction.fromMap(e)).toList();
+  }
+
+  Future<List<RenalFunction>> rftGraph(int userid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.query('data',
+        where: 'user=? AND type=?',
+        whereArgs: [userid, 'rft'],
+        orderBy: 'date DESC',
+        limit: 30);
+    //print(queryResult);
+    return queryResult
+        .map((e) => RenalFunction.fromMap(e))
+        .toList()
+        .reversed
+        .toList();
+  }
+
+  Future<String> rftReading(int entryid, String unit) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db
+        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'rft']);
+    //print(queryResult);
+    final result = queryResult.map((e) => RenalFunction.fromMap(e)).toList();
+
+    String fromUnit = result.first.content.unit;
+    String bun = GlobalMethods.convertUnit(
+      fromUnit,
+      result.first.content.bun,
+      unit,
+    ).toStringAsFixed(2);
+    String urea = GlobalMethods.convertUnit(
+      fromUnit,
+      result.first.content.urea,
+      unit,
+    ).toStringAsFixed(2);
+    String creatinine = GlobalMethods.convertUnit(
+      fromUnit,
+      result.first.content.creatinine,
+      unit,
+    ).toStringAsFixed(2);
+    String sodium = GlobalMethods.convertUnit(
+      fromUnit,
+      result.first.content.sodium,
+      unit,
+    ).toStringAsFixed(2);
+    String potassium = GlobalMethods.convertUnit(
+      fromUnit,
+      result.first.content.potassium,
+      unit,
+    ).toStringAsFixed(2);
+
+    return 'Bun/Urea/Creatinine/Sodium/Potassium : $bun/$urea/$creatinine/$sodium/$potassium $unit';
+  }
+
+  Future<List<RenalFunction>> rftEntry(int entryid) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db
+        .query('data', where: 'id=? AND type=?', whereArgs: [entryid, 'rft']);
+    //print(queryResult);
+    return queryResult.map((e) => RenalFunction.fromMap(e)).toList();
+  }
+
+  Future<void> insertRf(RenalFunction rf) async {
+    final db = await initializeDB();
+
+    try {
+      await db.insert('data', rf.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+
+  Future<void> updateRf(RenalFunction ch, int userid, int entryid) async {
+    final db = await initializeDB();
+
+    try {
+      await db.update('data', ch.toMap(),
+          where: 'id=? AND user=?',
+          whereArgs: [entryid, userid],
+          conflictAlgorithm: ConflictAlgorithm.replace);
+      if (_prefs?.getBool('alwaysbackupDB') == true) {
+        backupDB();
+      }
+    } catch (e) {
+      //print('Error while inserting data: $e');
+    }
+  }
+// RFT END
 
 // Note
 // Note

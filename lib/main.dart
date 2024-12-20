@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/data/style.dart';
+import 'package:healthlog/view/theme/style.dart';
 import 'package:healthlog/view/users/users.dart';
 
 void main() async {

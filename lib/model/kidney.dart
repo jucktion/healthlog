@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:healthlog/model/record.dart';
 
-class RenalTest extends HealthRecord<RFT> {
-  RenalTest({
+class RenalFunction extends HealthRecord<RFT> {
+  RenalFunction({
     super.id,
     required super.user,
     required super.type,
@@ -11,12 +11,12 @@ class RenalTest extends HealthRecord<RFT> {
     required super.comments,
   });
 
-  factory RenalTest.fromJson(String json) {
-    return RenalTest.fromMap(jsonDecode(json));
+  factory RenalFunction.fromJson(String json) {
+    return RenalFunction.fromMap(jsonDecode(json));
   }
 
-  factory RenalTest.fromMap(Map<String, dynamic> map) {
-    return RenalTest(
+  factory RenalFunction.fromMap(Map<String, dynamic> map) {
+    return RenalFunction(
       id: map["id"],
       user: map["user"],
       type: map["type"],
@@ -28,6 +28,7 @@ class RenalTest extends HealthRecord<RFT> {
 }
 
 class RFT {
+  final String unit;
   final double bun;
   final double urea;
   final double creatinine;
@@ -35,7 +36,8 @@ class RFT {
   final double potassium;
 
   RFT(
-      {required this.bun,
+      {required this.unit,
+      required this.bun,
       required this.urea,
       required this.creatinine,
       required this.sodium,
@@ -43,6 +45,7 @@ class RFT {
 
   Map<String, dynamic> toMap() {
     return {
+      'unit': unit,
       'bun': bun,
       'urea': urea,
       'creatinine': creatinine,
@@ -53,6 +56,7 @@ class RFT {
 
   factory RFT.fromMap(Map<String, dynamic> map) {
     return RFT(
+        unit: map['unit'],
         bun: map['bun'],
         urea: map['urea'],
         creatinine: map['creatinine'],

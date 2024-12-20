@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/view/theme/colors.dart';
-import 'package:healthlog/model/bloodpressure.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/view/bp/bp_graph.dart';
-import 'package:healthlog/view/bp/bp_helper.dart';
+import 'package:healthlog/model/kidney.dart';
+import 'package:healthlog/view/rft/rft_graph.dart';
+import 'package:healthlog/view/rft/rft_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class BPScreen extends StatefulWidget {
+class RFTScreen extends StatefulWidget {
   final int userid;
-  const BPScreen({super.key, required this.userid});
+  const RFTScreen({super.key, required this.userid});
 
   @override
-  State<BPScreen> createState() => _BPScreenState();
+  State<RFTScreen> createState() => _RFTScreenState();
 }
 
-class _BPScreenState extends State<BPScreen> {
+class _RFTScreenState extends State<RFTScreen> {
   late DatabaseHandler handler;
-
+  SharedPreferences? _prefs;
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
-  late Future<List<BloodPressure>> _bp;
+  late Future<List<RenalFunction>> _rft;
   late Future<String> _user;
   bool _retrived = false;
+  bool _prefLoaded = false;
 
   @override
   void initState() {
@@ -30,14 +32,22 @@ class _BPScreenState extends State<BPScreen> {
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _retrived = true;
-        _bp = getList();
+        _rft = getList();
         _user = getName();
+        _initPrefs();
       });
     });
   }
 
-  Future<List<BloodPressure>> getList() async {
-    return await handler.bphistory(widget.userid);
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
+    });
+  }
+
+  Future<List<RenalFunction>> getList() async {
+    return await handler.rftHistory(widget.userid);
   }
 
   Future<String> getName() async {
@@ -46,7 +56,7 @@ class _BPScreenState extends State<BPScreen> {
 
   Future<void> _onRefresh() async {
     setState(() {
-      _bp = getList();
+      _rft = getList();
     });
   }
 
@@ -66,7 +76,7 @@ class _BPScreenState extends State<BPScreen> {
                       return const Text('Error');
                     }
                     // Return the retrieved title.
-                    return Text("${snapshot.data}'s BP Data");
+                    return Text("${snapshot.data}'s RFT Data");
                   } else {
                     return const CircularProgressIndicator();
                   }
@@ -78,8 +88,10 @@ class _BPScreenState extends State<BPScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => BPGraph(
+                        builder: (context) => RFTGraph(
                           userid: widget.userid,
+                          unit: _prefs!.getString('rftUnit').toString(),
+                          dots: _prefs!.getBool('graphDots') ?? false,
                         ),
                       ),
                     )
@@ -89,7 +101,7 @@ class _BPScreenState extends State<BPScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          BPHelper.statefulBpBottomModal(context,
+          RFTHelper.statefulRftBottomModal(context,
               userid: widget.userid,
               callback: () {},
               refreshIndicatorKey: _refreshIndicatorKey);
@@ -102,14 +114,14 @@ class _BPScreenState extends State<BPScreen> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: !_retrived
+          child: !_retrived && !_prefLoaded
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height,
-                  child: FutureBuilder<List<BloodPressure>>(
-                    future: _bp,
+                  child: FutureBuilder<List<RenalFunction>>(
+                    future: _rft,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<BloodPressure>> snapshot) {
+                        AsyncSnapshot<List<RenalFunction>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),
@@ -125,13 +137,15 @@ class _BPScreenState extends State<BPScreen> {
                           ),
                         );
                       } else {
-                        final items = snapshot.data ?? <BloodPressure>[];
+                        final items = snapshot.data ?? <RenalFunction>[];
                         return Scrollbar(
                           child: RefreshIndicator(
                             onRefresh: _onRefresh,
                             child: ListView.builder(
                               itemCount: items.length,
                               itemBuilder: (BuildContext context, int index) {
+                                String unit =
+                                    _prefs!.getString('rftUnit').toString();
                                 return Dismissible(
                                   direction: DismissDirection.startToEnd,
                                   background: Container(
@@ -169,13 +183,14 @@ class _BPScreenState extends State<BPScreen> {
                                   child: Card(
                                     child: InkWell(
                                         onTap: () => {
-                                              BPHelper.showRecord(
+                                              RFTHelper.showRecord(
                                                   context,
                                                   items[index].id ?? 0,
+                                                  unit,
                                                   _refreshIndicatorKey)
                                             },
-                                        child: BPHelper.tileBP(
-                                            context, items[index])),
+                                        child: RFTHelper.tileRFT(
+                                            context, items[index], unit)),
                                   ),
                                 );
                               },

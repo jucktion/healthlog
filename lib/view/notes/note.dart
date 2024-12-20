@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/data/colors.dart';
+import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/notes.dart';
 import 'package:healthlog/view/notes/note_helper.dart';

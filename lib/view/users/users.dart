@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/data/colors.dart';
+import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/view/profile/profile.dart';
 import 'package:healthlog/view/settings/settings.dart';
 import 'package:healthlog/view/theme/globals.dart';

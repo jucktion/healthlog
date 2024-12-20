@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/data/colors.dart';
+import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/data.dart';
 import 'package:healthlog/view/bp/bp.dart';
@@ -8,6 +8,8 @@ import 'package:healthlog/view/cholesterol/cholesterol.dart';
 import 'package:healthlog/view/cholesterol/cholesterol_helper.dart';
 import 'package:healthlog/view/notes/note.dart';
 import 'package:healthlog/view/notes/note_helper.dart';
+import 'package:healthlog/view/rft/rft.dart';
+import 'package:healthlog/view/rft/rft_helper.dart';
 import 'package:healthlog/view/sugar/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
@@ -75,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           PopupMenuButton(
             //onOpened: () => {DatabaseHandler().getDbpath()},
             itemBuilder: (BuildContext context) {
-              return {'BP', 'Sugar', 'Cholesterol', 'Notes'}
+              return {'BP', 'Sugar', 'Cholesterol', 'RFT', 'Notes'}
                   .toList()
                   .asMap()
                   .entries
@@ -183,6 +185,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       //           'Record ID: ${items[index].id}')),
                                       // );
                                       switch (items[index].type) {
+                                        case 'rft':
+                                          RFTHelper.showRecord(
+                                              context,
+                                              items[index].id,
+                                              _prefs!
+                                                  .getString('rftUnit')
+                                                  .toString(),
+                                              _refreshIndicatorKey);
+                                          break;
                                         case 'sugar':
                                           SGHelper.showRecord(
                                               context,
@@ -241,6 +252,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget titleText(String type, int id) {
     switch (type) {
+      case 'bp':
+        Future<String> entrybp = handler.bpReading(id);
+        return FutureBuilder(
+            future: entrybp,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return Text('BP: ${snapshot.data}',
+                  style: TextStyle(fontSize: 19));
+            });
+
+      case 'rft':
+        Future<String> entrybp =
+            handler.rftReading(id, _prefs!.getString('sugarUnit').toString());
+        return FutureBuilder(
+            future: entrybp,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              return Text('RFT: ${snapshot.data}',
+                  style: TextStyle(fontSize: 19));
+            });
       case 'sugar':
         Future<String> entrysg =
             handler.sgReading(id, _prefs!.getString('sugarUnit').toString());
@@ -248,15 +277,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             future: entrysg,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               return Text('Sugar: ${snapshot.data}',
-                  style: TextStyle(fontSize: 19));
-            });
-
-      case 'bp':
-        Future<String> entrybp = handler.bpReading(id);
-        return FutureBuilder(
-            future: entrybp,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return Text('BP: ${snapshot.data}',
                   style: TextStyle(fontSize: 19));
             });
       case 'chlstrl':
@@ -284,6 +304,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               label: 'Note',
               doOnPressed: () {
                 NoteHelper.statefulNoteBottomModal(context,
+                    userid: widget.userid,
+                    callback: () {},
+                    refreshIndicatorKey: _refreshIndicatorKey);
+              }),
+        if (_isFabOpen)
+          _buildFabOption(
+              icon: Icons.monitor_rounded,
+              label: 'RFT',
+              doOnPressed: () {
+                RFTHelper.statefulRftBottomModal(context,
                     userid: widget.userid,
                     callback: () {},
                     refreshIndicatorKey: _refreshIndicatorKey);
@@ -406,6 +436,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
         break;
       case 3:
+        // print('Reset selected');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RFTScreen(
+              userid: widget.userid,
+            ),
+          ),
+        );
+        break;
+      case 4:
         // print('Reset selected');
         Navigator.push(
           context,

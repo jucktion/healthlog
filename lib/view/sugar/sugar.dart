@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/data/colors.dart';
+import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_graph.dart';

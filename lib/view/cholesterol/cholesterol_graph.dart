@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/data/colors.dart';
+import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/cholesterol.dart';
@@ -148,48 +148,48 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
 
                                       final total = double.parse(
                                           GlobalMethods.convertUnit(
-                                                  widget.unit,
-                                                  fromUnit,
-                                                  rawData[i].content.total)
-                                              .toStringAsFixed(2));
+                                        fromUnit,
+                                        rawData[i].content.total,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
                                       totalData
                                           .add(FlSpot(j.toDouble(), total));
 
                                       final tag = double.parse(
                                           GlobalMethods.convertUnit(
-                                                  widget.unit,
-                                                  fromUnit,
-                                                  rawData[i].content.tag)
-                                              .toStringAsFixed(2));
+                                        fromUnit,
+                                        rawData[i].content.tag,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
                                       tagData.add(FlSpot(j.toDouble(), tag));
 
                                       final hdl = double.parse(
                                           GlobalMethods.convertUnit(
-                                                  widget.unit,
-                                                  fromUnit,
-                                                  rawData[i].content.hdl)
-                                              .toStringAsFixed(2));
+                                        fromUnit,
+                                        rawData[i].content.hdl,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
                                       hdlData.add(FlSpot(j.toDouble(), hdl));
                                       final ldl = double.parse(
                                           GlobalMethods.convertUnit(
-                                                  widget.unit,
-                                                  fromUnit,
-                                                  rawData[i].content.ldl)
-                                              .toStringAsFixed(2));
+                                        fromUnit,
+                                        rawData[i].content.ldl,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
                                       ldlData.add(FlSpot(j.toDouble(), ldl));
 
                                       final nonhdl = double.parse(
                                           GlobalMethods.convertUnit(
-                                                  widget.unit,
-                                                  fromUnit,
-                                                  (rawData[i].content.total -
-                                                      rawData[i].content.hdl))
-                                              .toStringAsFixed(2));
+                                        fromUnit,
+                                        (rawData[i].content.total -
+                                            rawData[i].content.hdl),
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
                                       nonhdlData
                                           .add(FlSpot(j.toDouble(), nonhdl));
 
                                       //print(content['systolic'].toString());
-
+                                      j++;
                                       dates =
                                           '${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}';
 
@@ -210,7 +210,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
                                         minX: 0,
                                         maxX: range.toDouble(),
                                         minY: 0,
-                                        maxY: widget.unit == 'mg/dL' ? 500 : 15,
+                                        maxY: widget.unit == 'mg/dL' ? 300 : 15,
                                         titlesData: FlTitlesData(
                                             show: true,
                                             topTitles: const AxisTitles(

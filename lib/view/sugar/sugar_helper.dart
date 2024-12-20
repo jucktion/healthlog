@@ -211,8 +211,8 @@ class SGHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String fastGroup = '';
-    String unit = '';
-    String unitGroup = '';
+    String unit = 'mg/dL';
+    String unitGroup = 'mg/dL';
     String comment = "";
 
     showModalBottomSheet(
@@ -444,9 +444,11 @@ class SGHelper {
                 final entry = snapshot.data ?? [];
                 final userid = entry.first.user;
                 //Convert the units as required from settings
-                String reading = GlobalMethods.convertUnit(unit,
-                        entry.first.content.unit, entry.first.content.reading)
-                    .toStringAsFixed(2);
+                String reading = GlobalMethods.convertUnit(
+                  entry.first.content.unit,
+                  entry.first.content.reading,
+                  unit,
+                ).toStringAsFixed(2);
 
                 return AlertDialog(
                   title: Row(
@@ -572,8 +574,10 @@ class SGHelper {
 
   static ListTile tileSugar(BuildContext context, Sugar items, unit) {
     String reading = GlobalMethods.convertUnit(
-            unit, items.content.unit, items.content.reading)
-        .toStringAsFixed(2);
+      items.content.unit,
+      items.content.reading,
+      unit,
+    ).toStringAsFixed(2);
     return ListTile(
       trailing: Text(
         '${DateTime.parse(items.date).year}-${DateTime.parse(items.date).month}-${DateTime.parse(items.date).day} ${DateTime.parse(items.date).hour}:${DateTime.parse(items.date).minute}',

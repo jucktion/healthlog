@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
-import 'package:healthlog/model/cholesterol.dart';
+import 'package:healthlog/model/kidney.dart';
 import 'package:healthlog/view/theme/globals.dart';
 
-class CHLSTRLHelper {
-  static Future<void> statefulchlstrlBottomModal(BuildContext context,
+class RFTHelper {
+  static Future<void> statefulRftBottomModal(BuildContext context,
       {required int userid,
       required Function callback,
       required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
     final formKey = GlobalKey<FormState>();
-    double total = 0.00;
-    double tag = 0.00;
-    double hdl = 0.00;
-    double ldl = 0.00;
+    double bun = 0.00;
+    double urea = 0.00;
+    double creatinine = 0.00;
+    double sodium = 0.00;
+    double potassium = 0.00;
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "mg/dL";
@@ -29,7 +30,7 @@ class CHLSTRLHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 425,
+              height: 500,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -74,18 +75,18 @@ class CHLSTRLHelper {
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter total cholesterol result';
+                              return 'Please enter BUN reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '<Less than 200, no more than 240',
+                            hintText: '4.6 - 23.5',
                             suffixText: unitGroup,
-                            label: const Text('Total Cholesterol'),
+                            label: const Text('BUN'),
                           ),
                           onChanged: (String? value) {
                             setState(
-                                () => total = double.parse(value.toString()));
+                                () => bun = double.parse(value.toString()));
                           }),
                     ),
                     Padding(
@@ -94,19 +95,18 @@ class CHLSTRLHelper {
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter Triacyglycerol result';
+                              return 'Please enter Urea reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText:
-                                '<Ideally less than 150, no more than 500',
+                            hintText: '10-50',
                             suffixText: unitGroup,
-                            label: const Text('Triacyglycerol (TAG)'),
+                            label: const Text('Urea'),
                           ),
                           onChanged: (String? value) {
                             setState(
-                                () => tag = double.parse(value.toString()));
+                                () => urea = double.parse(value.toString()));
                           }),
                     ),
                     Padding(
@@ -115,18 +115,18 @@ class CHLSTRLHelper {
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter HDL Cholesterol result';
+                              return 'Please enter creatinine reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '40-60',
+                            hintText: '0.60 - 1.20',
                             suffixText: unitGroup,
-                            label: const Text('HDL Cholesterol'),
+                            label: const Text('Creatinine'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => hdl = double.parse(value.toString()));
+                            setState(() =>
+                                creatinine = double.parse(value.toString()));
                           }),
                     ),
                     Padding(
@@ -135,18 +135,38 @@ class CHLSTRLHelper {
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter LDL Cholesterol result';
+                              return 'Please enter Sodium reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: 'Less than 100',
+                            hintText: '135 - 145',
                             suffixText: unitGroup,
-                            label: const Text('LDL Cholesterol'),
+                            label: const Text('Sodium'),
                           ),
                           onChanged: (String? value) {
                             setState(
-                                () => ldl = double.parse(value.toString()));
+                                () => sodium = double.parse(value.toString()));
+                          }),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40, right: 40),
+                      child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Potassium reading';
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: '3.50 - 5.00',
+                            suffixText: unitGroup,
+                            label: const Text('Potassium'),
+                          ),
+                          onChanged: (String? value) {
+                            setState(() =>
+                                potassium = double.parse(value.toString()));
                           }),
                     ),
                     Padding(
@@ -171,14 +191,15 @@ class CHLSTRLHelper {
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
                             await DatabaseHandler.instance
-                                .insertCh(Cholesterol(
+                                .insertRf(RenalFunction(
                                     user: userid,
-                                    type: 'chlstrl',
-                                    content: CHLSTRL(
-                                        total: total,
-                                        tag: tag,
-                                        hdl: hdl,
-                                        ldl: ldl,
+                                    type: 'rft',
+                                    content: RFT(
+                                        bun: bun,
+                                        urea: urea,
+                                        creatinine: creatinine,
+                                        sodium: sodium,
+                                        potassium: potassium,
                                         unit: unit),
                                     date: DateTime.now().toIso8601String(),
                                     comments: comment))
@@ -214,25 +235,26 @@ class CHLSTRLHelper {
     );
   }
 
-  static Future<void> statefulChlstrlUpdateModal(BuildContext context,
+  static Future<void> statefulRftUpdateModal(BuildContext context,
       {required int userid,
       required int entryid,
       required Function callback,
       required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
     final formKey = GlobalKey<FormState>();
     late DatabaseHandler handler;
-    late Future<List<Cholesterol>> ch;
-    Future<List<Cholesterol>> getList() async {
+    late Future<List<RenalFunction>> rf;
+    Future<List<RenalFunction>> getList() async {
       handler = DatabaseHandler.instance;
-      return await handler.chlstrlEntry(entryid);
+      return await handler.rftEntry(entryid);
     }
 
-    ch = getList();
+    rf = getList();
 
-    double total = 0.00;
-    double tag = 0.00;
-    double hdl = 0.00;
-    double ldl = 0.00;
+    double bun = 0.00;
+    double urea = 0.00;
+    double creatinine = 0.00;
+    double sodium = 0.00;
+    double potassium = 0.00;
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";
@@ -249,17 +271,17 @@ class CHLSTRLHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 425,
+              height: 500,
               width: MediaQuery.of(context).size.width / 1.25,
-              child: FutureBuilder<List<Cholesterol>>(
-                  future: ch,
+              child: FutureBuilder<List<RenalFunction>>(
+                  future: rf,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       } else {
                         final entry = snapshot.data ?? [];
-                        final chd = entry.first.content;
+                        final rfd = entry.first.content;
                         return Form(
                           key: formKey,
                           child: Column(
@@ -273,7 +295,7 @@ class CHLSTRLHelper {
                                     width: 160,
                                     child: RadioListTile<String>(
                                         title: const Text("mmol/L"),
-                                        selected: chd.unit == 'mmol/L',
+                                        selected: rfd.unit == 'mmol/L',
                                         value: "mmol/L",
                                         groupValue: unitGroup,
                                         onChanged: (String? value) {
@@ -286,7 +308,7 @@ class CHLSTRLHelper {
                                     width: 150,
                                     child: RadioListTile<String>(
                                       title: const Text("mg/dL"),
-                                      selected: chd.unit == 'mg/dL',
+                                      selected: rfd.unit == 'mg/dL',
                                       value: "mg/dL",
                                       groupValue: unitGroup,
                                       onChanged: (String? value) {
@@ -302,22 +324,43 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chd.total.toString(),
+                                    initialValue: rfd.bun.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter total cholesterol result';
+                                        return 'Please enter BUN reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText:
-                                          '<Less than 200, no more than 240',
+                                      hintText: '4.6 - 23.5',
                                       suffixText: unitGroup,
-                                      label: const Text('Total Cholesterol'),
+                                      label: const Text('BUN'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => total =
+                                      setState(() =>
+                                          bun = double.parse(value.toString()));
+                                    }),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 40, right: 40),
+                                child: TextFormField(
+                                    initialValue: rfd.urea.toString(),
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter Urea reading';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: '10 - 50',
+                                      suffixText: unitGroup,
+                                      label: const Text('Urea'),
+                                    ),
+                                    onChanged: (String? value) {
+                                      setState(() => urea =
                                           double.parse(value.toString()));
                                     }),
                               ),
@@ -325,67 +368,66 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chd.tag.toString(),
+                                    initialValue: rfd.creatinine.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter Triacyglycerol result';
+                                        return 'Please enter Creatinine reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText:
-                                          '<Ideally less than 150, no more than 500',
+                                      hintText: '0.60 - 1.20',
                                       suffixText: unitGroup,
-                                      label: const Text('Triacyglycerol (TAG)'),
+                                      label: const Text('Creatinine'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          tag = double.parse(value.toString()));
+                                      setState(() => creatinine =
+                                          double.parse(value.toString()));
                                     }),
                               ),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chd.hdl.toString(),
+                                    initialValue: rfd.sodium.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter HDL Cholesterol result';
+                                        return 'Please enter Sodium reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '40-60',
+                                      hintText: '135 - 145',
                                       suffixText: unitGroup,
-                                      label: const Text('HDL Cholesterol'),
+                                      label: const Text('Sodium'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          hdl = double.parse(value.toString()));
+                                      setState(() => sodium =
+                                          double.parse(value.toString()));
                                     }),
                               ),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: chd.ldl.toString(),
+                                    initialValue: rfd.potassium.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
-                                        return 'Please enter LDL Cholesterol result';
+                                        return 'Please enter Potassium reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: 'Less than 100',
+                                      hintText: '3.50 - 5.00',
                                       suffixText: unitGroup,
-                                      label: const Text('LDL Cholesterol'),
+                                      label: const Text('Potassium'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          ldl = double.parse(value.toString()));
+                                      setState(() => potassium =
+                                          double.parse(value.toString()));
                                     }),
                               ),
                               Padding(
@@ -412,16 +454,17 @@ class CHLSTRLHelper {
                                   onPressed: () async {
                                     if (formKey.currentState!.validate()) {
                                       await DatabaseHandler.instance
-                                          .updateCh(
-                                              Cholesterol(
+                                          .updateRf(
+                                              RenalFunction(
                                                   id: entry.first.id,
                                                   user: userid,
-                                                  type: 'chlstrl',
-                                                  content: CHLSTRL(
-                                                      total: total,
-                                                      tag: tag,
-                                                      hdl: hdl,
-                                                      ldl: ldl,
+                                                  type: 'rft',
+                                                  content: RFT(
+                                                      bun: bun,
+                                                      urea: urea,
+                                                      creatinine: creatinine,
+                                                      sodium: sodium,
+                                                      potassium: potassium,
                                                       unit: unit),
                                                   date: entry.first.date,
                                                   comments: comment),
@@ -470,18 +513,19 @@ class CHLSTRLHelper {
   static Future<void> showRecord(BuildContext context, int entryid, String unit,
       GlobalKey<RefreshIndicatorState> refresh) async {
     late DatabaseHandler handler;
-    late Future<List<Cholesterol>> ch;
-    Future<List<Cholesterol>> getList() async {
+    late Future<List<RenalFunction>> rf;
+
+    Future<List<RenalFunction>> getList() async {
       handler = DatabaseHandler.instance;
-      return await handler.chlstrlEntry(entryid);
+      return await handler.rftEntry(entryid);
     }
 
-    ch = getList();
+    rf = getList();
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return FutureBuilder<List<Cholesterol>>(
-          future: ch,
+        return FutureBuilder<List<RenalFunction>>(
+          future: rf,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.hasError) {
@@ -489,13 +533,9 @@ class CHLSTRLHelper {
               } else {
                 final entry = snapshot.data ?? [];
                 final userid = entry.first.user;
-                final chd = entry.first.content;
+                final rfd = entry.first.content;
                 final fromUnit = entry.first.content.unit;
-                final double nonhdl = GlobalMethods.convertUnit(
-                  fromUnit,
-                  (entry.first.content.total - entry.first.content.hdl),
-                  unit,
-                );
+
                 return AlertDialog(
                   title: Row(
                     children: [
@@ -526,42 +566,50 @@ class CHLSTRLHelper {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('Total:',
+                            const Text('BUN:',
                                 style: TextStyle(
                                   fontSize: 20,
                                 )),
                             Text(
                                 GlobalMethods.convertUnit(
                                   fromUnit,
-                                  chd.total,
+                                  rfd.bun,
                                   unit,
                                 ).toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color:
-                                        (chd.total > 240 || chd.total < 200) &&
-                                                (chd.unit == 'mg/dL')
-                                            ? Colors.red
-                                            : Colors.green)),
+                                    color: (GlobalMethods.convertUnit(
+                                                        fromUnit, rfd.bun) >
+                                                    23.5 ||
+                                                GlobalMethods.convertUnit(
+                                                        fromUnit, rfd.bun) <
+                                                    4.6) &&
+                                            (rfd.unit == 'mg/dL')
+                                        ? Colors.red
+                                        : Colors.green)),
                           ],
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('TAG:',
+                            const Text('Urea:',
                                 style: TextStyle(
                                   fontSize: 20,
                                 )),
                             Text(
                               GlobalMethods.convertUnit(
                                 fromUnit,
-                                chd.tag,
+                                rfd.urea,
                                 unit,
                               ).toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (chd.tag > 500 || chd.tag < 150) &&
-                                          (unit == 'mg/dL')
+                                  color: (GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.urea) >
+                                              50 ||
+                                          GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.urea) <
+                                              10)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -570,47 +618,24 @@ class CHLSTRLHelper {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('HDL:',
+                            const Text('Creatinine:',
                                 style: TextStyle(
                                   fontSize: 20,
                                 )),
                             Text(
                               GlobalMethods.convertUnit(
                                 fromUnit,
-                                chd.hdl,
+                                rfd.creatinine,
                                 unit,
                               ).toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (chd.hdl > 60 && unit == 'mg/dL')
-                                      ? Colors.red
-                                      : (chd.hdl > 40 &&
-                                              chd.hdl < 60 &&
-                                              unit == 'mg/dL')
-                                          ? Colors.green
-                                          : (chd.hdl < 40 && unit == 'mg/dL')
-                                              ? Colors.blue
-                                              : Colors.brown),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Text('LDL:',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                )),
-                            Text(
-                              GlobalMethods.convertUnit(
-                                fromUnit,
-                                chd.ldl,
-                                unit,
-                              ).toStringAsFixed(2),
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: (chd.ldl > 160 || chd.ldl < 100) &&
-                                          (unit == 'mg/dL')
+                                  color: (GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.creatinine) >
+                                              1.20 ||
+                                          GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.creatinine) <
+                                              0.60)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -619,14 +644,48 @@ class CHLSTRLHelper {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            const Text('Non-HDL:',
+                            const Text('Sodium:',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                )),
+                            Text(
+                              GlobalMethods.convertUnit(
+                                fromUnit,
+                                rfd.sodium,
+                                unit,
+                              ).toStringAsFixed(2),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: (GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.sodium) >
+                                              145 ||
+                                          GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.sodium) <
+                                              135)
+                                      ? Colors.red
+                                      : Colors.green),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text('Potassium:',
                                 style: TextStyle(fontSize: 20)),
                             Text(
-                              nonhdl.toStringAsFixed(2),
+                              GlobalMethods.convertUnit(
+                                fromUnit,
+                                rfd.potassium,
+                                unit,
+                              ).toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (nonhdl > 160 || nonhdl < 130) &&
-                                          (unit == 'mg/dL')
+                                  color: (GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.potassium) >
+                                              5.00 ||
+                                          GlobalMethods.convertUnit(
+                                                  fromUnit, rfd.potassium) <
+                                              3.5)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -640,7 +699,6 @@ class CHLSTRLHelper {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text('Unit: $unit'),
-                                Text('TAG: (Tracyglyclerol)'),
                               ],
                             ),
                           ),
@@ -670,7 +728,7 @@ class CHLSTRLHelper {
                         ElevatedButton(
                           onPressed: () => {
                             Navigator.pop(context),
-                            statefulChlstrlUpdateModal(context,
+                            statefulRftUpdateModal(context,
                                 userid: userid,
                                 entryid: entryid,
                                 callback: () {},
@@ -696,21 +754,31 @@ class CHLSTRLHelper {
     );
   }
 
-  static ListTile tileCHLSTRL(BuildContext context, Cholesterol items, unit) {
+  static ListTile tileRFT(BuildContext context, RenalFunction items, unit) {
     String fromUnit = items.content.unit;
-    String total = GlobalMethods.convertUnit(
+    String bun = GlobalMethods.convertUnit(
       fromUnit,
-      items.content.total,
+      items.content.bun,
       unit,
     ).toStringAsFixed(2);
-    String hdl = GlobalMethods.convertUnit(
+    String urea = GlobalMethods.convertUnit(
       fromUnit,
-      items.content.hdl,
+      items.content.urea,
       unit,
     ).toStringAsFixed(2);
-    String ldl = GlobalMethods.convertUnit(
+    String creatinine = GlobalMethods.convertUnit(
       fromUnit,
-      items.content.ldl,
+      items.content.creatinine,
+      unit,
+    ).toStringAsFixed(2);
+    String sodium = GlobalMethods.convertUnit(
+      fromUnit,
+      items.content.sodium,
+      unit,
+    ).toStringAsFixed(2);
+    String potassium = GlobalMethods.convertUnit(
+      fromUnit,
+      items.content.potassium,
       unit,
     ).toStringAsFixed(2);
     return ListTile(
@@ -726,7 +794,8 @@ class CHLSTRLHelper {
               ),
               children: [
             TextSpan(
-                text: 'Total/HDL/LDL: \n$total/$hdl/$ldl $unit',
+                text:
+                    'Bun/Urea/Creatinine/Sodium/Potassium : $bun/$urea/$creatinine/$sodium/$potassium $unit',
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ])),
       subtitle: Text('Note: ${items.comments.toString()}'),

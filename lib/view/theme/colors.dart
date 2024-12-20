@@ -38,7 +38,13 @@ class AppColors {
   static const Color tagColor = Colors.yellow;
   static const Color hdlColor = Colors.green;
   static const Color ldlColor = Colors.red;
-  static const Color nonhdlColor = Colors.pink;
+  static const Color nonhdlColor = Colors.teal;
+
+  static const Color bunRf = Colors.blue;
+  static const Color ureaRf = Colors.yellow;
+  static const Color creatinineRf = Colors.green;
+  static const Color sodiumRf = Colors.red;
+  static const Color potassiumRf = Colors.teal;
 
   static const Color saferangeColor = Color(0xff02d39a);
 

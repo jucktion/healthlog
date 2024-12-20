@@ -102,4 +102,12 @@ final ThemeData healthDark = ThemeData(
       }
     }),
   ),
+  popupMenuTheme: PopupMenuThemeData(
+      color: Colors.black,
+      labelTextStyle: WidgetStatePropertyAll(
+        TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      shape: Border.all(color: Colors.grey)),
 );

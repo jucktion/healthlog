@@ -44,11 +44,11 @@ class GlobalMethods {
         });
   }
 
-  static double convertUnit(String unit, String fromUnit, double reading) {
-    unit = unit.isNotEmpty ? unit : 'mg/dL';
-    if (unit == 'mmol/L' && fromUnit == 'mg/dL') {
+  static double convertUnit(String from, double reading,
+      [String unit = 'mg/dL']) {
+    if (unit == 'mmol/L' && from == 'mg/dL') {
       return (reading / 18.0182);
-    } else if (unit == 'mg/dL' && fromUnit == 'mmol/L') {
+    } else if (unit == 'mg/dL' && from == 'mmol/L') {
       return (reading * 18.0182);
     } else {
       return reading;

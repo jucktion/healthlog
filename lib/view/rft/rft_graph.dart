@@ -2,31 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:healthlog/model/bloodpressure.dart';
-import 'package:healthlog/view/bp/bp_helper.dart';
+import 'package:healthlog/model/kidney.dart';
+import 'package:healthlog/view/rft/rft_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class BPGraph extends StatefulWidget {
+class RFTGraph extends StatefulWidget {
   final int userid;
-  const BPGraph({super.key, required this.userid});
+  final bool dots;
+  final String unit;
+  const RFTGraph(
+      {super.key,
+      required this.userid,
+      required this.dots,
+      required this.unit});
 
   @override
-  State<BPGraph> createState() => _BPGraphState();
+  State<RFTGraph> createState() => _RFTGraphState();
 }
 
-class _BPGraphState extends State<BPGraph> {
+class _RFTGraphState extends State<RFTGraph> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
 
+  //final int _range = 30;
   //List<FlSpot> normalSystolic = List.filled(11, FlSpot(for (int i = 1; i <= 11; i++) i,120.toDouble()));
-  SharedPreferences? _prefs;
+
   List<FlSpot> dateData = [];
 
   late DatabaseHandler handler;
-  late Future<List<BloodPressure>> _bp;
+  late Future<List<RenalFunction>> _rf;
   bool _retrived = false;
   bool _prefLoaded = false;
+
+  List<Color> normalgradientColors = [
+    const Color(0xff23b6e6),
+    const Color(0xff02d39a)
+  ];
+  List<Color> cautiongradientColors = [
+    const Color.fromARGB(255, 240, 182, 107),
+    const Color.fromARGB(255, 230, 74, 35)
+  ];
 
   @override
   void initState() {
@@ -35,18 +50,17 @@ class _BPGraphState extends State<BPGraph> {
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
-        _bp = getList();
+        _rf = getList();
         _retrived = true;
       });
     });
   }
 
-  Future<List<BloodPressure>> getList() async {
-    return await handler.bpHistoryGraph(widget.userid);
+  Future<List<RenalFunction>> getList() async {
+    return await handler.rftGraph(widget.userid);
   }
 
   void _initPrefs() async {
-    _prefs = await SharedPreferences.getInstance();
     setState(() {
       _prefLoaded = true;
     });
@@ -54,7 +68,7 @@ class _BPGraphState extends State<BPGraph> {
 
   Future<void> _onRefresh() async {
     setState(() {
-      _bp = getList();
+      _rf = getList();
     });
   }
 
@@ -62,11 +76,11 @@ class _BPGraphState extends State<BPGraph> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('BloodPressure Graph'),
+          title: const Text('RFT Graph'),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            BPHelper.statefulBpBottomModal(context,
+            RFTHelper.statefulRftBottomModal(context,
                 userid: widget.userid,
                 callback: () {},
                 refreshIndicatorKey: _refreshIndicatorKey);
@@ -79,7 +93,7 @@ class _BPGraphState extends State<BPGraph> {
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: !_retrived && !_prefLoaded
+              child: !_retrived && _prefLoaded
                   ? const Text('Content is not loaded yet')
                   : SizedBox(
                       height: MediaQuery.of(context).size.height / 1.25,
@@ -91,10 +105,10 @@ class _BPGraphState extends State<BPGraph> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height / 3,
                               width: MediaQuery.of(context).size.width / 1.05,
-                              child: FutureBuilder<List<BloodPressure>>(
-                                future: _bp,
+                              child: FutureBuilder<List<RenalFunction>>(
+                                future: _rf,
                                 builder: (BuildContext context,
-                                    AsyncSnapshot<List<BloodPressure>>
+                                    AsyncSnapshot<List<RenalFunction>>
                                         snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -105,58 +119,89 @@ class _BPGraphState extends State<BPGraph> {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
                                     //final items = snapshot.data ?? <BloodPressure>[];
-                                    final List<FlSpot> systolicData = [];
-                                    final List<FlSpot> diastolicData = [];
+                                    final List<FlSpot> bunData = [];
+                                    final List<FlSpot> ureaData = [];
+                                    final List<FlSpot> creatinineData = [];
+                                    final List<FlSpot> sodiumData = [];
+                                    final List<FlSpot> potassiumData = [];
                                     const int range = 30;
                                     //Reverse the list so graph appears left to right
                                     final rawData =
                                         snapshot.data!.reversed.toList();
                                     //List<dynamic> jsonList = jsonDecode(rawData);
                                     //print(rawData.toList().toString());
-                                    List<String> dateData = [];
-                                    List<FlSpot> normalSystolic = [
-                                      for (int i = 0; i <= range; i++)
-                                        FlSpot(i.toDouble(), 120.toDouble())
-                                    ];
-                                    List<FlSpot> normalDiastolic = [
-                                      for (int i = 0; i <= range; i++)
-                                        FlSpot(i.toDouble(), 80.toDouble())
-                                    ];
+                                    Set<String> dateData = {};
+                                    // List<FlSpot> normalBeforeData = [
+                                    //   for (int i = 0; i <= _range; i++)
+                                    //     FlSpot(i.toDouble(), 110.toDouble())
+                                    // ];
+                                    // List<FlSpot> normalAfterData = [
+                                    //   for (int i = 0; i <= _range; i++)
+                                    //     FlSpot(i.toDouble(), 140.toDouble())
+                                    // ];
+                                    String dates = '';
+                                    int j = 0;
+                                    final fromUnit = rawData[0].content.unit;
                                     for (int i = 0; i < rawData.length; i++) {
                                       // final content =
                                       //     jsonDecode(rawData[i].content.toString());
                                       //print(normalSystolic);
-                                      final systolic = rawData[i]
-                                          .content
-                                          .systolic
-                                          .toDouble();
-                                      //print(content['systolic'].toString());
-                                      final diastolic = rawData[i]
-                                          .content
-                                          .diastolic
-                                          .toDouble();
-                                      final dates =
+
+                                      final bun = double.parse(
+                                          GlobalMethods.convertUnit(
+                                        fromUnit,
+                                        rawData[i].content.bun,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
+                                      bunData.add(FlSpot(j.toDouble(), bun));
+
+                                      final urea = double.parse(
+                                          GlobalMethods.convertUnit(
+                                        fromUnit,
+                                        rawData[i].content.urea,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
+                                      ureaData.add(FlSpot(j.toDouble(), urea));
+
+                                      final creatinine = double.parse(
+                                          GlobalMethods.convertUnit(
+                                        fromUnit,
+                                        rawData[i].content.creatinine,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
+                                      creatinineData.add(
+                                          FlSpot(j.toDouble(), creatinine));
+                                      final sodium = double.parse(
+                                          GlobalMethods.convertUnit(
+                                        fromUnit,
+                                        rawData[i].content.sodium,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
+                                      sodiumData
+                                          .add(FlSpot(j.toDouble(), sodium));
+
+                                      final potassium = double.parse(
+                                          GlobalMethods.convertUnit(
+                                        fromUnit,
+                                        rawData[i].content.potassium,
+                                        widget.unit,
+                                      ).toStringAsFixed(2));
+                                      potassiumData
+                                          .add(FlSpot(j.toDouble(), potassium));
+                                      j++;
+                                      dates =
                                           '${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}';
-                                      //print(content['diastolic'].toString());
-                                      //final dates = item['date'].toString();
 
-                                      //print(systolic + diastolic);
-
-                                      //Assuming you want to plot points based on their order in the dataset
-                                      systolicData
-                                          .add(FlSpot(i.toDouble(), systolic));
-                                      diastolicData
-                                          .add(FlSpot(i.toDouble(), diastolic));
-                                      //print(dates.toString());
-                                      dateData.add(dates.toString());
+                                      dateData.add(dates);
                                     }
-                                    //print(systolicData);
+                                    //
+
                                     return LineChart(
                                       LineChartData(
                                         minX: 0,
                                         maxX: range.toDouble(),
                                         minY: 0,
-                                        maxY: 200,
+                                        maxY: widget.unit == 'mg/dL' ? 200 : 15,
                                         titlesData: FlTitlesData(
                                             show: true,
                                             topTitles: const AxisTitles(
@@ -165,9 +210,12 @@ class _BPGraphState extends State<BPGraph> {
                                             rightTitles: const AxisTitles(
                                                 sideTitles: SideTitles(
                                                     showTitles: false)),
-                                            leftTitles: const AxisTitles(
+                                            leftTitles: AxisTitles(
                                                 sideTitles: SideTitles(
-                                                    interval: 10,
+                                                    interval:
+                                                        widget.unit == 'mg/dL'
+                                                            ? 50
+                                                            : 1,
                                                     showTitles: true,
                                                     reservedSize: 35)),
                                             bottomTitles: AxisTitles(
@@ -184,7 +232,8 @@ class _BPGraphState extends State<BPGraph> {
                                                       child: (value >=
                                                               dateData.length)
                                                           ? const Text('')
-                                                          : Text(dateData[
+                                                          : Text(dateData
+                                                                  .toList()[
                                                               value.toInt()]),
                                                     ),
                                                   );
@@ -208,7 +257,7 @@ class _BPGraphState extends State<BPGraph> {
                                             },
                                             drawVerticalLine: true,
                                             verticalInterval: 1,
-                                            horizontalInterval: 10),
+                                            horizontalInterval: 50),
                                         //titlesData: const FlTitlesData(show: true),
                                         borderData: FlBorderData(
                                           show: true,
@@ -217,78 +266,104 @@ class _BPGraphState extends State<BPGraph> {
                                         ),
                                         lineBarsData: [
                                           LineChartBarData(
-                                            spots: normalSystolic,
-                                            color: Colors.green,
-                                            barWidth: 1,
-                                            isStrokeCapRound: true,
-                                            dotData:
-                                                const FlDotData(show: false),
-                                            belowBarData: BarAreaData(
-                                              applyCutOffY: true,
-                                              show: true,
-                                              cutOffY: 80,
-                                              gradient: RadialGradient(
-                                                colors: AppColors
-                                                    .safegradientColors
-                                                    .map((color) =>
-                                                        color.withAlpha(153))
-                                                    .toList(),
-                                              ),
-                                            ),
-                                          ),
-                                          LineChartBarData(
-                                            spots: systolicData,
-                                            isCurved: true,
-                                            color: AppColors.systolicGraph,
+                                            spots: bunData,
+                                            //isCurved: true,
+                                            color: AppColors.bunRf,
                                             barWidth: 2,
                                             isStrokeCapRound: true,
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
-                                              cutOffY: 130,
+                                              cutOffY: 110,
                                               gradient: RadialGradient(
-                                                colors: AppColors
-                                                    .cautiongradientColors
+                                                colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withAlpha(153))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
-                                          ),
-                                          LineChartBarData(
-                                            spots: normalDiastolic,
-                                            color: Colors.green,
-                                            barWidth: 1,
-                                            isStrokeCapRound: true,
                                             dotData:
-                                                const FlDotData(show: false),
+                                                FlDotData(show: widget.dots),
                                           ),
                                           LineChartBarData(
-                                            spots: diastolicData,
+                                            spots: ureaData,
                                             isCurved: true,
-                                            color: AppColors.diastolicGraph,
+                                            color: AppColors.ureaRf,
                                             barWidth: 2,
                                             isStrokeCapRound: true,
-                                            dotData: FlDotData(
-                                                show: _prefs?.getBool(
-                                                        'graphDots') ??
-                                                    true),
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
-                                              cutOffY: 90,
+                                              cutOffY: 140,
                                               gradient: RadialGradient(
-                                                colors: AppColors
-                                                    .cautiongradientColors
+                                                colors: cautiongradientColors
                                                     .map((color) =>
-                                                        color.withAlpha(153))
+                                                        color.withAlpha(77))
                                                     .toList(),
                                               ),
                                             ),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
+                                          ),
+                                          LineChartBarData(
+                                            spots: creatinineData,
+                                            isCurved: true,
+                                            color: AppColors.creatinineRf,
+                                            barWidth: 2,
+                                            isStrokeCapRound: true,
+                                            belowBarData: BarAreaData(
+                                              applyCutOffY: true,
+                                              show: true,
+                                              cutOffY: 140,
+                                              gradient: RadialGradient(
+                                                colors: cautiongradientColors
+                                                    .map((color) =>
+                                                        color.withAlpha(77))
+                                                    .toList(),
+                                              ),
+                                            ),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
+                                          ),
+                                          LineChartBarData(
+                                            spots: sodiumData,
+                                            isCurved: true,
+                                            color: AppColors.sodiumRf,
+                                            barWidth: 2,
+                                            isStrokeCapRound: true,
+                                            belowBarData: BarAreaData(
+                                              applyCutOffY: true,
+                                              show: true,
+                                              cutOffY: 140,
+                                              gradient: RadialGradient(
+                                                colors: cautiongradientColors
+                                                    .map((color) =>
+                                                        color.withAlpha(77))
+                                                    .toList(),
+                                              ),
+                                            ),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
+                                          ),
+                                          LineChartBarData(
+                                            spots: potassiumData,
+                                            isCurved: true,
+                                            color: AppColors.potassiumRf,
+                                            barWidth: 2,
+                                            isStrokeCapRound: true,
+                                            belowBarData: BarAreaData(
+                                              applyCutOffY: true,
+                                              show: true,
+                                              cutOffY: 140,
+                                              gradient: RadialGradient(
+                                                colors: cautiongradientColors
+                                                    .map((color) =>
+                                                        color.withAlpha(77))
+                                                    .toList(),
+                                              ),
+                                            ),
+                                            dotData:
+                                                FlDotData(show: widget.dots),
                                           ),
                                         ],
                                       ),
@@ -300,10 +375,11 @@ class _BPGraphState extends State<BPGraph> {
                             LegendsListWidget(
                               width: 3,
                               legends: [
-                                Legend('Systolic', AppColors.systolicGraph),
-                                Legend('Diastolic', AppColors.diastolicGraph),
-                                Legend(
-                                    'Normal Range', AppColors.saferangeColor),
+                                Legend('Bun', AppColors.totalChColor),
+                                Legend('Urea', AppColors.tagColor),
+                                Legend('Creatinine', AppColors.hdlColor),
+                                Legend('Sodium', AppColors.ldlColor),
+                                Legend('Potassium', AppColors.nonhdlColor),
                               ],
                             ),
                           ],

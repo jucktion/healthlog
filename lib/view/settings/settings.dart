@@ -60,6 +60,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   generalSettings(),
                   sugarSettings(),
                   cholesterolSettings(),
+                  rftSettings(),
                   dataSettings(),
                   aboutSettings()
                 ],
@@ -287,6 +288,68 @@ class _SettingScreenState extends State<SettingScreen> {
                 }).toList(),
                 onSelected: (value) {
                   _prefs?.setString('chlstrlUnit', value.toString());
+                  setState(
+                    () {
+                      value = value.toString();
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget rftSettings() {
+    const List<String> list = <String>['mg/dL', 'mmol/L'];
+    return SizedBox(
+      child: Column(
+        children: [
+          const Text(
+            'Renal Function Settings',
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
+          const Divider(
+            indent: 20,
+            endIndent: 20,
+            color: Colors.black45,
+            thickness: 1,
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Preferred unit',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      'mg/dL or mmol/L',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ],
+                ),
+              ),
+              DropdownMenu<String>(
+                initialSelection: _prefs?.getString('rftUnit') ?? list.first,
+                dropdownMenuEntries:
+                    list.map<DropdownMenuEntry<String>>((String value) {
+                  return DropdownMenuEntry<String>(
+                    value: value,
+                    label: value,
+                  );
+                }).toList(),
+                onSelected: (value) {
+                  _prefs?.setString('rftUnit', value.toString());
                   setState(
                     () {
                       value = value.toString();

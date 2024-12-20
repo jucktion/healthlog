@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthlog/data/colors.dart';
+import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/sugar.dart';
@@ -138,10 +138,10 @@ class _SugarGraphState extends State<SugarGraph> {
                                           'before') {
                                         double beforeFast = double.parse(
                                             GlobalMethods.convertUnit(
-                                                    widget.unit,
-                                                    dataunit,
-                                                    rawData[i].content.reading)
-                                                .toStringAsFixed(2));
+                                          dataunit,
+                                          rawData[i].content.reading,
+                                          widget.unit,
+                                        ).toStringAsFixed(2));
                                         beforeFastData.add(
                                             FlSpot(j.toDouble(), beforeFast));
                                       }
@@ -151,10 +151,10 @@ class _SugarGraphState extends State<SugarGraph> {
                                           'after') {
                                         double afterFast = double.parse(
                                             GlobalMethods.convertUnit(
-                                                    widget.unit,
-                                                    dataunit,
-                                                    rawData[i].content.reading)
-                                                .toStringAsFixed(2));
+                                          dataunit,
+                                          rawData[i].content.reading,
+                                          widget.unit,
+                                        ).toStringAsFixed(2));
 
                                         if ('${DateTime.parse((rawData[i].date)).month}-${DateTime.parse((rawData[i].date)).day}' ==
                                             dates) {
