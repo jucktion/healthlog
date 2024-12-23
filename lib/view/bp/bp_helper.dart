@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/bloodpressure.dart';
+import 'package:healthlog/view/theme/globals.dart';
 
 class BPHelper {
   static Future<void> statefulBpBottomModal(BuildContext context,
@@ -38,7 +39,9 @@ class BPHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isInt(value)) {
                               return 'Please enter systolic value';
                             }
                             return null;
@@ -57,7 +60,9 @@ class BPHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isInt(value)) {
                               return 'Please enter diastolic value';
                             }
                             return null;
@@ -76,7 +81,9 @@ class BPHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isInt(value)) {
                               return 'Please enter your heartrate';
                             }
                             return null;
@@ -124,7 +131,7 @@ class BPHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           decoration: const InputDecoration(
-                              hintText: 'Any notes you want to include',
+                              hintText: 'Additional context',
                               label: Text('Comments')),
                           onChanged: (String? value) {
                             setState(() => comment = value.toString());
@@ -202,7 +209,6 @@ class BPHelper {
     int diastolic = 80;
     int heartrate = 70;
     String arm = "";
-    String armGroup = "";
     String comment = "";
     bp = getList();
 
@@ -240,7 +246,9 @@ class BPHelper {
                                   initialValue: bpd.systolic.toString(),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
+                                    if (value == null ||
+                                        value.isEmpty ||
+                                        !GlobalMethods.isInt(value)) {
                                       return 'Please enter systolic value';
                                     }
                                     return null;
@@ -261,7 +269,9 @@ class BPHelper {
                                   initialValue: bpd.diastolic.toString(),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
+                                    if (value == null ||
+                                        value.isEmpty ||
+                                        !GlobalMethods.isInt(value)) {
                                       return 'Please enter diastolic value';
                                     }
                                     return null;
@@ -282,7 +292,9 @@ class BPHelper {
                                   initialValue: bpd.heartrate.toString(),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    if (value == null || value.isEmpty) {
+                                    if (value == null ||
+                                        value.isEmpty ||
+                                        !GlobalMethods.isInt(value)) {
                                       return 'Please enter your heartrate';
                                     }
                                     return null;
@@ -305,10 +317,10 @@ class BPHelper {
                                       title: const Text("Left"),
                                       selected: bpd.arm == 'left',
                                       value: "left",
-                                      groupValue: armGroup,
+                                      groupValue: arm.isEmpty ? bpd.arm : arm,
                                       onChanged: (String? value) {
                                         setState(() {
-                                          arm = armGroup = value.toString();
+                                          arm = value.toString();
                                         });
                                       }),
                                 ),
@@ -318,10 +330,10 @@ class BPHelper {
                                     title: const Text("Right"),
                                     selected: bpd.arm == 'right',
                                     value: "right",
-                                    groupValue: armGroup,
+                                    groupValue: arm.isEmpty ? bpd.arm : arm,
                                     onChanged: (String? value) {
                                       setState(() {
-                                        arm = armGroup = value.toString();
+                                        arm = value.toString();
                                       });
                                     },
                                   ),
@@ -334,7 +346,7 @@ class BPHelper {
                               child: TextFormField(
                                   initialValue: entry.first.comments,
                                   decoration: const InputDecoration(
-                                      hintText: 'Notes you want to include',
+                                      hintText: 'Additional context',
                                       label: Text('Comments')),
                                   onChanged: (String? value) {
                                     setState(() => comment = value.toString());
@@ -358,12 +370,26 @@ class BPHelper {
                                                 user: userid,
                                                 type: 'bp',
                                                 content: BP(
-                                                    systolic: systolic,
-                                                    diastolic: diastolic,
-                                                    heartrate: heartrate,
+                                                    systolic: systolic != 0 &&
+                                                            systolic !=
+                                                                bpd.systolic
+                                                        ? systolic
+                                                        : bpd.systolic,
+                                                    diastolic: diastolic != 0 &&
+                                                            diastolic !=
+                                                                bpd.diastolic
+                                                        ? diastolic
+                                                        : bpd.diastolic,
+                                                    heartrate: heartrate != 0 &&
+                                                            heartrate !=
+                                                                bpd.heartrate
+                                                        ? heartrate
+                                                        : bpd.heartrate,
                                                     arm: arm),
                                                 date: entry.first.date,
-                                                comments: comment),
+                                                comments: comment.isNotEmpty
+                                                    ? comment
+                                                    : entry.first.comments),
                                             userid,
                                             entryid)
                                         .whenComplete(() {

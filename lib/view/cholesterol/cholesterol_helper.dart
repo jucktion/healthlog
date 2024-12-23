@@ -16,7 +16,6 @@ class CHLSTRLHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "mg/dL";
-    String unitGroup = "mg/dL";
     String comment = "";
 
     showModalBottomSheet(
@@ -29,7 +28,7 @@ class CHLSTRLHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 425,
+              height: 450,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -45,10 +44,10 @@ class CHLSTRLHelper {
                           child: RadioListTile<String>(
                               title: const Text("mmol/L"),
                               value: "mmol/L",
-                              groupValue: unitGroup,
+                              groupValue: unit,
                               onChanged: (String? value) {
                                 setState(() {
-                                  unit = unitGroup = value.toString();
+                                  unit = value.toString();
                                 });
                               }),
                         ),
@@ -58,10 +57,10 @@ class CHLSTRLHelper {
                             title: const Text("mg/dL"),
                             selected: true,
                             value: "mg/dL",
-                            groupValue: unitGroup,
+                            groupValue: unit,
                             onChanged: (String? value) {
                               setState(() {
-                                unit = unitGroup = value.toString();
+                                unit = value.toString();
                               });
                             },
                           ),
@@ -73,14 +72,16 @@ class CHLSTRLHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter total cholesterol result';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '<Less than 200, no more than 240',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Total Cholesterol'),
                           ),
                           onChanged: (String? value) {
@@ -93,7 +94,9 @@ class CHLSTRLHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter Triacyglycerol result';
                             }
                             return null;
@@ -101,7 +104,7 @@ class CHLSTRLHelper {
                           decoration: InputDecoration(
                             hintText:
                                 '<Ideally less than 150, no more than 500',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Triacyglycerol (TAG)'),
                           ),
                           onChanged: (String? value) {
@@ -114,14 +117,16 @@ class CHLSTRLHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter HDL Cholesterol result';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '40-60',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('HDL Cholesterol'),
                           ),
                           onChanged: (String? value) {
@@ -134,14 +139,16 @@ class CHLSTRLHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter LDL Cholesterol result';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: 'Less than 100',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('LDL Cholesterol'),
                           ),
                           onChanged: (String? value) {
@@ -236,7 +243,6 @@ class CHLSTRLHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";
-    String unitGroup = "mg/dL";
     String comment = "";
 
     showModalBottomSheet(
@@ -249,7 +255,7 @@ class CHLSTRLHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 425,
+              height: 450,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<Cholesterol>>(
                   future: ch,
@@ -275,10 +281,11 @@ class CHLSTRLHelper {
                                         title: const Text("mmol/L"),
                                         selected: chd.unit == 'mmol/L',
                                         value: "mmol/L",
-                                        groupValue: unitGroup,
+                                        groupValue:
+                                            unit.isEmpty ? chd.unit : unit,
                                         onChanged: (String? value) {
                                           setState(() {
-                                            unit = unitGroup = value.toString();
+                                            unit = value.toString();
                                           });
                                         }),
                                   ),
@@ -288,10 +295,11 @@ class CHLSTRLHelper {
                                       title: const Text("mg/dL"),
                                       selected: chd.unit == 'mg/dL',
                                       value: "mg/dL",
-                                      groupValue: unitGroup,
+                                      groupValue:
+                                          unit.isEmpty ? chd.unit : unit,
                                       onChanged: (String? value) {
                                         setState(() {
-                                          unit = unitGroup = value.toString();
+                                          unit = value.toString();
                                         });
                                       },
                                     ),
@@ -305,7 +313,9 @@ class CHLSTRLHelper {
                                     initialValue: chd.total.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter total cholesterol result';
                                       }
                                       return null;
@@ -313,7 +323,7 @@ class CHLSTRLHelper {
                                     decoration: InputDecoration(
                                       hintText:
                                           '<Less than 200, no more than 240',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Total Cholesterol'),
                                     ),
                                     onChanged: (String? value) {
@@ -328,7 +338,9 @@ class CHLSTRLHelper {
                                     initialValue: chd.tag.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter Triacyglycerol result';
                                       }
                                       return null;
@@ -336,7 +348,7 @@ class CHLSTRLHelper {
                                     decoration: InputDecoration(
                                       hintText:
                                           '<Ideally less than 150, no more than 500',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Triacyglycerol (TAG)'),
                                     ),
                                     onChanged: (String? value) {
@@ -351,14 +363,16 @@ class CHLSTRLHelper {
                                     initialValue: chd.hdl.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter HDL Cholesterol result';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: '40-60',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('HDL Cholesterol'),
                                     ),
                                     onChanged: (String? value) {
@@ -373,14 +387,16 @@ class CHLSTRLHelper {
                                     initialValue: chd.ldl.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter LDL Cholesterol result';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: 'Less than 100',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('LDL Cholesterol'),
                                     ),
                                     onChanged: (String? value) {
@@ -392,19 +408,14 @@ class CHLSTRLHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
+                                    initialValue: entry.first.comments,
                                     decoration: const InputDecoration(
-                                        hintText: 'What did you eat',
+                                        hintText: 'Additional context',
                                         label: Text('Comments')),
                                     onChanged: (String? value) {
                                       setState(
                                           () => comment = value.toString());
-                                    }
-                                    // (value) {
-                                    //   setState(() {
-                                    //     comment = value;
-                                    //   });
-                                    // },
-                                    ),
+                                    }),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -418,13 +429,29 @@ class CHLSTRLHelper {
                                                   user: userid,
                                                   type: 'chlstrl',
                                                   content: CHLSTRL(
-                                                      total: total,
-                                                      tag: tag,
-                                                      hdl: hdl,
-                                                      ldl: ldl,
-                                                      unit: unit),
+                                                      total: total != 0.0 &&
+                                                              total != chd.total
+                                                          ? total
+                                                          : chd.total,
+                                                      tag: tag != 0.0 &&
+                                                              tag != chd.tag
+                                                          ? tag
+                                                          : chd.tag,
+                                                      hdl: hdl != 0.0 &&
+                                                              hdl != chd.hdl
+                                                          ? hdl
+                                                          : chd.hdl,
+                                                      ldl: ldl != 0.0 &&
+                                                              ldl != chd.ldl
+                                                          ? ldl
+                                                          : chd.ldl,
+                                                      unit: unit.isNotEmpty
+                                                          ? unit
+                                                          : chd.unit),
                                                   date: entry.first.date,
-                                                  comments: comment),
+                                                  comments: comment.isNotEmpty
+                                                      ? comment
+                                                      : entry.first.comments),
                                               userid,
                                               entryid)
                                           .whenComplete(() {

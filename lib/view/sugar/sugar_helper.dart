@@ -71,7 +71,9 @@ class SGHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter blood sugar reading';
                             }
                             return null;
@@ -206,14 +208,14 @@ class SGHelper {
     sg = getList();
 
     final formKey = GlobalKey<FormState>();
-    double reading = 0.00;
+
+    double reading = 0.0;
     String beforeAfter = '';
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String fastGroup = '';
-    String unit = 'mg/dL';
-    String unitGroup = 'mg/dL';
-    String comment = "";
+    String unit = '';
+    String comment = '';
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -236,6 +238,7 @@ class SGHelper {
                       } else {
                         final entry = snapshot.data ?? [];
                         final sgd = entry.first.content;
+
                         return Form(
                           key: formKey,
                           child: Column(
@@ -251,7 +254,9 @@ class SGHelper {
                                         title: const Text("Before"),
                                         selected: sgd.beforeAfter == 'before',
                                         value: "before",
-                                        groupValue: fastGroup,
+                                        groupValue: fastGroup.isEmpty
+                                            ? sgd.beforeAfter
+                                            : fastGroup,
                                         onChanged: (String? value) {
                                           setState(() {
                                             beforeAfter =
@@ -265,7 +270,9 @@ class SGHelper {
                                       title: const Text("After"),
                                       selected: sgd.beforeAfter == 'after',
                                       value: "after",
-                                      groupValue: fastGroup,
+                                      groupValue: fastGroup.isEmpty
+                                          ? sgd.beforeAfter
+                                          : fastGroup,
                                       onChanged: (String? value) {
                                         setState(() {
                                           beforeAfter =
@@ -283,7 +290,9 @@ class SGHelper {
                                     initialValue: sgd.reading.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter blood sugar reading';
                                       }
                                       return null;
@@ -295,15 +304,15 @@ class SGHelper {
                                           : (unit == 'mg/dL' &&
                                                   beforeAfter == 'after')
                                               ? '70-140'
-                                              : (unitGroup == 'mmol/L' &&
+                                              : (unit == 'mmol/L' &&
                                                       beforeAfter == 'before')
                                                   ? '3.33-6.11'
-                                                  : (unitGroup == 'mmol/L' &&
+                                                  : (unit == 'mmol/L' &&
                                                           beforeAfter ==
                                                               'after')
                                                       ? '3.88-7.77'
                                                       : '',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Blood Sugar'),
                                     ),
                                     onChanged: (String? value) {
@@ -320,10 +329,11 @@ class SGHelper {
                                         title: const Text("mmol/L"),
                                         selected: sgd.unit == 'mmol/L',
                                         value: "mmol/L",
-                                        groupValue: unitGroup,
+                                        groupValue:
+                                            unit.isEmpty ? sgd.unit : unit,
                                         onChanged: (String? value) {
                                           setState(() {
-                                            unit = unitGroup = value.toString();
+                                            unit = value.toString();
                                           });
                                         }),
                                   ),
@@ -333,10 +343,11 @@ class SGHelper {
                                       title: const Text("mg/dL"),
                                       selected: sgd.unit == 'mg/dL',
                                       value: "mg/dL",
-                                      groupValue: unitGroup,
+                                      groupValue:
+                                          unit.isEmpty ? sgd.unit : unit,
                                       onChanged: (String? value) {
                                         setState(() {
-                                          unit = unitGroup = value.toString();
+                                          unit = value.toString();
                                         });
                                       },
                                     ),
@@ -347,19 +358,14 @@ class SGHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
+                                    initialValue: entry.first.comments,
                                     decoration: const InputDecoration(
-                                        hintText: 'What did you eat',
+                                        hintText: 'Additional context',
                                         label: Text('Comments')),
                                     onChanged: (String? value) {
                                       setState(
                                           () => comment = value.toString());
-                                    }
-                                    // (value) {
-                                    //   setState(() {
-                                    //     comment = value;
-                                    //   });
-                                    // },
-                                    ),
+                                    }),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -373,12 +379,22 @@ class SGHelper {
                                                   user: userid,
                                                   type: 'sugar',
                                                   content: SG(
-                                                      reading: reading,
-                                                      beforeAfter: beforeAfter,
-                                                      unit: unit),
-                                                  date: DateTime.now()
-                                                      .toIso8601String(),
-                                                  comments: comment),
+                                                      reading: reading != 0.0 &&
+                                                              reading !=
+                                                                  sgd.reading
+                                                          ? reading
+                                                          : sgd.reading,
+                                                      beforeAfter:
+                                                          beforeAfter.isNotEmpty
+                                                              ? beforeAfter
+                                                              : sgd.beforeAfter,
+                                                      unit: unit.isNotEmpty
+                                                          ? unit
+                                                          : sgd.unit),
+                                                  date: entry.first.date,
+                                                  comments: comment.isNotEmpty
+                                                      ? comment
+                                                      : entry.first.comments),
                                               userid,
                                               entryid)
                                           .whenComplete(() {

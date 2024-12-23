@@ -44,6 +44,14 @@ class GlobalMethods {
         });
   }
 
+  static bool isInt(String input) {
+    return int.tryParse(input) != null;
+  }
+
+  static bool isDouble(String input) {
+    return double.tryParse(input) != null;
+  }
+
   static double convertUnit(String from, double reading,
       [String unit = 'mg/dL']) {
     if (unit == 'mmol/L' && from == 'mg/dL') {

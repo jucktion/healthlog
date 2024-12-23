@@ -17,7 +17,6 @@ class RFTHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "mg/dL";
-    String unitGroup = "mg/dL";
     String comment = "";
 
     showModalBottomSheet(
@@ -46,10 +45,10 @@ class RFTHelper {
                           child: RadioListTile<String>(
                               title: const Text("mmol/L"),
                               value: "mmol/L",
-                              groupValue: unitGroup,
+                              groupValue: unit,
                               onChanged: (String? value) {
                                 setState(() {
-                                  unit = unitGroup = value.toString();
+                                  unit = value.toString();
                                 });
                               }),
                         ),
@@ -59,10 +58,10 @@ class RFTHelper {
                             title: const Text("mg/dL"),
                             selected: true,
                             value: "mg/dL",
-                            groupValue: unitGroup,
+                            groupValue: unit,
                             onChanged: (String? value) {
                               setState(() {
-                                unit = unitGroup = value.toString();
+                                unit = value.toString();
                               });
                             },
                           ),
@@ -74,14 +73,16 @@ class RFTHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter BUN reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '4.6 - 23.5',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('BUN'),
                           ),
                           onChanged: (String? value) {
@@ -94,14 +95,16 @@ class RFTHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter Urea reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '10-50',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Urea'),
                           ),
                           onChanged: (String? value) {
@@ -114,14 +117,16 @@ class RFTHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter creatinine reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '0.60 - 1.20',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Creatinine'),
                           ),
                           onChanged: (String? value) {
@@ -134,14 +139,16 @@ class RFTHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter Sodium reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '135 - 145',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Sodium'),
                           ),
                           onChanged: (String? value) {
@@ -154,14 +161,16 @@ class RFTHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null ||
+                                value.isEmpty ||
+                                !GlobalMethods.isDouble(value)) {
                               return 'Please enter Potassium reading';
                             }
                             return null;
                           },
                           decoration: InputDecoration(
                             hintText: '3.50 - 5.00',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Potassium'),
                           ),
                           onChanged: (String? value) {
@@ -173,7 +182,7 @@ class RFTHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           decoration: const InputDecoration(
-                              hintText: 'What did you eat',
+                              hintText: 'Additional Context',
                               label: Text('Comments')),
                           onChanged: (String? value) {
                             setState(() => comment = value.toString());
@@ -258,7 +267,6 @@ class RFTHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";
-    String unitGroup = "mg/dL";
     String comment = "";
 
     showModalBottomSheet(
@@ -297,10 +305,11 @@ class RFTHelper {
                                         title: const Text("mmol/L"),
                                         selected: rfd.unit == 'mmol/L',
                                         value: "mmol/L",
-                                        groupValue: unitGroup,
+                                        groupValue:
+                                            unit.isEmpty ? rfd.unit : unit,
                                         onChanged: (String? value) {
                                           setState(() {
-                                            unit = unitGroup = value.toString();
+                                            unit = value.toString();
                                           });
                                         }),
                                   ),
@@ -310,10 +319,11 @@ class RFTHelper {
                                       title: const Text("mg/dL"),
                                       selected: rfd.unit == 'mg/dL',
                                       value: "mg/dL",
-                                      groupValue: unitGroup,
+                                      groupValue:
+                                          unit.isEmpty ? rfd.unit : unit,
                                       onChanged: (String? value) {
                                         setState(() {
-                                          unit = unitGroup = value.toString();
+                                          unit = value.toString();
                                         });
                                       },
                                     ),
@@ -327,14 +337,16 @@ class RFTHelper {
                                     initialValue: rfd.bun.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter BUN reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: '4.6 - 23.5',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('BUN'),
                                     ),
                                     onChanged: (String? value) {
@@ -349,14 +361,16 @@ class RFTHelper {
                                     initialValue: rfd.urea.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter Urea reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: '10 - 50',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Urea'),
                                     ),
                                     onChanged: (String? value) {
@@ -371,14 +385,16 @@ class RFTHelper {
                                     initialValue: rfd.creatinine.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter Creatinine reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: '0.60 - 1.20',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Creatinine'),
                                     ),
                                     onChanged: (String? value) {
@@ -393,14 +409,16 @@ class RFTHelper {
                                     initialValue: rfd.sodium.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter Sodium reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: '135 - 145',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Sodium'),
                                     ),
                                     onChanged: (String? value) {
@@ -415,14 +433,16 @@ class RFTHelper {
                                     initialValue: rfd.potassium.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          value.isEmpty ||
+                                          !GlobalMethods.isDouble(value)) {
                                         return 'Please enter Potassium reading';
                                       }
                                       return null;
                                     },
                                     decoration: InputDecoration(
                                       hintText: '3.50 - 5.00',
-                                      suffixText: unitGroup,
+                                      suffixText: unit,
                                       label: const Text('Potassium'),
                                     ),
                                     onChanged: (String? value) {
@@ -434,19 +454,14 @@ class RFTHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
+                                    initialValue: entry.first.comments,
                                     decoration: const InputDecoration(
-                                        hintText: 'What did you eat',
+                                        hintText: 'Additional Context',
                                         label: Text('Comments')),
                                     onChanged: (String? value) {
                                       setState(
                                           () => comment = value.toString());
-                                    }
-                                    // (value) {
-                                    //   setState(() {
-                                    //     comment = value;
-                                    //   });
-                                    // },
-                                    ),
+                                    }),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -460,14 +475,31 @@ class RFTHelper {
                                                   user: userid,
                                                   type: 'rft',
                                                   content: RFT(
-                                                      bun: bun,
-                                                      urea: urea,
-                                                      creatinine: creatinine,
-                                                      sodium: sodium,
-                                                      potassium: potassium,
-                                                      unit: unit),
+                                                      bun: bun != 0.0 && bun != rfd.bun
+                                                          ? bun
+                                                          : rfd.bun,
+                                                      urea: urea != 0.0 && urea != rfd.urea
+                                                          ? urea
+                                                          : rfd.urea,
+                                                      creatinine: creatinine != 0.0 &&
+                                                              creatinine !=
+                                                                  rfd.creatinine
+                                                          ? creatinine
+                                                          : rfd.creatinine,
+                                                      sodium: sodium != 0.0 && sodium != rfd.sodium
+                                                          ? sodium
+                                                          : rfd.sodium,
+                                                      potassium:
+                                                          potassium != 0.0 && potassium != rfd.potassium
+                                                              ? potassium
+                                                              : rfd.potassium,
+                                                      unit: unit.isNotEmpty
+                                                          ? unit
+                                                          : rfd.unit),
                                                   date: entry.first.date,
-                                                  comments: comment),
+                                                  comments: comment.isNotEmpty
+                                                      ? comment
+                                                      : entry.first.comments),
                                               userid,
                                               entryid)
                                           .whenComplete(() {
