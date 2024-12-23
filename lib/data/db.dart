@@ -453,7 +453,7 @@ class DatabaseHandler {
       unit,
     ).toStringAsFixed(2);
 
-    return 'Bun/Urea/Creatinine/Sodium/Potassium : $bun/$urea/$creatinine/$sodium/$potassium $unit';
+    return 'Bun/Urea/Creatinine/Sodium/Potassium:\n$bun/$urea/$creatinine/$sodium/$potassium $unit';
   }
 
   Future<List<RenalFunction>> rftEntry(int entryid) async {

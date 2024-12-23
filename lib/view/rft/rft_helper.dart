@@ -827,7 +827,7 @@ class RFTHelper {
               children: [
             TextSpan(
                 text:
-                    'Bun/Urea/Creatinine/Sodium/Potassium : $bun/$urea/$creatinine/$sodium/$potassium $unit',
+                    'Bun/Urea/Creatinine/Sodium/Potassium:\n$bun/$urea/$creatinine/$sodium/$potassium $unit',
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ])),
       subtitle: Text('Note: ${items.comments.toString()}'),
