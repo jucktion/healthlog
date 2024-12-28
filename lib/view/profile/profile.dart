@@ -125,6 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     future: _data,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
+                        print(_prefs!.getDouble('sugarBeforeLow').toString());
                         return const Center(
                           child: CircularProgressIndicator(),
                         );

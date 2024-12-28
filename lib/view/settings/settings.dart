@@ -16,7 +16,9 @@ class _SettingScreenState extends State<SettingScreen> {
   bool _graphDots = true;
   bool _prefLoaded = false;
   bool _backupDB = false;
-
+  double sugarMax = 200;
+  RangeValues sugarBeforeRange = RangeValues(60, 110);
+  RangeValues sugarAfterRange = RangeValues(70, 140);
   @override
   void initState() {
     super.initState();
@@ -29,16 +31,6 @@ class _SettingScreenState extends State<SettingScreen> {
       _prefLoaded = true;
     });
   }
-
-  // void _setPrefs() async {
-  //   _prefs?.setString('first', 'value');
-  // }
-
-  // void _getPrefs() async {
-  //   setState(() {
-  //     _data = _prefs?.getString('first') ?? '';
-  //   });
-  // }
 
   Future<void> _launchUrl(String url) async {
     if (!await launchUrl(Uri.parse(url))) {
@@ -73,38 +65,11 @@ class _SettingScreenState extends State<SettingScreen> {
     return SizedBox(
       child: Column(
         children: [
-          const Text(
-            'General',
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          ),
-          const Divider(
-            indent: 20,
-            endIndent: 20,
-            color: Colors.black45,
-            thickness: 1,
-            height: 10,
-          ),
+          heading('General'),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Theme Design',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'Placeholder, does nothing for now',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
+              paddedText('Theme Design', 'Placeholder, does nothing for now'),
               Switch(
                   value: _theme,
                   onChanged: (value) {
@@ -117,22 +82,8 @@ class _SettingScreenState extends State<SettingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Save db to disk on each entry',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'Backup db on every entry',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
+              paddedText(
+                  'Save on each entry', 'Backup db to disk on every entry'),
               Switch(
                   value: _prefs?.getBool('alwaysbackupDB') ?? _backupDB,
                   onChanged: (value) {
@@ -146,22 +97,8 @@ class _SettingScreenState extends State<SettingScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Show Dots on Graph',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'Graph should have dots for entries',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
+              paddedText(
+                  'Show Dots on Graph', 'Graph should have dots for entries'),
               Switch(
                   value: _prefs?.getBool('graphDots') ?? _graphDots,
                   onChanged: (value) {
@@ -178,187 +115,44 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget sugarSettings() {
-    const List<String> list = <String>['mg/dL', 'mmol/L'];
     return SizedBox(
       child: Column(
         children: [
-          const Text(
-            'Blood Glucose Settings',
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          ),
-          const Divider(
-            indent: 20,
-            endIndent: 20,
-            color: Colors.black45,
-            thickness: 1,
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          heading('Blood Glucose Settings'),
+          setUnit('sugarUnit'),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Preferred unit',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'mg/dL or mmol/L',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-              DropdownMenu<String>(
-                initialSelection: _prefs?.getString('sugarUnit') ?? list.first,
-                dropdownMenuEntries:
-                    list.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(
-                    value: value,
-                    label: value,
-                  );
-                }).toList(),
-                onSelected: (value) {
-                  _prefs?.setString('sugarUnit', value.toString());
-                  setState(
-                    () {
-                      value = value.toString();
-                    },
-                  );
-                },
-              ),
+              headText('Glucose Range (fasting)'),
+              setRange(sugarBeforeRange, 1, sugarMax, _prefs, 'sugarBeforeLow',
+                  'sugarBeforeHigh'),
+              headText('Glucose Range After Fasting (PP)'),
+              setRange(sugarAfterRange, 1, sugarMax, _prefs, 'sugarAfterLow',
+                  'sugarAfterHigh')
             ],
-          ),
+          )
         ],
       ),
     );
   }
 
   Widget cholesterolSettings() {
-    const List<String> list = <String>['mg/dL', 'mmol/L'];
     return SizedBox(
       child: Column(
         children: [
-          const Text(
-            'Cholesterol Settings',
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          ),
-          const Divider(
-            indent: 20,
-            endIndent: 20,
-            color: Colors.black45,
-            thickness: 1,
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Preferred unit',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'mg/dL or mmol/L',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-              DropdownMenu<String>(
-                initialSelection:
-                    _prefs?.getString('chlstrlUnit') ?? list.first,
-                dropdownMenuEntries:
-                    list.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(
-                    value: value,
-                    label: value,
-                  );
-                }).toList(),
-                onSelected: (value) {
-                  _prefs?.setString('chlstrlUnit', value.toString());
-                  setState(
-                    () {
-                      value = value.toString();
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+          heading('Cholesterol Settings'),
+          setUnit('chlstrlUnit'),
         ],
       ),
     );
   }
 
   Widget rftSettings() {
-    const List<String> list = <String>['mg/dL', 'mmol/L'];
     return SizedBox(
       child: Column(
         children: [
-          const Text(
-            'Renal Function Settings',
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          ),
-          const Divider(
-            indent: 20,
-            endIndent: 20,
-            color: Colors.black45,
-            thickness: 1,
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Preferred unit',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      'mg/dL or mmol/L',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-              DropdownMenu<String>(
-                initialSelection: _prefs?.getString('rftUnit') ?? list.first,
-                dropdownMenuEntries:
-                    list.map<DropdownMenuEntry<String>>((String value) {
-                  return DropdownMenuEntry<String>(
-                    value: value,
-                    label: value,
-                  );
-                }).toList(),
-                onSelected: (value) {
-                  _prefs?.setString('rftUnit', value.toString());
-                  setState(
-                    () {
-                      value = value.toString();
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+          heading('Renal Function Settings'),
+          setUnit('rftUnit'),
         ],
       ),
     );
@@ -377,7 +171,6 @@ class _SettingScreenState extends State<SettingScreen> {
           const Divider(
             indent: 20,
             endIndent: 20,
-            color: Colors.black45,
             thickness: 1,
             height: 10,
           ),
@@ -399,7 +192,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         'A db file is saved to Stroage/Healthlog/healthlob.db',
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -425,7 +218,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         'Stroage/Healthlog/healthlob.db must be available',
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -451,7 +244,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       ),
                       Text(
                         'All data is reset for a fresh start',
-                        style: TextStyle(fontSize: 15),
+                        style: TextStyle(fontSize: 10),
                       ),
                     ],
                   ),
@@ -464,98 +257,186 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
+  //Currently not used as the void function executes consecutively
+  Widget dataSettingss() {
+    return SizedBox(
+      child: Column(
+        children: [
+          heading('Data'),
+          dataRow(DatabaseHandler.instance.backupDB(), 'Backup Data',
+              'A db file is saved to Stroage/Healthlog/healthlob.db'),
+          dataRow(DatabaseHandler.instance.restoreDb(), 'Restore Data',
+              'Stroage/Healthlog/healthlob.db must be available'),
+          dataRow(DatabaseHandler.instance.deleteDB(), 'Reset Data',
+              'All data is reset for a fresh start'),
+        ],
+      ),
+    );
+  }
+
   Widget aboutSettings() {
     String homeUrl = 'https://www.jucktion.com';
     String gitUrl = 'https://github.com/nirose/healthlog';
     return SizedBox(
       child: Column(
         children: [
-          const Text(
-            'About',
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          ),
-          const Divider(
-            indent: 20,
-            endIndent: 20,
-            color: Colors.black45,
-            thickness: 1,
-            height: 10,
-          ),
-          const Row(
+          heading('About'),
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 18.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Version',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      '0.1.5',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            children: [paddedText('Version', '0.1.5')],
           ),
-          InkWell(
+          launchWeb(homeUrl, 'Website', 'https://www.jucktion.com/'),
+          launchWeb(gitUrl, 'Issues/Discussion',
+              'https://github.com/jucktion/healthlog'),
+        ],
+      ),
+    );
+  }
+
+  Widget heading(String text) {
+    return Column(
+      children: [
+        Text(
+          text,
+          style: TextStyle(fontSize: 25),
+        ),
+        const Divider(
+          indent: 10,
+          endIndent: 10,
+          thickness: 1,
+          height: 10,
+        ),
+      ],
+    );
+  }
+
+  Widget headText(String text) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: 20),
+      textAlign: TextAlign.left,
+    );
+  }
+
+  Widget subText(String text) {
+    return Text(text, style: TextStyle(fontSize: 10));
+  }
+
+  //Currently not used as the void function executes consecutively
+  Widget dataRow(void func, String head, String sub) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 18.0),
+          child: InkWell(
             onTap: () {
-              _launchUrl(homeUrl);
+              func;
             },
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Website',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Text(
-                        'https://www.jucktion.com/',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
+                headText(head),
+                subText(sub),
               ],
             ),
           ),
-          InkWell(
-            onTap: () {
-              _launchUrl(gitUrl);
-            },
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        ),
+      ],
+    );
+  }
+
+  Widget launchWeb(String url, String head, String sub) {
+    return InkWell(
+      onTap: () => _launchUrl(url),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Issues/Discussion',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Text(
-                        'https://github.com/nirose/healthlog',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ),
+                headText(head),
+                subText(sub),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget setUnit(String unit) {
+    const List<String> list = <String>['mg/dL', 'mmol/L'];
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: EdgeInsets.only(left: 18.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [headText('Preferred unit'), subText('mg/dL or mmol/L')],
+          ),
+        ),
+        DropdownMenu<String>(
+          initialSelection: _prefs?.getString(unit) ?? list.first,
+          dropdownMenuEntries:
+              list.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry<String>(
+              value: value,
+              label: value,
+            );
+          }).toList(),
+          onSelected: (value) {
+            _prefs?.setString(unit, value.toString());
+            setState(
+              () {
+                value = value.toString();
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget setRange(RangeValues range, double min, double max,
+      SharedPreferences? prefs, String setLow, String setHigh) {
+    print(int.parse(max.toStringAsFixed(0)));
+    return StatefulBuilder(
+      builder: (context, StateSetter setState) => Center(
+        child: RangeSlider(
+            values: range,
+            labels: RangeLabels(
+                range.start.toStringAsFixed(2), range.end.toStringAsFixed(2)),
+            min: min,
+            max: max,
+            divisions: (int.parse(max.toStringAsFixed(0)) * 10) - 10,
+            onChanged: (newValues) {
+              setState(() {
+                range = newValues;
+                prefs?.setDouble(
+                    setLow, double.parse(newValues.start.toStringAsFixed(2)));
+                prefs?.setDouble(
+                    setHigh, double.parse(newValues.end.toStringAsFixed(2)));
+                // labels = RangeLabels(
+                //     newValues.start.toString(), newValues.end.toString());
+                //print('${newValues.start}, ${newValues.end}');
+              });
+            }),
+      ),
+    );
+  }
+
+  Widget paddedText(String head, String sub) {
+    return Padding(
+      padding: EdgeInsets.only(left: 18.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          headText(head),
+          subText(sub),
         ],
       ),
     );

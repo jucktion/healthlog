@@ -311,13 +311,19 @@ class NoteHelper {
                                                   user: userid,
                                                   type: 'note',
                                                   content: Note(
-                                                    title: title,
-                                                    note: note,
+                                                    title: title.isNotEmpty
+                                                        ? title
+                                                        : ntd.title,
+                                                    note: note.isNotEmpty
+                                                        ? note
+                                                        : ntd.note,
                                                     notetype: selectedValue
                                                         .toString(),
                                                   ),
                                                   date: entry.first.date,
-                                                  comments: comment),
+                                                  comments: comment.isNotEmpty
+                                                      ? comment
+                                                      : entry.first.comments),
                                               userid,
                                               entryid)
                                           .whenComplete(() {
@@ -415,26 +421,32 @@ class NoteHelper {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text(entry.first.content.title,
-                                    style: TextStyle(
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  entry.first.content.title,
+                                  style: TextStyle(
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ],
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text(entry.first.content.note,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                  )),
+                              Divider(height: 2, thickness: 2),
+                              FittedBox(
+                                child: Text(entry.first.content.note,
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                    )),
+                              ),
                             ],
                           ),
                           Padding(
                             padding: const EdgeInsets.all(25.0),
                             child: Text(
-                              'Note: ${entry.first.comments}',
+                              'Comment: ${entry.first.comments}',
                               textAlign: TextAlign.center,
                             ),
                           ),

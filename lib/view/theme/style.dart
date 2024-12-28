@@ -6,11 +6,9 @@ final ThemeData healthTheme = ThemeData(
   textTheme: TextTheme(
     bodyMedium: TextStyle(color: Colors.black),
   ),
+  dividerColor: Colors.black,
 );
 final ThemeData healthDark = ThemeData(
-  toggleButtonsTheme: ToggleButtonsThemeData(
-    selectedColor: Colors.green,
-  ),
   primaryColor: Colors.white,
   primarySwatch: Colors.green,
   splashColor: Colors.black87,
@@ -110,4 +108,8 @@ final ThemeData healthDark = ThemeData(
         ),
       ),
       shape: Border.all(color: Colors.grey)),
+  toggleButtonsTheme: ToggleButtonsThemeData(
+    selectedColor: Colors.green,
+  ),
+  dividerColor: Colors.white,
 );

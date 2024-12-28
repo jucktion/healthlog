@@ -181,17 +181,20 @@ class _NoteScreenState extends State<NoteScreen> {
                                             '${DateTime.parse(items[index].date).year}-${DateTime.parse(items[index].date).month}-${DateTime.parse(items[index].date).day} ${DateTime.parse(items[index].date).hour}:${DateTime.parse(items[index].date).minute}'),
                                         contentPadding:
                                             const EdgeInsets.all(8.0),
-                                        title: Text(items[index]
-                                            .content
-                                            .title
-                                            .toUpperCase()),
+                                        title: Text(
+                                          items[index]
+                                              .content
+                                              .title
+                                              .toUpperCase(),
+                                          textAlign: TextAlign.start,
+                                        ),
                                         subtitle: Column(
                                           children: [
-                                            Divider(
-                                                color: Colors.grey,
-                                                height: 2,
-                                                thickness: 1),
-                                            Text(items[index].content.note),
+                                            Divider(height: 2, thickness: 1),
+                                            Text(
+                                              items[index].content.note,
+                                              textAlign: TextAlign.start,
+                                            ),
                                           ],
                                         )),
                                   )),
