@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/sugar/sugar_helper.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SugarGraph extends StatefulWidget {
   final int userid;
@@ -30,7 +31,9 @@ class _SugarGraphState extends State<SugarGraph> {
   List<FlSpot> dateData = [];
   late DatabaseHandler handler;
   late Future<List<Sugar>> _sg;
+  SharedPreferences? _prefs;
   bool _retrived = false;
+  bool _prefLoaded = false;
 
   List<Color> normalgradientColors = [
     const Color(0xff23b6e6),
@@ -44,12 +47,21 @@ class _SugarGraphState extends State<SugarGraph> {
   @override
   void initState() {
     super.initState();
+
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
+      _sg = getList();
       setState(() {
-        _sg = getList();
         _retrived = true;
       });
+    });
+    _initPrefs();
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
     });
   }
 
@@ -58,8 +70,9 @@ class _SugarGraphState extends State<SugarGraph> {
   }
 
   Future<void> _onRefresh() async {
+    _sg = getList();
     setState(() {
-      _sg = getList();
+      _retrived = true;
     });
   }
 
@@ -84,7 +97,7 @@ class _SugarGraphState extends State<SugarGraph> {
             onRefresh: _onRefresh,
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: !_retrived
+              child: !_retrived && !_prefLoaded
                   ? const Text('Content is not loaded yet')
                   : SizedBox(
                       height: MediaQuery.of(context).size.height / 1.25,
@@ -109,6 +122,14 @@ class _SugarGraphState extends State<SugarGraph> {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
                                     //final items = snapshot.data ?? <BloodPressure>[];
+                                    double sugarBeforeHigh =
+                                        _prefs!.getDouble('sugarBeforeHigh') ??
+                                            110;
+                                    double sugarAfterHigh =
+                                        _prefs!.getDouble('sugarAfterHigh') ??
+                                            140;
+
+                                    print('$sugarBeforeHigh , $sugarAfterHigh');
                                     final List<FlSpot> beforeFastData = [];
                                     final List<FlSpot> afterFastData = [];
                                     const int range = 30;
@@ -261,7 +282,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                               applyCutOffY: true,
                                               show: true,
                                               cutOffY: widget.unit == 'mg/dL'
-                                                  ? 110
+                                                  ? sugarBeforeHigh
                                                   : 6.11,
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
@@ -283,7 +304,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                               applyCutOffY: true,
                                               show: true,
                                               cutOffY: widget.unit == 'mg/dL'
-                                                  ? 140
+                                                  ? sugarAfterHigh
                                                   : 7.77,
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors

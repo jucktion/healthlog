@@ -124,10 +124,10 @@ class _SettingScreenState extends State<SettingScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               headText('Glucose Range (fasting)'),
-              setRange(sugarBeforeRange, 1, sugarMax, _prefs, 'sugarBeforeLow',
+              setRange(sugarBeforeRange, 1, sugarMax, 'sugarBeforeLow',
                   'sugarBeforeHigh'),
               headText('Glucose Range After Fasting (PP)'),
-              setRange(sugarAfterRange, 1, sugarMax, _prefs, 'sugarAfterLow',
+              setRange(sugarAfterRange, 1, sugarMax, 'sugarAfterLow',
                   'sugarAfterHigh')
             ],
           )
@@ -401,9 +401,10 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget setRange(RangeValues range, double min, double max,
-      SharedPreferences? prefs, String setLow, String setHigh) {
-    print(int.parse(max.toStringAsFixed(0)));
+  Widget setRange(RangeValues range, double min, double max, String setLow,
+      String setHigh) {
+    range = RangeValues(_prefs!.getDouble(setLow) ?? range.start,
+        _prefs!.getDouble(setHigh) ?? range.end);
     return StatefulBuilder(
       builder: (context, StateSetter setState) => Center(
         child: RangeSlider(
@@ -412,13 +413,16 @@ class _SettingScreenState extends State<SettingScreen> {
                 range.start.toStringAsFixed(2), range.end.toStringAsFixed(2)),
             min: min,
             max: max,
-            divisions: (int.parse(max.toStringAsFixed(0)) * 10) - 10,
+            //Change 0.1 with movement
+            divisions: (int.parse(max.toStringAsFixed(0)) * 10) -
+                (int.parse(min.toStringAsFixed(0)) * 10),
             onChanged: (newValues) {
               setState(() {
                 range = newValues;
-                prefs?.setDouble(
+
+                _prefs?.setDouble(
                     setLow, double.parse(newValues.start.toStringAsFixed(2)));
-                prefs?.setDouble(
+                _prefs?.setDouble(
                     setHigh, double.parse(newValues.end.toStringAsFixed(2)));
                 // labels = RangeLabels(
                 //     newValues.start.toString(), newValues.end.toString());

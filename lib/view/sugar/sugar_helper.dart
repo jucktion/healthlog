@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/sugar.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SGHelper {
   static Future<void> statefulBpBottomModal(BuildContext context,
@@ -437,8 +438,12 @@ class SGHelper {
     );
   }
 
-  static Future<void> showRecord(BuildContext context, int entryid, String unit,
-      GlobalKey<RefreshIndicatorState> refresh) async {
+  static Future<void> showRecord(
+      BuildContext context,
+      int entryid,
+      String unit,
+      GlobalKey<RefreshIndicatorState> refresh,
+      SharedPreferences? prefs) async {
     late DatabaseHandler handler;
     late Future<List<Sugar>> sg;
     Future<List<Sugar>> getList() async {
@@ -447,6 +452,10 @@ class SGHelper {
     }
 
     sg = getList();
+    double sugarBeforeLow = prefs!.getDouble('sugarBeforeLow') ?? 60;
+    double sugarBeforeHigh = prefs.getDouble('sugarBeforeHigh') ?? 110;
+    double sugarAfterLow = prefs.getDouble('sugarAfterLow') ?? 60;
+    double sugarAfterHigh = prefs.getDouble('sugarAfterHigh') ?? 140;
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -510,11 +519,13 @@ class SGHelper {
                                   color: (unit == 'mg/dL' &&
                                               entry.first.content.beforeAfter ==
                                                   'before' &&
-                                              double.parse(reading) > 110) ||
+                                              double.parse(reading) >
+                                                  sugarBeforeHigh) ||
                                           (unit == 'mg/dL' &&
                                               entry.first.content.beforeAfter ==
                                                   'after' &&
-                                              double.parse(reading) > 140)
+                                              double.parse(reading) >
+                                                  sugarAfterHigh)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -528,10 +539,12 @@ class SGHelper {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 unit == 'mg/dL'
-                                    ? const Text('Fasting: 60-110 mg/dL')
+                                    ? Text(
+                                        'Fasting: $sugarBeforeLow-$sugarBeforeHigh mg/dL')
                                     : const Text('Fasting: 3.33-6.11 mmol/L'),
                                 unit == 'mg/dL'
-                                    ? const Text('After: 70-140 mg/dL')
+                                    ? Text(
+                                        'After: $sugarAfterLow-$sugarAfterHigh mg/dL')
                                     : const Text('After: 3.88-7.77 mmol/L')
                               ],
                             ),

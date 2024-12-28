@@ -125,7 +125,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     future: _data,
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        print(_prefs!.getDouble('sugarBeforeLow').toString());
+                        //Check if the prefs are loading
+                        // print(
+                        //     'Before: ${_prefs!.getDouble('sugarBeforeLow').toString()}, ${_prefs!.getDouble('sugarBeforeHigh').toString()}\nAfter: ${_prefs!.getDouble('sugarAfterLow').toString()}, ${_prefs!.getDouble('sugarAfterHigh').toString()} ');
                         return const Center(
                           child: CircularProgressIndicator(),
                         );
@@ -202,7 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               _prefs!
                                                   .getString('sugarUnit')
                                                   .toString(),
-                                              _refreshIndicatorKey);
+                                              _refreshIndicatorKey,
+                                              _prefs);
                                           break;
                                         case 'bp':
                                           BPHelper.showRecord(
