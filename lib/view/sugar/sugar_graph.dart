@@ -281,9 +281,11 @@ class _SugarGraphState extends State<SugarGraph> {
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
-                                              cutOffY: widget.unit == 'mg/dL'
-                                                  ? sugarBeforeHigh
-                                                  : 6.11,
+                                              cutOffY:
+                                                  GlobalMethods.convertUnit(
+                                                      'mg/dL',
+                                                      sugarBeforeHigh,
+                                                      widget.unit),
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>
@@ -303,9 +305,11 @@ class _SugarGraphState extends State<SugarGraph> {
                                             belowBarData: BarAreaData(
                                               applyCutOffY: true,
                                               show: true,
-                                              cutOffY: widget.unit == 'mg/dL'
-                                                  ? sugarAfterHigh
-                                                  : 7.77,
+                                              cutOffY:
+                                                  GlobalMethods.convertUnit(
+                                                      'mg/dL',
+                                                      sugarAfterHigh,
+                                                      widget.unit),
                                               gradient: RadialGradient(
                                                 colors: cautiongradientColors
                                                     .map((color) =>

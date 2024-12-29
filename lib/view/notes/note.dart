@@ -182,18 +182,16 @@ class _NoteScreenState extends State<NoteScreen> {
                                         contentPadding:
                                             const EdgeInsets.all(8.0),
                                         title: Text(
-                                          items[index]
-                                              .content
-                                              .title
-                                              .toUpperCase(),
+                                          items[index].content.title,
                                           textAlign: TextAlign.start,
                                         ),
                                         subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Divider(height: 2, thickness: 1),
                                             Text(
                                               items[index].content.note,
-                                              textAlign: TextAlign.start,
                                             ),
                                           ],
                                         )),

@@ -456,6 +456,7 @@ class SGHelper {
     double sugarBeforeHigh = prefs.getDouble('sugarBeforeHigh') ?? 110;
     double sugarAfterLow = prefs.getDouble('sugarAfterLow') ?? 60;
     double sugarAfterHigh = prefs.getDouble('sugarAfterHigh') ?? 140;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -474,7 +475,9 @@ class SGHelper {
                   entry.first.content.reading,
                   unit,
                 ).toStringAsFixed(2);
-
+                // Check whether the conversion is working
+                // print(GlobalMethods.convertUnit(
+                //     entry.first.content.unit, entry.first.content.reading));
                 return AlertDialog(
                   title: Row(
                     children: [
@@ -516,15 +519,20 @@ class SGHelper {
                               //Color the readings based on range
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (unit == 'mg/dL' &&
-                                              entry.first.content.beforeAfter ==
+                                  color: (entry.first.content.beforeAfter ==
                                                   'before' &&
-                                              double.parse(reading) >
+                                              //Convert unit to mg/dL so it can be compared
+                                              GlobalMethods.convertUnit(
+                                                      entry.first.content.unit,
+                                                      entry.first.content
+                                                          .reading) >
                                                   sugarBeforeHigh) ||
-                                          (unit == 'mg/dL' &&
-                                              entry.first.content.beforeAfter ==
+                                          (entry.first.content.beforeAfter ==
                                                   'after' &&
-                                              double.parse(reading) >
+                                              GlobalMethods.convertUnit(
+                                                      entry.first.content.unit,
+                                                      entry.first.content
+                                                          .reading) >
                                                   sugarAfterHigh)
                                       ? Colors.red
                                       : Colors.green),
