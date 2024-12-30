@@ -129,7 +129,6 @@ class _SugarGraphState extends State<SugarGraph> {
                                         _prefs!.getDouble('sugarAfterHigh') ??
                                             140;
 
-                                    print('$sugarBeforeHigh , $sugarAfterHigh');
                                     final List<FlSpot> beforeFastData = [];
                                     final List<FlSpot> afterFastData = [];
                                     const int range = 30;

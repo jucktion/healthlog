@@ -6,6 +6,7 @@ import 'package:healthlog/view/theme/globals.dart';
 import 'package:healthlog/view/users/add_user.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -20,10 +21,14 @@ class _UserScreenState extends State<UserScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   bool _retrived = false;
+  bool _prefLoaded = false;
 
+  SharedPreferences? _prefs;
   @override
   void initState() {
     super.initState();
+    _initPrefs();
+    _checkFirstRun();
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
@@ -32,6 +37,42 @@ class _UserScreenState extends State<UserScreen> {
         _onRefresh();
       });
     });
+  }
+
+  void _initPrefs() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _prefLoaded = true;
+    });
+    // print('Removing firstRun');
+    // _prefs?.remove('firstRun');
+  }
+
+  //Run this to set default preferences, so some UI elements aren't messed up
+  void _checkFirstRun() async {
+    final String standardUnit = 'mg/dL';
+    const List<String> unitList = <String>[
+      'rftUnit',
+      'sugarUnit',
+      'chlstrlUnit'
+    ];
+    //Runs only if firstRun pref is not found
+    if (_prefs?.containsKey('firstRun') == false) {
+      unitList
+          .map(
+            (unit) => _prefs?.setString(unit, standardUnit),
+          )
+          .toList();
+      _prefs?.setBool('alwaysbackupDB', false);
+
+      // Sugar defaults
+      _prefs?.setDouble('sugarBeforeLow', 60.0);
+      _prefs?.setDouble('sugarBeforeHigh', 110.0);
+      _prefs?.setDouble('sugarAfterLow', 70.0);
+      _prefs?.setDouble('sugarAfterHigh', 140.0);
+
+      _prefs?.setBool('firstRun', true);
+    }
   }
 
   Future<List<User>> getList() async {
@@ -102,7 +143,7 @@ class _UserScreenState extends State<UserScreen> {
         onRefresh: _onRefresh,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
-          child: !_retrived
+          child: !_retrived && !_prefLoaded
               ? const Text('Content is not loaded yet')
               : SizedBox(
                   height: MediaQuery.of(context).size.height / 1.25,
