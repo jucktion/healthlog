@@ -33,7 +33,7 @@ The project is currently in a beta testing phase. I have used it for a while wit
 
 ## Build
 
-# Install Flutter on your respective OS
+### Install Flutter on your respective OS
 
 ```
 Flutter Tested: 3.27.1
