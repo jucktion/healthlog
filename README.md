@@ -16,7 +16,7 @@ The project is currently in a beta testing phase. I have used it for a while wit
 
 ### A popup to show the results from the list
 
-![A popup to show the results from the list](https://i.imgur.com/Iv9lJCt.jpeg)
+![A popup to show the results from the list](https://i.imgur.com/iOvhhv3.png)
 
 ### Bottom popup for easy record addition
 
