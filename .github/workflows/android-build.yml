@@ -25,7 +25,7 @@ jobs:
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
 
     - name: Decode and create keystore
-      run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/keystore.jks
+      run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/keystore.jks
 
     - name: Create key.properties
       run: |
