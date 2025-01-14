@@ -40,7 +40,7 @@ class CHLSTRLHelper {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 160,
+                          width: 165,
                           child: RadioListTile<String>(
                               title: const Text("mmol/L"),
                               value: "mmol/L",
@@ -52,7 +52,7 @@ class CHLSTRLHelper {
                               }),
                         ),
                         SizedBox(
-                          width: 150,
+                          width: 160,
                           child: RadioListTile<String>(
                             title: const Text("mg/dL"),
                             selected: true,
@@ -276,7 +276,7 @@ class CHLSTRLHelper {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: 160,
+                                    width: 165,
                                     child: RadioListTile<String>(
                                         title: const Text("mmol/L"),
                                         selected: chd.unit == 'mmol/L',
@@ -290,7 +290,7 @@ class CHLSTRLHelper {
                                         }),
                                   ),
                                   SizedBox(
-                                    width: 150,
+                                    width: 160,
                                     child: RadioListTile<String>(
                                       title: const Text("mg/dL"),
                                       selected: chd.unit == 'mg/dL',

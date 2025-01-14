@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 final ThemeData healthTheme = ThemeData(
   primaryColor: Colors.black,
-  splashColor: Colors.grey,
+  splashColor: Colors.white,
   textTheme: TextTheme(
     bodyMedium: TextStyle(color: Colors.black),
   ),

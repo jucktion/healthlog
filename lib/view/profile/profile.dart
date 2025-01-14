@@ -375,16 +375,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           DecoratedBox(
             decoration: BoxDecoration(
-                color: Theme.of(context).splashColor,
-                borderRadius: BorderRadius.all(Radius.circular(10))),
+              color: Theme.of(context).splashColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).primaryColor,
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: Offset(1.1, 1), // changes position of shadow
+                ),
+              ],
+            ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                ),
+              child: Row(
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -395,7 +410,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Handle your on press here
               doOnPressed();
             },
-            child: Icon(icon),
+            backgroundColor: Theme.of(context).splashColor,
+            child: Icon(
+              icon,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
           // Space between the icon and the label
         ],

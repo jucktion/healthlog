@@ -41,7 +41,7 @@ class RFTHelper {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 160,
+                          width: 165,
                           child: RadioListTile<String>(
                               title: const Text("mmol/L"),
                               value: "mmol/L",
@@ -53,7 +53,7 @@ class RFTHelper {
                               }),
                         ),
                         SizedBox(
-                          width: 150,
+                          width: 160,
                           child: RadioListTile<String>(
                             title: const Text("mg/dL"),
                             selected: true,

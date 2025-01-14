@@ -66,19 +66,19 @@ class _SettingScreenState extends State<SettingScreen> {
       child: Column(
         children: [
           heading('General'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              paddedText('Theme Design', 'Placeholder, does nothing for now'),
-              Switch(
-                  value: _theme,
-                  onChanged: (value) {
-                    setState(() {
-                      _theme = value;
-                    });
-                  })
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     paddedText('Theme Design', 'Placeholder, does nothing for now'),
+          //     Switch(
+          //         value: _theme,
+          //         onChanged: (value) {
+          //           setState(() {
+          //             _theme = value;
+          //           });
+          //         })
+          //   ],
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

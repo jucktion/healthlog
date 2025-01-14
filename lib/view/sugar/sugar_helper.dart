@@ -41,7 +41,7 @@ class SGHelper {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 150,
+                          width: 155,
                           child: RadioListTile<String>(
                               title: const Text("Before"),
                               value: "before",
@@ -104,7 +104,7 @@ class SGHelper {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 160,
+                          width: 165,
                           child: RadioListTile<String>(
                               title: const Text("mmol/L"),
                               value: "mmol/L",
@@ -116,7 +116,7 @@ class SGHelper {
                               }),
                         ),
                         SizedBox(
-                          width: 150,
+                          width: 160,
                           child: RadioListTile<String>(
                             title: const Text("mg/dL"),
                             selected: true,
@@ -250,7 +250,7 @@ class SGHelper {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    width: 150,
+                                    width: 165,
                                     child: RadioListTile<String>(
                                         title: const Text("Before"),
                                         selected: sgd.beforeAfter == 'before',
@@ -266,7 +266,7 @@ class SGHelper {
                                         }),
                                   ),
                                   SizedBox(
-                                    width: 150,
+                                    width: 160,
                                     child: RadioListTile<String>(
                                       title: const Text("After"),
                                       selected: sgd.beforeAfter == 'after',
@@ -552,7 +552,7 @@ class SGHelper {
                                     : const Text('Fasting: 3.33-6.11 mmol/L'),
                                 unit == 'mg/dL'
                                     ? Text(
-                                        'After: $sugarAfterLow-$sugarAfterHigh mg/dL')
+                                        'After (PP): $sugarAfterLow-$sugarAfterHigh mg/dL')
                                     : const Text('After: 3.88-7.77 mmol/L')
                               ],
                             ),
