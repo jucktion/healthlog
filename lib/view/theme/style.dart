@@ -7,6 +7,15 @@ final ThemeData healthTheme = ThemeData(
     bodyMedium: TextStyle(color: Colors.black),
   ),
   dividerColor: Colors.black,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(
+      shape: WidgetStatePropertyAll(
+        RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+      ),
+    ),
+  ),
 );
 final ThemeData healthDark = ThemeData(
   primaryColor: Colors.white,

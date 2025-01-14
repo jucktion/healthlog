@@ -120,16 +120,29 @@ class _SettingScreenState extends State<SettingScreen> {
         children: [
           heading('Blood Glucose Settings'),
           setUnit('sugarUnit'),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              headText('Glucose Range (fasting)'),
-              setRange(sugarBeforeRange, 1, sugarMax, 'sugarBeforeLow',
-                  'sugarBeforeHigh'),
-              headText('Glucose Range After Fasting (PP)'),
-              setRange(sugarAfterRange, 1, sugarMax, 'sugarAfterLow',
-                  'sugarAfterHigh')
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                headText('Glucose Range (fasting)'),
+                setRange(
+                    range: sugarBeforeRange,
+                    step: 1.0,
+                    min: 1,
+                    max: sugarMax,
+                    setLow: 'sugarBeforeLow',
+                    setHigh: 'sugarBeforeHigh'),
+                headText('Glucose Range After Fasting (PP)'),
+                setRange(
+                    range: sugarAfterRange,
+                    step: 1.0,
+                    min: 1,
+                    max: sugarMax,
+                    setLow: 'sugarAfterLow',
+                    setHigh: 'sugarAfterHigh')
+              ],
+            ),
           )
         ],
       ),
@@ -314,7 +327,7 @@ class _SettingScreenState extends State<SettingScreen> {
     return Text(
       text,
       style: TextStyle(fontSize: 20),
-      textAlign: TextAlign.left,
+      //textAlign: TextAlign.left,
     );
   }
 
@@ -401,34 +414,59 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
-  Widget setRange(RangeValues range, double min, double max, String setLow,
-      String setHigh) {
+  Widget setRange(
+      {required RangeValues range,
+      required double step,
+      required double min,
+      required double max,
+      required String setLow,
+      required String setHigh}) {
     range = RangeValues(_prefs!.getDouble(setLow) ?? range.start,
         _prefs!.getDouble(setHigh) ?? range.end);
+    double roundToStep(double value) {
+      return (min + (step * ((value - min) / step))).clamp(min, max);
+    }
+
     return StatefulBuilder(
       builder: (context, StateSetter setState) => Center(
-        child: RangeSlider(
-            values: range,
-            labels: RangeLabels(
-                range.start.toStringAsFixed(2), range.end.toStringAsFixed(2)),
-            min: min,
-            max: max,
-            //Change 0.1 with movement
-            divisions: (int.parse(max.toStringAsFixed(0)) * 10) -
-                (int.parse(min.toStringAsFixed(0)) * 10),
-            onChanged: (newValues) {
-              setState(() {
-                range = newValues;
+        child: Center(
+          child: Column(
+            children: [
+              RangeSlider(
+                values: range,
+                labels: RangeLabels(range.start.toStringAsFixed(2),
+                    range.end.toStringAsFixed(2)),
+                min: min,
+                max: max,
+                //Change 0.1 with movement
+                divisions: ((max - min) / step).toInt(),
+                onChanged: (newValues) {
+                  setState(
+                    () {
+                      range = RangeValues(roundToStep(newValues.start),
+                          roundToStep(newValues.end));
 
-                _prefs?.setDouble(
-                    setLow, double.parse(newValues.start.toStringAsFixed(2)));
-                _prefs?.setDouble(
-                    setHigh, double.parse(newValues.end.toStringAsFixed(2)));
-                // labels = RangeLabels(
-                //     newValues.start.toString(), newValues.end.toString());
-                //print('${newValues.start}, ${newValues.end}');
-              });
-            }),
+                      _prefs?.setDouble(setLow,
+                          double.parse(newValues.start.toStringAsFixed(2)));
+                      _prefs?.setDouble(setHigh,
+                          double.parse(newValues.end.toStringAsFixed(2)));
+                      // labels = RangeLabels(
+                      //     newValues.start.toString(), newValues.end.toString());
+                      //print('${newValues.start}, ${newValues.end}');
+                    },
+                  );
+                },
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                '${range.start.toStringAsFixed(2)} - ${range.end.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

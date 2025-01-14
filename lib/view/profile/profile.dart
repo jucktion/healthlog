@@ -175,18 +175,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                     .currentState
                                                     ?.show());
                                       });
-                                    });
+                                    }).then((value) => {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) =>
+                                                  _refreshIndicatorKey
+                                                      .currentState
+                                                      ?.show())
+                                        });
                                   },
                                   child: Card(
                                       child: InkWell(
                                     onTap: () {
-                                      // ScaffoldMessenger.of(context)
-                                      //     .showSnackBar(
-                                      //   SnackBar(
-                                      //       showCloseIcon: true,
-                                      //       content: Text(
-                                      //           'Record ID: ${items[index].id}')),
-                                      // );
                                       switch (items[index].type) {
                                         case 'rft':
                                           RFTHelper.showRecord(

@@ -162,7 +162,8 @@ class _UserScreenState extends State<UserScreen> {
                         //print('${snapshot.data}');
                         return const Center(
                           child: Text(
-                            'Add a User',
+                            textAlign: TextAlign.center,
+                            'Add a User \nor\nPull to refresh',
                             style: TextStyle(fontSize: 20),
                           ),
                         );
