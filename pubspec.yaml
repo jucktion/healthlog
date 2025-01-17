@@ -1,5 +1,5 @@
 name: healthlog
-description: A new Flutter project.
+description: Log medical tests like Blood Pressure/Sugar/Cholesterol/RFT
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -20,7 +20,7 @@ version: 0.32.0+5
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
-  flutter: ^3.27.1
+  flutter: ^3.27.2
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions

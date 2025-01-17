@@ -20,7 +20,7 @@ final ThemeData healthTheme = ThemeData(
 final ThemeData healthDark = ThemeData(
   primaryColor: Colors.white,
   primarySwatch: Colors.green,
-  splashColor: Colors.black87,
+  splashColor: Colors.black,
   primaryColorDark: Colors.black54,
   primaryTextTheme: TextTheme(
     bodyMedium: TextStyle(color: Colors.white),

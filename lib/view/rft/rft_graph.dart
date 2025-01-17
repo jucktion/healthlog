@@ -31,6 +31,7 @@ class _RFTGraphState extends State<RFTGraph> {
 
   late DatabaseHandler handler;
   late Future<List<RenalFunction>> _rf;
+  late Future<String> _user;
   bool _retrived = false;
   bool _prefLoaded = false;
 
@@ -51,13 +52,19 @@ class _RFTGraphState extends State<RFTGraph> {
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _rf = getList();
+
         _retrived = true;
+        _user = getName();
       });
     });
   }
 
   Future<List<RenalFunction>> getList() async {
     return await handler.rftGraph(widget.userid);
+  }
+
+  Future<String> getName() async {
+    return await handler.getUserName(widget.userid);
   }
 
   void _initPrefs() async {
@@ -76,7 +83,24 @@ class _RFTGraphState extends State<RFTGraph> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('RFT Graph'),
+          title: !_retrived
+              ? const Text('User log')
+              : FutureBuilder<String>(
+                  future: _user,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // Check if an error occurred.
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      }
+                      // Return the retrieved title.
+                      return Text("${snapshot.data}'s RFT Graph");
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

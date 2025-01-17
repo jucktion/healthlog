@@ -25,6 +25,7 @@ class _BPGraphState extends State<BPGraph> {
 
   late DatabaseHandler handler;
   late Future<List<BloodPressure>> _bp;
+  late Future<String> _user;
   bool _retrived = false;
   bool _prefLoaded = false;
 
@@ -37,8 +38,13 @@ class _BPGraphState extends State<BPGraph> {
       setState(() {
         _bp = getList();
         _retrived = true;
+        _user = getName();
       });
     });
+  }
+
+  Future<String> getName() async {
+    return await handler.getUserName(widget.userid);
   }
 
   Future<List<BloodPressure>> getList() async {
@@ -62,7 +68,24 @@ class _BPGraphState extends State<BPGraph> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('BloodPressure Graph'),
+          title: !_retrived
+              ? const Text('User log')
+              : FutureBuilder<String>(
+                  future: _user,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // Check if an error occurred.
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      }
+                      // Return the retrieved title.
+                      return Text("${snapshot.data}'s BP Graph");
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

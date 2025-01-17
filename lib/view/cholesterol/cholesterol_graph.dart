@@ -31,6 +31,7 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
 
   late DatabaseHandler handler;
   late Future<List<Cholesterol>> _sg;
+  late Future<String> _user;
   bool _retrived = false;
   bool _prefLoaded = false;
 
@@ -51,9 +52,14 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
     handler.initializeDB().whenComplete(() async {
       setState(() {
         _sg = getList();
+        _user = getName();
         _retrived = true;
       });
     });
+  }
+
+  Future<String> getName() async {
+    return await handler.getUserName(widget.userid);
   }
 
   Future<List<Cholesterol>> getList() async {
@@ -76,7 +82,24 @@ class _CholesterolGraphState extends State<CholesterolGraph> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Cholesterol Graph'),
+          title: !_retrived
+              ? const Text('User log')
+              : FutureBuilder<String>(
+                  future: _user,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // Check if an error occurred.
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      }
+                      // Return the retrieved title.
+                      return Text("${snapshot.data}'s Cholesterol Graph");
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

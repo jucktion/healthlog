@@ -12,7 +12,6 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   SharedPreferences? _prefs;
-  bool _theme = false;
   bool _graphDots = true;
   bool _prefLoaded = false;
   bool _backupDB = false;
@@ -133,7 +132,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     max: sugarMax,
                     setLow: 'sugarBeforeLow',
                     setHigh: 'sugarBeforeHigh'),
-                headText('Glucose Range After Fasting (PP)'),
+                headText('Glucose Range After Eating (PP)'),
                 setRange(
                     range: sugarAfterRange,
                     step: 1.0,
