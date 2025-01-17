@@ -1,1 +1,1 @@
-Log medical tests like Cholesterol/Sugar/BP/RFT
+Log medical tests like Blood Pressure/Sugar/Cholesterol/RFT

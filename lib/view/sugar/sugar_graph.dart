@@ -31,6 +31,7 @@ class _SugarGraphState extends State<SugarGraph> {
   List<FlSpot> dateData = [];
   late DatabaseHandler handler;
   late Future<List<Sugar>> _sg;
+  late Future<String> _user;
   SharedPreferences? _prefs;
   bool _retrived = false;
   bool _prefLoaded = false;
@@ -53,9 +54,14 @@ class _SugarGraphState extends State<SugarGraph> {
       _sg = getList();
       setState(() {
         _retrived = true;
+        _user = getName();
       });
     });
     _initPrefs();
+  }
+
+  Future<String> getName() async {
+    return await handler.getUserName(widget.userid);
   }
 
   void _initPrefs() async {
@@ -80,7 +86,24 @@ class _SugarGraphState extends State<SugarGraph> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Blood Glucose Graph'),
+          title: !_retrived
+              ? const Text('User log')
+              : FutureBuilder<String>(
+                  future: _user,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // Check if an error occurred.
+                      if (snapshot.hasError) {
+                        return const Text('Error');
+                      }
+                      // Return the retrieved title.
+                      return Text("${snapshot.data}'s Sugar Graph");
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -337,7 +360,7 @@ class _SugarGraphState extends State<SugarGraph> {
                                 Legend(
                                     widget.unit == 'mg/dL'
                                         ? 'After (70-140)'
-                                        : 'After(3.88-7.77)',
+                                        : 'After (3.88-7.77)',
                                     AppColors.afterFastColor),
                               ],
                             ),
