@@ -5,10 +5,11 @@ import 'package:healthlog/view/theme/globals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SGHelper {
-  static Future<void> statefulBpBottomModal(BuildContext context,
+  static Future<void> statefulSgBottomModal(BuildContext context,
       {required int userid,
       required Function callback,
-      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+      required SharedPreferences? prefs}) async {
     final formKey = GlobalKey<FormState>();
     double reading = 0.00;
     String beforeAfter = '';
@@ -16,8 +17,12 @@ class SGHelper {
     // String afterFastingNormalReading = '70 - 140';
     String fastGroup = "";
     String unit = "mg/dL";
-    String unitGroup = "mg/dL";
     String comment = "";
+
+    double sugarBeforeLow = prefs!.getDouble('sugarBeforeLow') ?? 60;
+    double sugarBeforeHigh = prefs.getDouble('sugarBeforeHigh') ?? 110;
+    double sugarAfterLow = prefs.getDouble('sugarAfterLow') ?? 60;
+    double sugarAfterHigh = prefs.getDouble('sugarAfterHigh') ?? 140;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -82,17 +87,17 @@ class SGHelper {
                           decoration: InputDecoration(
                             hintText: (unit == 'mg/dL' &&
                                     beforeAfter == 'before')
-                                ? '60-110'
+                                ? '${GlobalMethods.convertUnit(unit, sugarBeforeLow).toStringAsFixed(2)} - ${GlobalMethods.convertUnit(unit, sugarBeforeHigh).toStringAsFixed(2)}'
                                 : (unit == 'mg/dL' && beforeAfter == 'after')
-                                    ? '70-140'
-                                    : (unitGroup == 'mmol/L' &&
+                                    ? '${GlobalMethods.convertUnit(unit, sugarAfterLow).toStringAsFixed(2)} - ${GlobalMethods.convertUnit(unit, sugarAfterHigh).toStringAsFixed(2)}'
+                                    : (unit == 'mmol/L' &&
                                             beforeAfter == 'before')
-                                        ? '3.33-6.11'
-                                        : (unitGroup == 'mmol/L' &&
+                                        ? '${GlobalMethods.convertUnit('mg/dL', sugarBeforeLow, unit).toStringAsFixed(2)} - ${GlobalMethods.convertUnit('mg/dL', sugarBeforeHigh, unit).toStringAsFixed(2)}'
+                                        : (unit == 'mmol/L' &&
                                                 beforeAfter == 'after')
-                                            ? '3.88-7.77'
+                                            ? '${GlobalMethods.convertUnit('mg/dL', sugarAfterLow, unit).toStringAsFixed(2)} - ${GlobalMethods.convertUnit('mg/dL', sugarAfterHigh, unit).toStringAsFixed(2)}'
                                             : '',
-                            suffixText: unitGroup,
+                            suffixText: unit,
                             label: const Text('Blood Sugar'),
                           ),
                           onChanged: (String? value) {
@@ -108,10 +113,10 @@ class SGHelper {
                           child: RadioListTile<String>(
                               title: const Text("mmol/L"),
                               value: "mmol/L",
-                              groupValue: unitGroup,
+                              groupValue: unit,
                               onChanged: (String? value) {
                                 setState(() {
-                                  unit = unitGroup = value.toString();
+                                  unit = value.toString();
                                 });
                               }),
                         ),
@@ -121,10 +126,10 @@ class SGHelper {
                             title: const Text("mg/dL"),
                             selected: true,
                             value: "mg/dL",
-                            groupValue: unitGroup,
+                            groupValue: unit,
                             onChanged: (String? value) {
                               setState(() {
-                                unit = unitGroup = value.toString();
+                                unit = value.toString();
                               });
                             },
                           ),
@@ -198,7 +203,8 @@ class SGHelper {
       {required int userid,
       required int entryid,
       required Function callback,
-      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+      required SharedPreferences? prefs}) async {
     late DatabaseHandler handler;
     late Future<List<Sugar>> sg;
     Future<List<Sugar>> getList() async {
@@ -217,6 +223,11 @@ class SGHelper {
     String fastGroup = '';
     String unit = '';
     String comment = '';
+
+    double sugarBeforeLow = prefs!.getDouble('sugarBeforeLow') ?? 60;
+    double sugarBeforeHigh = prefs.getDouble('sugarBeforeHigh') ?? 110;
+    double sugarAfterLow = prefs.getDouble('sugarAfterLow') ?? 60;
+    double sugarAfterHigh = prefs.getDouble('sugarAfterHigh') ?? 140;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -301,17 +312,17 @@ class SGHelper {
                                     decoration: InputDecoration(
                                       hintText: (unit == 'mg/dL' &&
                                               beforeAfter == 'before')
-                                          ? '60-110'
+                                          ? '${GlobalMethods.convertUnit(unit, sugarBeforeLow).toStringAsFixed(2)} - ${GlobalMethods.convertUnit(unit, sugarBeforeHigh).toStringAsFixed(2)}'
                                           : (unit == 'mg/dL' &&
                                                   beforeAfter == 'after')
-                                              ? '70-140'
+                                              ? '${GlobalMethods.convertUnit(unit, sugarAfterLow).toStringAsFixed(2)} - ${GlobalMethods.convertUnit(unit, sugarAfterHigh).toStringAsFixed(2)}'
                                               : (unit == 'mmol/L' &&
                                                       beforeAfter == 'before')
-                                                  ? '3.33-6.11'
+                                                  ? '${GlobalMethods.convertUnit('mg/dL', sugarBeforeLow, unit).toStringAsFixed(2)} - ${GlobalMethods.convertUnit('mg/dL', sugarBeforeHigh, unit).toStringAsFixed(2)}'
                                                   : (unit == 'mmol/L' &&
                                                           beforeAfter ==
                                                               'after')
-                                                      ? '3.88-7.77'
+                                                      ? '${GlobalMethods.convertUnit('mg/dL', sugarAfterLow, unit).toStringAsFixed(2)} - ${GlobalMethods.convertUnit('mg/dL', sugarAfterHigh, unit).toStringAsFixed(2)}'
                                                       : '',
                                       suffixText: unit,
                                       label: const Text('Blood Sugar'),
@@ -587,7 +598,8 @@ class SGHelper {
                                 userid: userid,
                                 entryid: entryid,
                                 callback: () {},
-                                refreshIndicatorKey: refresh)
+                                refreshIndicatorKey: refresh,
+                                prefs: prefs)
                           },
                           child: const Text('Update'),
                         ),

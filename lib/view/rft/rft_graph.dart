@@ -198,7 +198,7 @@ class _RFTGraphState extends State<RFTGraph> {
                                       final sodium = double.parse(
                                           GlobalMethods.convertUnit(
                                         fromUnit,
-                                        rawData[i].content.sodium,
+                                        rawData[i].content.elements.sodium,
                                         widget.unit,
                                       ).toStringAsFixed(2));
                                       sodiumData
@@ -207,7 +207,7 @@ class _RFTGraphState extends State<RFTGraph> {
                                       final potassium = double.parse(
                                           GlobalMethods.convertUnit(
                                         fromUnit,
-                                        rawData[i].content.potassium,
+                                        rawData[i].content.elements.potassium,
                                         widget.unit,
                                       ).toStringAsFixed(2));
                                       potassiumData

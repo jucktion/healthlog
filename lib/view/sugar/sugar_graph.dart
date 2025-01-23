@@ -107,10 +107,11 @@ class _SugarGraphState extends State<SugarGraph> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            SGHelper.statefulBpBottomModal(context,
+            SGHelper.statefulSgBottomModal(context,
                 userid: widget.userid,
                 callback: () {},
-                refreshIndicatorKey: _refreshIndicatorKey);
+                refreshIndicatorKey: _refreshIndicatorKey,
+                prefs: _prefs);
           },
           backgroundColor: Colors.deepOrange,
           child: const Icon(Icons.add),

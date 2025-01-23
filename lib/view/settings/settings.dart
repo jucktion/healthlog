@@ -18,6 +18,16 @@ class _SettingScreenState extends State<SettingScreen> {
   double sugarMax = 200;
   RangeValues sugarBeforeRange = RangeValues(60, 110);
   RangeValues sugarAfterRange = RangeValues(70, 140);
+  double totalCholesterolHigh = 230;
+  double totalCholesterolMax = 300;
+  double tagHigh = 200;
+  double tagMax = 700;
+  double hdlMax = 100;
+  RangeValues hdlRange = RangeValues(40, 60);
+  double ldlHigh = 100;
+  double ldlMax = 200;
+  double nonHdlHigh = 130;
+  double nonHdlMax = 200;
   @override
   void initState() {
     super.initState();
@@ -154,6 +164,51 @@ class _SettingScreenState extends State<SettingScreen> {
         children: [
           heading('Cholesterol Settings'),
           setUnit('chlstrlUnit'),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                headText('Total Cholesterol High Limit'),
+                setHigh(
+                  high: totalCholesterolHigh,
+                  step: 1.0,
+                  min: 150,
+                  max: totalCholesterolMax,
+                  setHigh: 'totalCholesterolHigh',
+                ),
+                headText('Triacyglycerol High Limit'),
+                setHigh(
+                    high: tagHigh,
+                    step: 1.0,
+                    min: 100,
+                    max: tagMax,
+                    setHigh: 'tagHigh'),
+                headText('HDL Range'),
+                setRange(
+                    range: hdlRange,
+                    step: 1.0,
+                    min: 1,
+                    max: hdlMax,
+                    setLow: 'hdlLow',
+                    setHigh: 'hdlHigh'),
+                headText('LDL High Limit'),
+                setHigh(
+                    high: ldlHigh,
+                    step: 1.0,
+                    min: 90,
+                    max: ldlMax,
+                    setHigh: 'ldlHigh'),
+                headText('Non-HDL High Limit'),
+                setHigh(
+                    high: nonHdlHigh,
+                    step: 1.0,
+                    min: 100,
+                    max: nonHdlMax,
+                    setHigh: 'nonHdlHigh'),
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -458,7 +513,55 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               Text(
                 textAlign: TextAlign.center,
-                '${range.start.toStringAsFixed(2)} - ${range.end.toStringAsFixed(2)}',
+                'Current: ${range.start.toStringAsFixed(2)} - ${range.end.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget setHigh({
+    required double high,
+    required double step,
+    required double min,
+    required double max,
+    required String setHigh,
+  }) {
+    return StatefulBuilder(
+      builder: (context, StateSetter setState) => Center(
+        child: Center(
+          child: Column(
+            children: [
+              Slider(
+                value: high,
+                label: high.toStringAsFixed(2),
+                min: min,
+                max: max,
+                //Change 0.1 with movement
+                divisions: ((max - min) / step).toInt(),
+                onChanged: (newValue) {
+                  setState(
+                    () {
+                      high = newValue;
+
+                      _prefs?.setDouble(
+                          setHigh, double.parse(newValue.toStringAsFixed(2)));
+
+                      // labels = RangeLabels(
+                      //     newValues.start.toString(), newValues.end.toString());
+                      //print('${newValues.start}, ${newValues.end}');
+                    },
+                  );
+                },
+              ),
+              Text(
+                textAlign: TextAlign.center,
+                'Current: ${high.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: 15,
                 ),

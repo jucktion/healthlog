@@ -219,7 +219,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               _prefs!
                                                   .getString('chlstrlUnit')
                                                   .toString(),
-                                              _refreshIndicatorKey);
+                                              _refreshIndicatorKey,
+                                              _prefs);
                                           break;
                                       }
                                       // ScaffoldMessenger.of(context)
@@ -319,7 +320,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 RFTHelper.statefulRftBottomModal(context,
                     userid: widget.userid,
                     callback: () {},
-                    refreshIndicatorKey: _refreshIndicatorKey);
+                    refreshIndicatorKey: _refreshIndicatorKey,
+                    prefs: _prefs);
               }),
         if (_isFabOpen)
           _buildFabOption(
@@ -329,17 +331,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CHLSTRLHelper.statefulchlstrlBottomModal(context,
                     userid: widget.userid,
                     callback: () {},
-                    refreshIndicatorKey: _refreshIndicatorKey);
+                    refreshIndicatorKey: _refreshIndicatorKey,
+                    prefs: _prefs);
               }),
         if (_isFabOpen)
           _buildFabOption(
               icon: Icons.cake,
               label: 'Sugar',
               doOnPressed: () {
-                SGHelper.statefulBpBottomModal(context,
+                SGHelper.statefulSgBottomModal(context,
                     userid: widget.userid,
                     callback: () {},
-                    refreshIndicatorKey: _refreshIndicatorKey);
+                    refreshIndicatorKey: _refreshIndicatorKey,
+                    prefs: _prefs);
               }),
         if (_isFabOpen)
           _buildFabOption(

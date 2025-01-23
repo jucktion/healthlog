@@ -53,10 +53,10 @@ class GlobalMethods {
   }
 
   static double convertUnit(String from, double reading,
-      [String unit = 'mg/dL']) {
-    if (unit == 'mmol/L' && from == 'mg/dL') {
+      [String to = 'mg/dL']) {
+    if (to == 'mmol/L' && from == 'mg/dL') {
       return (reading / 18.0182);
-    } else if (unit == 'mg/dL' && from == 'mmol/L') {
+    } else if (to == 'mg/dL' && from == 'mmol/L') {
       return (reading * 18.0182);
     } else {
       return reading;

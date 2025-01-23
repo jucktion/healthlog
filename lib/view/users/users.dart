@@ -57,19 +57,44 @@ class _UserScreenState extends State<UserScreen> {
       'chlstrlUnit'
     ];
     //Runs only if firstRun pref is not found
+    //Unit defaults
     if (_prefs?.containsKey('firstRun') == false) {
       unitList
           .map(
             (unit) => _prefs?.setString(unit, standardUnit),
           )
           .toList();
+      //Backup setting
       _prefs?.setBool('alwaysbackupDB', false);
+
+      //Graph
+      _prefs?.setBool('graphDots', true);
 
       // Sugar defaults
       _prefs?.setDouble('sugarBeforeLow', 60.0);
       _prefs?.setDouble('sugarBeforeHigh', 110.0);
       _prefs?.setDouble('sugarAfterLow', 70.0);
       _prefs?.setDouble('sugarAfterHigh', 140.0);
+
+      // Cholesterol defaults
+      _prefs?.setDouble('totalCholesterolHigh', 240);
+      _prefs?.setDouble('tagHigh', 110);
+      _prefs?.setDouble('hdlLow', 40);
+      _prefs?.setDouble('hdlHigh', 60);
+      _prefs?.setDouble('ldlHigh', 140);
+      _prefs?.setDouble('nonHdlHighHigh', 140);
+
+      // RFT defaults
+      _prefs?.setDouble('bunLow', 4.6);
+      _prefs?.setDouble('bunHigh', 23.5);
+      _prefs?.setDouble('ureaLow', 10);
+      _prefs?.setDouble('ureaHigh', 50);
+      _prefs?.setDouble('creatinineLow', 0.6);
+      _prefs?.setDouble('creatinineHigh', 1.2);
+      _prefs?.setDouble('sodiumLow', 135);
+      _prefs?.setDouble('sodiumHigh', 145);
+      _prefs?.setDouble('potassiumLow', 135);
+      _prefs?.setDouble('pottasiumHigh', 145);
 
       _prefs?.setBool('firstRun', true);
     }

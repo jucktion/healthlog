@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/kidney.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RFTHelper {
   static Future<void> statefulRftBottomModal(BuildContext context,
       {required int userid,
       required Function callback,
-      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+      SharedPreferences? prefs}) async {
     final formKey = GlobalKey<FormState>();
     double bun = 0.00;
     double urea = 0.00;
@@ -17,6 +19,7 @@ class RFTHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "mg/dL";
+    String elunit = "mmol/L";
     String comment = "";
 
     showModalBottomSheet(
@@ -29,7 +32,7 @@ class RFTHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 500,
+              height: 575,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -134,6 +137,37 @@ class RFTHelper {
                                 creatinine = double.parse(value.toString()));
                           }),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 165,
+                          child: RadioListTile<String>(
+                              title: const Text("mmol/L"),
+                              value: "mmol/L",
+                              selected: true,
+                              groupValue: elunit,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  elunit = value.toString();
+                                });
+                              }),
+                        ),
+                        SizedBox(
+                          width: 160,
+                          child: RadioListTile<String>(
+                            title: const Text("mEq/L"),
+                            value: "mEq/L",
+                            groupValue: elunit,
+                            onChanged: (String? value) {
+                              setState(() {
+                                elunit = value.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
@@ -148,7 +182,7 @@ class RFTHelper {
                           },
                           decoration: InputDecoration(
                             hintText: '135 - 145',
-                            suffixText: unit,
+                            suffixText: elunit,
                             label: const Text('Sodium'),
                           ),
                           onChanged: (String? value) {
@@ -170,7 +204,7 @@ class RFTHelper {
                           },
                           decoration: InputDecoration(
                             hintText: '3.50 - 5.00',
-                            suffixText: unit,
+                            suffixText: elunit,
                             label: const Text('Potassium'),
                           ),
                           onChanged: (String? value) {
@@ -207,8 +241,11 @@ class RFTHelper {
                                         bun: bun,
                                         urea: urea,
                                         creatinine: creatinine,
-                                        sodium: sodium,
-                                        potassium: potassium,
+                                        elements: RFTel(
+                                          unit: elunit,
+                                          sodium: sodium,
+                                          potassium: potassium,
+                                        ),
                                         unit: unit),
                                     date: DateTime.now().toIso8601String(),
                                     comments: comment))
@@ -267,6 +304,7 @@ class RFTHelper {
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";
+    String elunit = "mmol/L";
     String comment = "";
 
     showModalBottomSheet(
@@ -279,7 +317,7 @@ class RFTHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 500,
+              height: 575,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<RenalFunction>>(
                   future: rf,
@@ -402,11 +440,43 @@ class RFTHelper {
                                           double.parse(value.toString()));
                                     }),
                               ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: 165,
+                                    child: RadioListTile<String>(
+                                        title: const Text("mmol/L"),
+                                        value: "mmol/L",
+                                        selected: true,
+                                        groupValue: elunit,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            elunit = value.toString();
+                                          });
+                                        }),
+                                  ),
+                                  SizedBox(
+                                    width: 160,
+                                    child: RadioListTile<String>(
+                                      title: const Text("mEq/L"),
+                                      value: "mEq/L",
+                                      groupValue: elunit,
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          elunit = value.toString();
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                               Padding(
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: rfd.sodium.toString(),
+                                    initialValue:
+                                        rfd.elements.sodium.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null ||
@@ -430,7 +500,8 @@ class RFTHelper {
                                 padding:
                                     const EdgeInsets.only(left: 40, right: 40),
                                 child: TextFormField(
-                                    initialValue: rfd.potassium.toString(),
+                                    initialValue:
+                                        rfd.elements.potassium.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
                                       if (value == null ||
@@ -475,24 +546,38 @@ class RFTHelper {
                                                   user: userid,
                                                   type: 'rft',
                                                   content: RFT(
-                                                      bun: bun != 0.0 && bun != rfd.bun
+                                                      bun: bun != 0.0 &&
+                                                              bun != rfd.bun
                                                           ? bun
                                                           : rfd.bun,
-                                                      urea: urea != 0.0 && urea != rfd.urea
+                                                      urea: urea != 0.0 &&
+                                                              urea != rfd.urea
                                                           ? urea
                                                           : rfd.urea,
-                                                      creatinine: creatinine != 0.0 &&
+                                                      creatinine: creatinine !=
+                                                                  0.0 &&
                                                               creatinine !=
                                                                   rfd.creatinine
                                                           ? creatinine
                                                           : rfd.creatinine,
-                                                      sodium: sodium != 0.0 && sodium != rfd.sodium
-                                                          ? sodium
-                                                          : rfd.sodium,
-                                                      potassium:
-                                                          potassium != 0.0 && potassium != rfd.potassium
-                                                              ? potassium
-                                                              : rfd.potassium,
+                                                      elements: RFTel(
+                                                        unit: unit,
+                                                        sodium: sodium != 0.0 &&
+                                                                sodium !=
+                                                                    rfd.elements
+                                                                        .sodium
+                                                            ? sodium
+                                                            : rfd.elements
+                                                                .sodium,
+                                                        potassium: potassium !=
+                                                                    0.0 &&
+                                                                potassium !=
+                                                                    rfd.elements
+                                                                        .potassium
+                                                            ? potassium
+                                                            : rfd.elements
+                                                                .potassium,
+                                                      ),
                                                       unit: unit.isNotEmpty
                                                           ? unit
                                                           : rfd.unit),
@@ -681,19 +766,11 @@ class RFTHelper {
                                   fontSize: 20,
                                 )),
                             Text(
-                              GlobalMethods.convertUnit(
-                                fromUnit,
-                                rfd.sodium,
-                                unit,
-                              ).toStringAsFixed(2),
+                              '${rfd.elements.sodium} ${rfd.elements.unit}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.sodium) >
-                                              145 ||
-                                          GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.sodium) <
-                                              135)
+                                  color: (rfd.elements.sodium > 145 ||
+                                          rfd.elements.sodium < 135)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -705,19 +782,11 @@ class RFTHelper {
                             const Text('Potassium:',
                                 style: TextStyle(fontSize: 20)),
                             Text(
-                              GlobalMethods.convertUnit(
-                                fromUnit,
-                                rfd.potassium,
-                                unit,
-                              ).toStringAsFixed(2),
+                              '${rfd.elements.potassium} ${rfd.elements.unit}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.potassium) >
-                                              5.00 ||
-                                          GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.potassium) <
-                                              3.5)
+                                  color: (rfd.elements.potassium > 5.00 ||
+                                          rfd.elements.potassium < 3.5)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -805,12 +874,12 @@ class RFTHelper {
     ).toStringAsFixed(2);
     String sodium = GlobalMethods.convertUnit(
       fromUnit,
-      items.content.sodium,
+      items.content.elements.sodium,
       unit,
     ).toStringAsFixed(2);
     String potassium = GlobalMethods.convertUnit(
       fromUnit,
-      items.content.potassium,
+      items.content.elements.potassium,
       unit,
     ).toStringAsFixed(2);
     return ListTile(

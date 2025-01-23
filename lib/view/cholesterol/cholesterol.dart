@@ -104,7 +104,8 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
           CHLSTRLHelper.statefulchlstrlBottomModal(context,
               userid: widget.userid,
               callback: () {},
-              refreshIndicatorKey: _refreshIndicatorKey);
+              refreshIndicatorKey: _refreshIndicatorKey,
+              prefs: _prefs);
         },
         backgroundColor: AppColors.floatingButton,
         child: const Icon(Icons.add),
@@ -187,7 +188,8 @@ class _CHLSTRLScreenState extends State<CHLSTRLScreen> {
                                                   context,
                                                   items[index].id ?? 0,
                                                   unit,
-                                                  _refreshIndicatorKey)
+                                                  _refreshIndicatorKey,
+                                                  _prefs)
                                             },
                                         child: CHLSTRLHelper.tileCHLSTRL(
                                             context, items[index], unit)),

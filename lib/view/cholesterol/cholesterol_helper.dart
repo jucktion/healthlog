@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/cholesterol.dart';
 import 'package:healthlog/view/theme/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CHLSTRLHelper {
   static Future<void> statefulchlstrlBottomModal(BuildContext context,
       {required int userid,
       required Function callback,
-      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+      SharedPreferences? prefs}) async {
     final formKey = GlobalKey<FormState>();
     double total = 0.00;
     double tag = 0.00;
@@ -17,6 +19,14 @@ class CHLSTRLHelper {
     // String afterFastingNormalReading = '70 - 140';
     String unit = "mg/dL";
     String comment = "";
+
+    double totalCholesterolHigh =
+        prefs!.getDouble('totalCholesterolHigh') ?? 240;
+    double tagHigh = prefs.getDouble('tagHigh') ?? 110;
+    double hdlLow = prefs.getDouble('hdlLow') ?? 60;
+    double hdlHigh = prefs.getDouble('hdlHigh') ?? 60;
+    double ldlHigh = prefs.getDouble('ldlHigh') ?? 140;
+    //double nonHdlHighHigh = prefs.getDouble('nonHdlHighHigh') ?? 140;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -80,7 +90,11 @@ class CHLSTRLHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '<Less than 200, no more than 240',
+                            hintText: (unit == 'mg/dL')
+                                ? 'Less than ${GlobalMethods.convertUnit(unit, totalCholesterolHigh).toStringAsFixed(2)}'
+                                : (unit == 'mmol/L')
+                                    ? 'Less than ${GlobalMethods.convertUnit('mg/dL', totalCholesterolHigh, unit).toStringAsFixed(2)}'
+                                    : '',
                             suffixText: unit,
                             label: const Text('Total Cholesterol'),
                           ),
@@ -102,8 +116,11 @@ class CHLSTRLHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText:
-                                '<Ideally less than 150, no more than 500',
+                            hintText: (unit == 'mg/dL')
+                                ? 'Less than ${GlobalMethods.convertUnit(unit, tagHigh).toStringAsFixed(2)}'
+                                : (unit == 'mmol/L')
+                                    ? 'Less than ${GlobalMethods.convertUnit('mg/dL', tagHigh, unit).toStringAsFixed(2)}'
+                                    : '',
                             suffixText: unit,
                             label: const Text('Triacyglycerol (TAG)'),
                           ),
@@ -125,7 +142,11 @@ class CHLSTRLHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '40-60',
+                            hintText: (unit == 'mg/dL')
+                                ? '${GlobalMethods.convertUnit(unit, hdlLow).toStringAsFixed(2)} - ${GlobalMethods.convertUnit(unit, hdlHigh).toStringAsFixed(2)}'
+                                : (unit == 'mmol/L')
+                                    ? '${GlobalMethods.convertUnit('mg/dL', hdlLow, unit).toStringAsFixed(2)} - ${GlobalMethods.convertUnit('mg/dL', hdlHigh, unit).toStringAsFixed(2)}'
+                                    : '',
                             suffixText: unit,
                             label: const Text('HDL Cholesterol'),
                           ),
@@ -147,7 +168,11 @@ class CHLSTRLHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: 'Less than 100',
+                            hintText: (unit == 'mg/dL')
+                                ? 'Less than ${GlobalMethods.convertUnit(unit, ldlHigh).toStringAsFixed(2)}'
+                                : (unit == 'mmol/L')
+                                    ? 'Less than ${GlobalMethods.convertUnit('mg/dL', ldlHigh, unit).toStringAsFixed(2)}'
+                                    : '',
                             suffixText: unit,
                             label: const Text('LDL Cholesterol'),
                           ),
@@ -225,7 +250,8 @@ class CHLSTRLHelper {
       {required int userid,
       required int entryid,
       required Function callback,
-      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+      required SharedPreferences? prefs}) async {
     final formKey = GlobalKey<FormState>();
     late DatabaseHandler handler;
     late Future<List<Cholesterol>> ch;
@@ -244,6 +270,13 @@ class CHLSTRLHelper {
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";
     String comment = "";
+
+    double totalCholesterolHigh =
+        prefs!.getDouble('totalCholesterolHigh') ?? 240;
+    double tagHigh = prefs.getDouble('tagHigh') ?? 110;
+    double hdlLow = prefs.getDouble('hdlLow') ?? 60;
+    double hdlHigh = prefs.getDouble('hdlHigh') ?? 60;
+    double ldlHigh = prefs.getDouble('ldlHigh') ?? 140;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -321,8 +354,11 @@ class CHLSTRLHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText:
-                                          '<Less than 200, no more than 240',
+                                      hintText: (unit == 'mg/dL')
+                                          ? 'Less than ${GlobalMethods.convertUnit(unit, totalCholesterolHigh).toStringAsFixed(2)}'
+                                          : (unit == 'mmol/L')
+                                              ? 'Less than ${GlobalMethods.convertUnit('mg/dL', totalCholesterolHigh, unit).toStringAsFixed(2)}'
+                                              : '',
                                       suffixText: unit,
                                       label: const Text('Total Cholesterol'),
                                     ),
@@ -346,8 +382,11 @@ class CHLSTRLHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText:
-                                          '<Ideally less than 150, no more than 500',
+                                      hintText: (unit == 'mg/dL')
+                                          ? 'Less than ${GlobalMethods.convertUnit(unit, tagHigh).toStringAsFixed(2)}'
+                                          : (unit == 'mmol/L')
+                                              ? 'Less than ${GlobalMethods.convertUnit('mg/dL', tagHigh, unit).toStringAsFixed(2)}'
+                                              : '',
                                       suffixText: unit,
                                       label: const Text('Triacyglycerol (TAG)'),
                                     ),
@@ -371,7 +410,11 @@ class CHLSTRLHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '40-60',
+                                      hintText: (unit == 'mg/dL')
+                                          ? '${GlobalMethods.convertUnit(unit, hdlLow).toStringAsFixed(2)} - ${GlobalMethods.convertUnit(unit, hdlHigh).toStringAsFixed(2)}'
+                                          : (unit == 'mmol/L')
+                                              ? '${GlobalMethods.convertUnit('mg/dL', hdlLow, unit).toStringAsFixed(2)} - ${GlobalMethods.convertUnit('mg/dL', hdlHigh, unit).toStringAsFixed(2)}'
+                                              : '',
                                       suffixText: unit,
                                       label: const Text('HDL Cholesterol'),
                                     ),
@@ -395,7 +438,11 @@ class CHLSTRLHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: 'Less than 100',
+                                      hintText: (unit == 'mg/dL')
+                                          ? 'Less than ${GlobalMethods.convertUnit(unit, ldlHigh).toStringAsFixed(2)}'
+                                          : (unit == 'mmol/L')
+                                              ? 'Less than ${GlobalMethods.convertUnit('mg/dL', ldlHigh, unit).toStringAsFixed(2)}'
+                                              : '',
                                       suffixText: unit,
                                       label: const Text('LDL Cholesterol'),
                                     ),
@@ -494,8 +541,12 @@ class CHLSTRLHelper {
     );
   }
 
-  static Future<void> showRecord(BuildContext context, int entryid, String unit,
-      GlobalKey<RefreshIndicatorState> refresh) async {
+  static Future<void> showRecord(
+      BuildContext context,
+      int entryid,
+      String unit,
+      GlobalKey<RefreshIndicatorState> refresh,
+      SharedPreferences? prefs) async {
     late DatabaseHandler handler;
     late Future<List<Cholesterol>> ch;
     Future<List<Cholesterol>> getList() async {
@@ -504,6 +555,15 @@ class CHLSTRLHelper {
     }
 
     ch = getList();
+
+    double totalCholesterolHigh =
+        prefs!.getDouble('totalCholesterolHigh') ?? 240;
+    double tagHigh = prefs.getDouble('tagHigh') ?? 110;
+    double hdlLow = prefs.getDouble('hdlLow') ?? 40;
+    double hdlHigh = prefs.getDouble('hdlHigh') ?? 60;
+    double ldlHigh = prefs.getDouble('ldlHigh') ?? 140;
+    double nonHdlHigh = prefs.getDouble('nonHdlHighHigh') ?? 140;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -559,17 +619,16 @@ class CHLSTRLHelper {
                                 )),
                             Text(
                                 GlobalMethods.convertUnit(
-                                  fromUnit,
-                                  chd.total,
-                                  unit,
-                                ).toStringAsFixed(2),
+                                        fromUnit, chd.total, unit)
+                                    .toStringAsFixed(2),
                                 style: TextStyle(
                                     fontSize: 20,
-                                    color:
-                                        (chd.total > 240 || chd.total < 200) &&
-                                                (chd.unit == 'mg/dL')
-                                            ? Colors.red
-                                            : Colors.green)),
+                                    color: (GlobalMethods.convertUnit(
+                                                fromUnit, chd.total, unit) >
+                                            GlobalMethods.convertUnit(fromUnit,
+                                                totalCholesterolHigh, unit))
+                                        ? Colors.red
+                                        : Colors.green)),
                           ],
                         ),
                         Row(
@@ -580,15 +639,14 @@ class CHLSTRLHelper {
                                   fontSize: 20,
                                 )),
                             Text(
-                              GlobalMethods.convertUnit(
-                                fromUnit,
-                                chd.tag,
-                                unit,
-                              ).toStringAsFixed(2),
+                              GlobalMethods.convertUnit(fromUnit, chd.tag, unit)
+                                  .toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (chd.tag > 500 || chd.tag < 150) &&
-                                          (unit == 'mg/dL')
+                                  color: (GlobalMethods.convertUnit(
+                                              fromUnit, chd.tag, unit) >
+                                          GlobalMethods.convertUnit(
+                                              fromUnit, tagHigh, unit))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -608,17 +666,53 @@ class CHLSTRLHelper {
                                 unit,
                               ).toStringAsFixed(2),
                               style: TextStyle(
-                                  fontSize: 20,
-                                  color: (chd.hdl > 60 && unit == 'mg/dL')
-                                      ? Colors.red
-                                      : (chd.hdl > 40 &&
-                                              chd.hdl < 60 &&
-                                              unit == 'mg/dL')
-                                          ? Colors.green
-                                          : (chd.hdl < 40 && unit == 'mg/dL')
-                                              ? Colors.blue
-                                              : Colors.brown),
-                            ),
+                                fontSize: 20,
+                                color: (GlobalMethods.convertUnit(
+                                              fromUnit,
+                                              chd.hdl,
+                                              unit,
+                                            ) >
+                                            GlobalMethods.convertUnit(
+                                              fromUnit,
+                                              hdlHigh,
+                                              unit,
+                                            ) ||
+                                        GlobalMethods.convertUnit(
+                                              fromUnit,
+                                              chd.hdl,
+                                              unit,
+                                            ) <
+                                            GlobalMethods.convertUnit(
+                                              fromUnit,
+                                              hdlLow,
+                                              unit,
+                                            ))
+                                    ? Colors.red
+                                    : (GlobalMethods.convertUnit(
+                                                  fromUnit,
+                                                  chd.hdl,
+                                                  unit,
+                                                ) >
+                                                GlobalMethods.convertUnit(
+                                                  fromUnit,
+                                                  hdlLow,
+                                                  unit,
+                                                ) &&
+                                            GlobalMethods.convertUnit(
+                                                  fromUnit,
+                                                  chd.hdl,
+                                                  unit,
+                                                ) <
+                                                GlobalMethods.convertUnit(
+                                                  fromUnit,
+                                                  hdlHigh,
+                                                  unit,
+                                                ) &&
+                                            unit == 'mg/dL')
+                                        ? Colors.green
+                                        : Colors.blue,
+                              ),
+                            )
                           ],
                         ),
                         Row(
@@ -629,15 +723,14 @@ class CHLSTRLHelper {
                                   fontSize: 20,
                                 )),
                             Text(
-                              GlobalMethods.convertUnit(
-                                fromUnit,
-                                chd.ldl,
-                                unit,
-                              ).toStringAsFixed(2),
+                              GlobalMethods.convertUnit(fromUnit, chd.ldl, unit)
+                                  .toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (chd.ldl > 160 || chd.ldl < 100) &&
-                                          (unit == 'mg/dL')
+                                  color: (GlobalMethods.convertUnit(
+                                              fromUnit, chd.ldl, unit) >
+                                          GlobalMethods.convertUnit(
+                                              fromUnit, ldlHigh, unit))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -652,8 +745,16 @@ class CHLSTRLHelper {
                               nonhdl.toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (nonhdl > 160 || nonhdl < 130) &&
-                                          (unit == 'mg/dL')
+                                  color: (GlobalMethods.convertUnit(
+                                            fromUnit,
+                                            nonhdl,
+                                            unit,
+                                          ) >
+                                          GlobalMethods.convertUnit(
+                                            fromUnit,
+                                            nonHdlHigh,
+                                            unit,
+                                          ))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -701,7 +802,8 @@ class CHLSTRLHelper {
                                 userid: userid,
                                 entryid: entryid,
                                 callback: () {},
-                                refreshIndicatorKey: refresh)
+                                refreshIndicatorKey: refresh,
+                                prefs: prefs)
                           },
                           child: const Text('Update'),
                         ),

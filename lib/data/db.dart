@@ -444,12 +444,12 @@ class DatabaseHandler {
     ).toStringAsFixed(2);
     String sodium = GlobalMethods.convertUnit(
       fromUnit,
-      result.first.content.sodium,
+      result.first.content.elements.sodium,
       unit,
     ).toStringAsFixed(2);
     String potassium = GlobalMethods.convertUnit(
       fromUnit,
-      result.first.content.potassium,
+      result.first.content.elements.potassium,
       unit,
     ).toStringAsFixed(2);
 
@@ -466,7 +466,7 @@ class DatabaseHandler {
 
   Future<void> insertRf(RenalFunction rf) async {
     final db = await initializeDB();
-
+    //print(rf.toString());
     try {
       await db.insert('data', rf.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
@@ -474,7 +474,7 @@ class DatabaseHandler {
         backupDB();
       }
     } catch (e) {
-      //print('Error while inserting data: $e');
+      print('Error while inserting data: $e');
     }
   }
 

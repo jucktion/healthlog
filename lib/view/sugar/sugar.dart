@@ -103,10 +103,11 @@ class _SGScreenState extends State<SGScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          SGHelper.statefulBpBottomModal(context,
+          SGHelper.statefulSgBottomModal(context,
               userid: widget.userid,
               callback: () {},
-              refreshIndicatorKey: _refreshIndicatorKey);
+              refreshIndicatorKey: _refreshIndicatorKey,
+              prefs: _prefs);
         },
         backgroundColor: AppColors.floatingButton,
         child: const Icon(Icons.add),

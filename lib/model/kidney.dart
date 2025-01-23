@@ -32,16 +32,14 @@ class RFT {
   final double bun;
   final double urea;
   final double creatinine;
-  final double sodium;
-  final double potassium;
+  final RFTel elements;
 
   RFT(
       {required this.unit,
       required this.bun,
       required this.urea,
       required this.creatinine,
-      required this.sodium,
-      required this.potassium});
+      required this.elements});
 
   Map<String, dynamic> toMap() {
     return {
@@ -49,18 +47,39 @@ class RFT {
       'bun': bun,
       'urea': urea,
       'creatinine': creatinine,
-      'sodium': sodium,
-      'potassium': potassium
+      'elements': jsonEncode((elements as dynamic).toMap())
     };
   }
 
   factory RFT.fromMap(Map<String, dynamic> map) {
     return RFT(
-        unit: map['unit'],
-        bun: map['bun'],
-        urea: map['urea'],
-        creatinine: map['creatinine'],
-        sodium: map['sodium'],
-        potassium: map['potassium']);
+      unit: map['unit'],
+      bun: map['bun'],
+      urea: map['urea'],
+      creatinine: map['creatinine'],
+      elements: RFTel.fromMap(jsonDecode(map["elements"])),
+    );
+  }
+}
+
+class RFTel {
+  final String unit;
+  final double sodium;
+  final double potassium;
+
+  RFTel({required this.unit, required this.sodium, required this.potassium});
+
+  Map<String, dynamic> toMap() {
+    return {'unit': unit, 'sodium': sodium, 'potassium': potassium};
+  }
+
+  @override
+  String toString() {
+    return 'Element(unit: $unit, reading: $sodium , $potassium)';
+  }
+
+  factory RFTel.fromMap(Map<String, dynamic> map) {
+    return RFTel(
+        unit: map['unit'], sodium: map['sodium'], potassium: map['potassium']);
   }
 }

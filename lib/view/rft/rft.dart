@@ -104,7 +104,8 @@ class _RFTScreenState extends State<RFTScreen> {
           RFTHelper.statefulRftBottomModal(context,
               userid: widget.userid,
               callback: () {},
-              refreshIndicatorKey: _refreshIndicatorKey);
+              refreshIndicatorKey: _refreshIndicatorKey,
+              prefs: _prefs);
         },
         backgroundColor: AppColors.floatingButton,
         child: const Icon(Icons.add),
