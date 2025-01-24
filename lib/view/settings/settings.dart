@@ -12,7 +12,7 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   SharedPreferences? _prefs;
-  bool _graphDots = true;
+  bool _graphDots = false;
   bool _prefLoaded = false;
   bool _backupDB = false;
   double sugarMax = 200;
@@ -264,7 +264,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     setLow: 'creatinineLow',
                     setHigh: 'creatinineHigh'),
                 setRange(
-                    header: 'Sodium:',
+                    header: 'Sodium (mmol/L or mEq/L):',
                     range: sodiumRange,
                     step: 1.0,
                     min: 75,
@@ -272,7 +272,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     setLow: 'sodiumLow',
                     setHigh: 'sodiumHigh'),
                 setRange(
-                    header: 'Potassium:',
+                    header: 'Potassium (mmol/L or mEq/L):',
                     range: potassiumRange,
                     step: .1,
                     min: 1,

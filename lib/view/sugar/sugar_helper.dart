@@ -21,7 +21,7 @@ class SGHelper {
 
     double sugarBeforeLow = prefs!.getDouble('sugarBeforeLow') ?? 60;
     double sugarBeforeHigh = prefs.getDouble('sugarBeforeHigh') ?? 110;
-    double sugarAfterLow = prefs.getDouble('sugarAfterLow') ?? 60;
+    double sugarAfterLow = prefs.getDouble('sugarAfterLow') ?? 70;
     double sugarAfterHigh = prefs.getDouble('sugarAfterHigh') ?? 140;
 
     showModalBottomSheet(

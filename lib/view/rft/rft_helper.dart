@@ -804,6 +804,18 @@ class RFTHelper {
                             ),
                           ],
                         ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.0, bottom: 5.0),
+                          child: SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('Unit: $unit'),
+                              ],
+                            ),
+                          ),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -812,17 +824,11 @@ class RFTHelper {
                                   fontSize: 20,
                                 )),
                             Text(
-                              '${rfd.elements.sodium} ${rfd.elements.unit}',
+                              '${rfd.elements.sodium}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (GlobalMethods.convertUnit(fromUnit,
-                                                  rfd.elements.sodium, unit) >
-                                              GlobalMethods.convertUnit(
-                                                  'mg/dL', sodiumHigh, unit) ||
-                                          GlobalMethods.convertUnit(fromUnit,
-                                                  rfd.elements.sodium, unit) <
-                                              GlobalMethods.convertUnit(
-                                                  'mg/dL', sodiumLow, unit))
+                                  color: (rfd.elements.sodium > sodiumHigh ||
+                                          rfd.elements.sodium < sodiumLow)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -834,21 +840,12 @@ class RFTHelper {
                             const Text('Potassium:',
                                 style: TextStyle(fontSize: 20)),
                             Text(
-                              '${rfd.elements.potassium} ${rfd.elements.unit}',
+                              '${rfd.elements.potassium}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (GlobalMethods.convertUnit(
-                                                  fromUnit,
-                                                  rfd.elements.potassium,
-                                                  unit) >
-                                              GlobalMethods.convertUnit('mg/dL',
-                                                  potassiumHigh, unit) ||
-                                          GlobalMethods.convertUnit(
-                                                  fromUnit,
-                                                  rfd.elements.potassium,
-                                                  unit) <
-                                              GlobalMethods.convertUnit(
-                                                  'mg/dL', potassiumLow, unit))
+                                  color: (rfd.elements.potassium >
+                                              potassiumHigh ||
+                                          rfd.elements.potassium < potassiumLow)
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -861,7 +858,7 @@ class RFTHelper {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('Unit: $unit'),
+                                Text('Unit: ${rfd.elements.unit}'),
                               ],
                             ),
                           ),

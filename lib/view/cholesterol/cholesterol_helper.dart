@@ -23,7 +23,7 @@ class CHLSTRLHelper {
     double totalCholesterolHigh =
         prefs!.getDouble('totalCholesterolHigh') ?? 240;
     double tagHigh = prefs.getDouble('tagHigh') ?? 110;
-    double hdlLow = prefs.getDouble('hdlLow') ?? 60;
+    double hdlLow = prefs.getDouble('hdlLow') ?? 40;
     double hdlHigh = prefs.getDouble('hdlHigh') ?? 60;
     double ldlHigh = prefs.getDouble('ldlHigh') ?? 140;
     //double nonHdlHighHigh = prefs.getDouble('nonHdlHighHigh') ?? 140;
@@ -274,7 +274,7 @@ class CHLSTRLHelper {
     double totalCholesterolHigh =
         prefs!.getDouble('totalCholesterolHigh') ?? 240;
     double tagHigh = prefs.getDouble('tagHigh') ?? 110;
-    double hdlLow = prefs.getDouble('hdlLow') ?? 60;
+    double hdlLow = prefs.getDouble('hdlLow') ?? 40;
     double hdlHigh = prefs.getDouble('hdlHigh') ?? 60;
     double ldlHigh = prefs.getDouble('ldlHigh') ?? 140;
 
@@ -763,7 +763,7 @@ class CHLSTRLHelper {
                         Padding(
                           padding: EdgeInsets.only(top: 10.0),
                           child: SizedBox(
-                            child: Row(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [

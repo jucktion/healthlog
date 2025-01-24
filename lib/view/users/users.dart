@@ -28,7 +28,7 @@ class _UserScreenState extends State<UserScreen> {
   void initState() {
     super.initState();
     _initPrefs();
-    _checkFirstRun();
+
     handler = DatabaseHandler.instance;
     handler.initializeDB().whenComplete(() async {
       setState(() {
@@ -105,6 +105,7 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   Future<void> _onRefresh() async {
+    _checkFirstRun();
     setState(() {
       _user = getList();
     });
