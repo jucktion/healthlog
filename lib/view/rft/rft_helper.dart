@@ -474,7 +474,9 @@ class RFTHelper {
                                         title: const Text("mmol/L"),
                                         value: "mmol/L",
                                         selected: true,
-                                        groupValue: elunit,
+                                        groupValue: elunit.isEmpty
+                                            ? rfd.elements.unit
+                                            : elunit,
                                         onChanged: (String? value) {
                                           setState(() {
                                             elunit = value.toString();
@@ -486,7 +488,9 @@ class RFTHelper {
                                     child: RadioListTile<String>(
                                       title: const Text("mEq/L"),
                                       value: "mEq/L",
-                                      groupValue: elunit,
+                                      groupValue: elunit.isEmpty
+                                          ? rfd.elements.unit
+                                          : elunit,
                                       onChanged: (String? value) {
                                         setState(() {
                                           elunit = value.toString();
