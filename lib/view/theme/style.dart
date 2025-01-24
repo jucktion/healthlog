@@ -16,6 +16,15 @@ final ThemeData healthTheme = ThemeData(
       ),
     ),
   ),
+  sliderTheme: SliderThemeData(
+    trackHeight: 1,
+    rangeThumbShape: RoundRangeSliderThumbShape(
+      enabledThumbRadius: 5,
+    ),
+    thumbShape: RoundSliderThumbShape(
+      enabledThumbRadius: 5,
+    ),
+  ),
 );
 final ThemeData healthDark = ThemeData(
   primaryColor: Colors.white,
@@ -121,4 +130,13 @@ final ThemeData healthDark = ThemeData(
     selectedColor: Colors.green,
   ),
   dividerColor: Colors.white,
+  sliderTheme: SliderThemeData(
+    trackHeight: 1,
+    rangeThumbShape: RoundRangeSliderThumbShape(
+      enabledThumbRadius: 5,
+    ),
+    thumbShape: RoundSliderThumbShape(
+      enabledThumbRadius: 5,
+    ),
+  ),
 );

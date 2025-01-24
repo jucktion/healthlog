@@ -22,6 +22,18 @@ class RFTHelper {
     String elunit = "mmol/L";
     String comment = "";
 
+    //Get prefs
+    double bunLow = prefs!.getDouble('bunLow') ?? 4.6;
+    double bunHigh = prefs.getDouble('bunHigh') ?? 23.5;
+    double ureaLow = prefs.getDouble('ureaLow') ?? 10;
+    double ureaHigh = prefs.getDouble('ureaHigh') ?? 50;
+    double creatinineLow = prefs.getDouble('creatinineLow') ?? 0.6;
+    double creatinineHigh = prefs.getDouble('creatinineHigh') ?? 1.2;
+    double sodiumLow = prefs.getDouble('sodiumLow') ?? 135;
+    double sodiumHigh = prefs.getDouble('sodiumHigh') ?? 145;
+    double potassiumLow = prefs.getDouble('potassiumLow') ?? 3.5;
+    double potassiumHigh = prefs.getDouble('potassiumHigh') ?? 5.0;
+
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -84,7 +96,7 @@ class RFTHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '4.6 - 23.5',
+                            hintText: '$bunLow - $bunHigh',
                             suffixText: unit,
                             label: const Text('BUN'),
                           ),
@@ -106,7 +118,7 @@ class RFTHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '10-50',
+                            hintText: '$ureaLow - $ureaHigh',
                             suffixText: unit,
                             label: const Text('Urea'),
                           ),
@@ -128,7 +140,7 @@ class RFTHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '0.60 - 1.20',
+                            hintText: '$creatinineLow - $creatinineHigh',
                             suffixText: unit,
                             label: const Text('Creatinine'),
                           ),
@@ -181,7 +193,7 @@ class RFTHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '135 - 145',
+                            hintText: '$sodiumLow - $sodiumHigh',
                             suffixText: elunit,
                             label: const Text('Sodium'),
                           ),
@@ -203,7 +215,7 @@ class RFTHelper {
                             return null;
                           },
                           decoration: InputDecoration(
-                            hintText: '3.50 - 5.00',
+                            hintText: '$potassiumLow - $potassiumHigh',
                             suffixText: elunit,
                             label: const Text('Potassium'),
                           ),
@@ -285,7 +297,8 @@ class RFTHelper {
       {required int userid,
       required int entryid,
       required Function callback,
-      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey}) async {
+      required GlobalKey<RefreshIndicatorState> refreshIndicatorKey,
+      required SharedPreferences? prefs}) async {
     final formKey = GlobalKey<FormState>();
     late DatabaseHandler handler;
     late Future<List<RenalFunction>> rf;
@@ -306,6 +319,17 @@ class RFTHelper {
     String unit = "";
     String elunit = "mmol/L";
     String comment = "";
+
+    double bunLow = prefs!.getDouble('bunLow') ?? 4.6;
+    double bunHigh = prefs.getDouble('bunHigh') ?? 23.5;
+    double ureaLow = prefs.getDouble('ureaLow') ?? 10;
+    double ureaHigh = prefs.getDouble('ureaHigh') ?? 50;
+    double creatinineLow = prefs.getDouble('creatinineLow') ?? 0.6;
+    double creatinineHigh = prefs.getDouble('creatinineHigh') ?? 1.2;
+    double sodiumLow = prefs.getDouble('sodiumLow') ?? 135;
+    double sodiumHigh = prefs.getDouble('sodiumHigh') ?? 145;
+    double potassiumLow = prefs.getDouble('potassiumLow') ?? 3.5;
+    double potassiumHigh = prefs.getDouble('potassiumHigh') ?? 5.0;
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -383,7 +407,7 @@ class RFTHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '4.6 - 23.5',
+                                      hintText: '$bunLow - $bunHigh',
                                       suffixText: unit,
                                       label: const Text('BUN'),
                                     ),
@@ -407,7 +431,7 @@ class RFTHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '10 - 50',
+                                      hintText: '$ureaLow - $ureaHigh',
                                       suffixText: unit,
                                       label: const Text('Urea'),
                                     ),
@@ -431,7 +455,8 @@ class RFTHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '0.60 - 1.20',
+                                      hintText:
+                                          '$creatinineLow - $creatinineHigh',
                                       suffixText: unit,
                                       label: const Text('Creatinine'),
                                     ),
@@ -487,7 +512,7 @@ class RFTHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '135 - 145',
+                                      hintText: '$sodiumLow - $sodiumHigh',
                                       suffixText: unit,
                                       label: const Text('Sodium'),
                                     ),
@@ -512,7 +537,8 @@ class RFTHelper {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      hintText: '3.50 - 5.00',
+                                      hintText:
+                                          '$potassiumLow - $potassiumHigh',
                                       suffixText: unit,
                                       label: const Text('Potassium'),
                                     ),
@@ -627,8 +653,12 @@ class RFTHelper {
     );
   }
 
-  static Future<void> showRecord(BuildContext context, int entryid, String unit,
-      GlobalKey<RefreshIndicatorState> refresh) async {
+  static Future<void> showRecord(
+      BuildContext context,
+      int entryid,
+      String unit,
+      GlobalKey<RefreshIndicatorState> refresh,
+      SharedPreferences? prefs) async {
     late DatabaseHandler handler;
     late Future<List<RenalFunction>> rf;
 
@@ -637,6 +667,18 @@ class RFTHelper {
       return await handler.rftEntry(entryid);
     }
 
+    double bunLow = prefs!.getDouble('bunLow') ?? 4.6;
+    double bunHigh = prefs.getDouble('bunHigh') ?? 23.5;
+    double ureaLow = prefs.getDouble('ureaLow') ?? 10;
+    double ureaHigh = prefs.getDouble('ureaHigh') ?? 50;
+    double creatinineLow = prefs.getDouble('creatinineLow') ?? 0.6;
+    double creatinineHigh = prefs.getDouble('creatinineHigh') ?? 1.2;
+    double sodiumLow = prefs.getDouble('sodiumLow') ?? 135;
+    double sodiumHigh = prefs.getDouble('sodiumHigh') ?? 145;
+    double potassiumLow = prefs.getDouble('potassiumLow') ?? 3.5;
+    double potassiumHigh = prefs.getDouble('potassiumHigh') ?? 5.0;
+
+    print(prefs.getDouble('creatinineHigh'));
     rf = getList();
     showDialog(
       context: context,
@@ -696,12 +738,13 @@ class RFTHelper {
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: (GlobalMethods.convertUnit(
-                                                        fromUnit, rfd.bun) >
-                                                    23.5 ||
+                                                    fromUnit, rfd.bun, unit) >
                                                 GlobalMethods.convertUnit(
-                                                        fromUnit, rfd.bun) <
-                                                    4.6) &&
-                                            (rfd.unit == 'mg/dL')
+                                                    'mg/dL', bunHigh, unit) ||
+                                            GlobalMethods.convertUnit(
+                                                    fromUnit, rfd.bun, unit) <
+                                                GlobalMethods.convertUnit(
+                                                    'mg/dL', bunLow, unit))
                                         ? Colors.red
                                         : Colors.green)),
                           ],
@@ -722,11 +765,13 @@ class RFTHelper {
                               style: TextStyle(
                                   fontSize: 20,
                                   color: (GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.urea) >
-                                              50 ||
+                                                  fromUnit, rfd.urea, unit) >
+                                              GlobalMethods.convertUnit(
+                                                  'mg/dL', ureaHigh, unit) ||
                                           GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.urea) <
-                                              10)
+                                                  fromUnit, rfd.urea, unit) <
+                                              GlobalMethods.convertUnit(
+                                                  'mg/dL', ureaLow, unit))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -747,12 +792,14 @@ class RFTHelper {
                               ).toStringAsFixed(2),
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.creatinine) >
-                                              1.20 ||
-                                          GlobalMethods.convertUnit(
-                                                  fromUnit, rfd.creatinine) <
-                                              0.60)
+                                  color: (GlobalMethods.convertUnit(fromUnit,
+                                                  rfd.creatinine, unit) >
+                                              GlobalMethods.convertUnit('mg/dL',
+                                                  creatinineHigh, unit) ||
+                                          GlobalMethods.convertUnit(fromUnit,
+                                                  rfd.creatinine, unit) <
+                                              GlobalMethods.convertUnit(
+                                                  'mg/dL', creatinineLow, unit))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -769,8 +816,14 @@ class RFTHelper {
                               '${rfd.elements.sodium} ${rfd.elements.unit}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (rfd.elements.sodium > 145 ||
-                                          rfd.elements.sodium < 135)
+                                  color: (GlobalMethods.convertUnit(fromUnit,
+                                                  rfd.elements.sodium, unit) >
+                                              GlobalMethods.convertUnit(
+                                                  'mg/dL', sodiumHigh, unit) ||
+                                          GlobalMethods.convertUnit(fromUnit,
+                                                  rfd.elements.sodium, unit) <
+                                              GlobalMethods.convertUnit(
+                                                  'mg/dL', sodiumLow, unit))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -785,8 +838,18 @@ class RFTHelper {
                               '${rfd.elements.potassium} ${rfd.elements.unit}',
                               style: TextStyle(
                                   fontSize: 20,
-                                  color: (rfd.elements.potassium > 5.00 ||
-                                          rfd.elements.potassium < 3.5)
+                                  color: (GlobalMethods.convertUnit(
+                                                  fromUnit,
+                                                  rfd.elements.potassium,
+                                                  unit) >
+                                              GlobalMethods.convertUnit('mg/dL',
+                                                  potassiumHigh, unit) ||
+                                          GlobalMethods.convertUnit(
+                                                  fromUnit,
+                                                  rfd.elements.potassium,
+                                                  unit) <
+                                              GlobalMethods.convertUnit(
+                                                  'mg/dL', potassiumLow, unit))
                                       ? Colors.red
                                       : Colors.green),
                             ),
@@ -833,7 +896,8 @@ class RFTHelper {
                                 userid: userid,
                                 entryid: entryid,
                                 callback: () {},
-                                refreshIndicatorKey: refresh)
+                                refreshIndicatorKey: refresh,
+                                prefs: prefs)
                           },
                           child: const Text('Update'),
                         ),

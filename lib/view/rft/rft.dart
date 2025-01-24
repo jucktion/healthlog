@@ -188,7 +188,8 @@ class _RFTScreenState extends State<RFTScreen> {
                                                   context,
                                                   items[index].id ?? 0,
                                                   unit,
-                                                  _refreshIndicatorKey)
+                                                  _refreshIndicatorKey,
+                                                  _prefs)
                                             },
                                         child: RFTHelper.tileRFT(
                                             context, items[index], unit)),

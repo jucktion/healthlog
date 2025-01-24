@@ -18,6 +18,7 @@ class _SettingScreenState extends State<SettingScreen> {
   double sugarMax = 200;
   RangeValues sugarBeforeRange = RangeValues(60, 110);
   RangeValues sugarAfterRange = RangeValues(70, 140);
+  //Cholesterol
   double totalCholesterolHigh = 230;
   double totalCholesterolMax = 300;
   double tagHigh = 200;
@@ -28,6 +29,19 @@ class _SettingScreenState extends State<SettingScreen> {
   double ldlMax = 200;
   double nonHdlHigh = 130;
   double nonHdlMax = 200;
+
+  //Renal Function Test
+  RangeValues bunRange = RangeValues(4.6, 23.5);
+  RangeValues ureaRange = RangeValues(10, 50);
+  RangeValues creatinineRange = RangeValues(0.6, 1.2);
+  RangeValues sodiumRange = RangeValues(135, 145);
+  RangeValues potassiumRange = RangeValues(3.5, 5.0);
+  double bunMax = 50;
+  double ureaMax = 100;
+  double creatinineMax = 5;
+  double sodiumMax = 200;
+  double potassiumMax = 10;
+
   @override
   void initState() {
     super.initState();
@@ -127,23 +141,23 @@ class _SettingScreenState extends State<SettingScreen> {
     return SizedBox(
       child: Column(
         children: [
-          heading('Blood Glucose Settings'),
+          heading('Blood Glucose/Sugar'),
           setUnit('sugarUnit'),
           Padding(
             padding: const EdgeInsets.only(left: 15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                headText('Glucose Range (fasting)'),
                 setRange(
+                    header: 'Glucose Range (fasting):',
                     range: sugarBeforeRange,
                     step: 1.0,
                     min: 1,
                     max: sugarMax,
                     setLow: 'sugarBeforeLow',
                     setHigh: 'sugarBeforeHigh'),
-                headText('Glucose Range After Eating (PP)'),
                 setRange(
+                    header: 'Glucose Range (PP):',
                     range: sugarAfterRange,
                     step: 1.0,
                     min: 1,
@@ -162,45 +176,45 @@ class _SettingScreenState extends State<SettingScreen> {
     return SizedBox(
       child: Column(
         children: [
-          heading('Cholesterol Settings'),
+          heading('Cholesterol'),
           setUnit('chlstrlUnit'),
           Padding(
             padding: const EdgeInsets.only(left: 15.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                headText('Total Cholesterol High Limit'),
                 setHigh(
+                  header: 'Total Cholesterol High Limit:',
                   high: totalCholesterolHigh,
                   step: 1.0,
                   min: 150,
                   max: totalCholesterolMax,
                   setHigh: 'totalCholesterolHigh',
                 ),
-                headText('Triacyglycerol High Limit'),
                 setHigh(
+                    header: 'Triacyglycerol High Limit:',
                     high: tagHigh,
                     step: 1.0,
                     min: 100,
                     max: tagMax,
                     setHigh: 'tagHigh'),
-                headText('HDL Range'),
                 setRange(
+                    header: 'HDL Range:',
                     range: hdlRange,
                     step: 1.0,
                     min: 1,
                     max: hdlMax,
                     setLow: 'hdlLow',
                     setHigh: 'hdlHigh'),
-                headText('LDL High Limit'),
                 setHigh(
+                    header: 'LDL High Limit:',
                     high: ldlHigh,
                     step: 1.0,
                     min: 90,
                     max: ldlMax,
                     setHigh: 'ldlHigh'),
-                headText('Non-HDL High Limit'),
                 setHigh(
+                    header: 'Non-HDL High Limit:',
                     high: nonHdlHigh,
                     step: 1.0,
                     min: 100,
@@ -218,8 +232,56 @@ class _SettingScreenState extends State<SettingScreen> {
     return SizedBox(
       child: Column(
         children: [
-          heading('Renal Function Settings'),
+          heading('Renal Function'),
           setUnit('rftUnit'),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                setRange(
+                    header: 'BUN:',
+                    range: bunRange,
+                    step: .1,
+                    min: 1,
+                    max: bunMax,
+                    setLow: 'bunLow',
+                    setHigh: 'bunHigh'),
+                setRange(
+                    header: 'Urea:',
+                    range: ureaRange,
+                    step: 1.0,
+                    min: 1,
+                    max: ureaMax,
+                    setLow: 'ureaLow',
+                    setHigh: 'ureaHigh'),
+                setRange(
+                    header: 'Creatinine:',
+                    range: creatinineRange,
+                    step: .1,
+                    min: .1,
+                    max: creatinineMax,
+                    setLow: 'creatinineLow',
+                    setHigh: 'creatinineHigh'),
+                setRange(
+                    header: 'Sodium:',
+                    range: sodiumRange,
+                    step: 1.0,
+                    min: 75,
+                    max: sodiumMax,
+                    setLow: 'sodiumLow',
+                    setHigh: 'sodiumHigh'),
+                setRange(
+                    header: 'Potassium:',
+                    range: potassiumRange,
+                    step: .1,
+                    min: 1,
+                    max: potassiumMax,
+                    setLow: 'potassiumLow',
+                    setHigh: 'potassiumHigh')
+              ],
+            ),
+          )
         ],
       ),
     );
@@ -385,6 +447,14 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
+  Widget head2Text(String text) {
+    return Text(
+      text,
+      style: TextStyle(fontSize: 15),
+      //textAlign: TextAlign.left,
+    );
+  }
+
   Widget subText(String text) {
     return Text(text, style: TextStyle(fontSize: 10));
   }
@@ -469,7 +539,8 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget setRange(
-      {required RangeValues range,
+      {required String header,
+      required RangeValues range,
       required double step,
       required double min,
       required double max,
@@ -486,6 +557,20 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Center(
           child: Column(
             children: [
+              Row(
+                spacing: 5,
+                children: [
+                  head2Text(header),
+                  Text(
+                    textAlign: TextAlign.center,
+                    '${range.start.toStringAsFixed(2)} - ${range.end.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
               RangeSlider(
                 values: range,
                 labels: RangeLabels(range.start.toStringAsFixed(2),
@@ -511,13 +596,6 @@ class _SettingScreenState extends State<SettingScreen> {
                   );
                 },
               ),
-              Text(
-                textAlign: TextAlign.center,
-                'Current: ${range.start.toStringAsFixed(2)} - ${range.end.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
-              ),
             ],
           ),
         ),
@@ -526,6 +604,7 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Widget setHigh({
+    required String header,
     required double high,
     required double step,
     required double min,
@@ -537,6 +616,20 @@ class _SettingScreenState extends State<SettingScreen> {
         child: Center(
           child: Column(
             children: [
+              Row(
+                spacing: 5,
+                children: [
+                  head2Text(header),
+                  Text(
+                    textAlign: TextAlign.center,
+                    high.toStringAsFixed(2),
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
               Slider(
                 value: high,
                 label: high.toStringAsFixed(2),
@@ -558,13 +651,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     },
                   );
                 },
-              ),
-              Text(
-                textAlign: TextAlign.center,
-                'Current: ${high.toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 15,
-                ),
               ),
             ],
           ),

@@ -194,7 +194,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               _prefs!
                                                   .getString('rftUnit')
                                                   .toString(),
-                                              _refreshIndicatorKey);
+                                              _refreshIndicatorKey,
+                                              _prefs);
                                           break;
                                         case 'sugar':
                                           SGHelper.showRecord(

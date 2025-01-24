@@ -474,7 +474,7 @@ class DatabaseHandler {
         backupDB();
       }
     } catch (e) {
-      print('Error while inserting data: $e');
+      //print('Error while inserting data: $e');
     }
   }
 
