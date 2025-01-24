@@ -587,7 +587,9 @@ class RFTHelper {
                                                           ? creatinine
                                                           : rfd.creatinine,
                                                       elements: RFTel(
-                                                        unit: unit,
+                                                        unit: elunit.isNotEmpty
+                                                            ? elunit
+                                                            : rfd.elements.unit,
                                                         sodium: sodium != 0.0 &&
                                                                 sodium !=
                                                                     rfd.elements
