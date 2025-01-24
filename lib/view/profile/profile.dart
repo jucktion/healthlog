@@ -268,7 +268,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       case 'rft':
         Future<String> entrybp =
-            handler.rftReading(id, _prefs!.getString('sugarUnit').toString());
+            handler.rftReading(id, _prefs!.getString('rftUnit').toString());
         return FutureBuilder(
             future: entrybp,
             builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -412,7 +412,7 @@ class _SettingScreenState extends State<SettingScreen> {
           heading('About'),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [paddedText('Version', '0.1.5')],
+            children: [paddedText('Version', '0.33.0')],
           ),
           launchWeb(homeUrl, 'Website', 'https://www.jucktion.com/'),
           launchWeb(gitUrl, 'Issues/Discussion',

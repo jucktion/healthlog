@@ -44,7 +44,7 @@ class RFTHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 575,
+              height: 550,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -341,7 +341,7 @@ class RFTHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 575,
+              height: 550,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<RenalFunction>>(
                   future: rf,
@@ -678,7 +678,6 @@ class RFTHelper {
     double potassiumLow = prefs.getDouble('potassiumLow') ?? 3.5;
     double potassiumHigh = prefs.getDouble('potassiumHigh') ?? 5.0;
 
-    print(prefs.getDouble('creatinineHigh'));
     rf = getList();
     showDialog(
       context: context,

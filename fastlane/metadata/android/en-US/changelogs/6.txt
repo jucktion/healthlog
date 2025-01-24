@@ -1,0 +1,3 @@
+- Initial implementation of user customizable range for medical tests
+- Cleanup settings screen
+- Small bugfixes
