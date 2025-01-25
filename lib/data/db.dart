@@ -350,7 +350,7 @@ class DatabaseHandler {
         GlobalMethods.convertUnit(fromUnit, result.first.content.ldl, unit)
             .toStringAsFixed(2);
 
-    return 'Total/HDL/LDL : $total/$hdl/$ldl $unit';
+    return '\nTotal/HDL/LDL:\n$total/$hdl/$ldl $unit';
   }
 
   Future<List<Cholesterol>> chlstrlEntry(int entryid) async {
@@ -442,18 +442,12 @@ class DatabaseHandler {
       result.first.content.creatinine,
       unit,
     ).toStringAsFixed(2);
-    String sodium = GlobalMethods.convertUnit(
-      fromUnit,
-      result.first.content.elements.sodium,
-      unit,
-    ).toStringAsFixed(2);
-    String potassium = GlobalMethods.convertUnit(
-      fromUnit,
-      result.first.content.elements.potassium,
-      unit,
-    ).toStringAsFixed(2);
+    String sodium = result.first.content.elements.sodium.toStringAsFixed(2);
+    String potassium =
+        (result.first.content.elements.potassium).toStringAsFixed(2);
+    String elunit = result.first.content.elements.unit;
 
-    return 'Bun/Urea/Creatinine/Sodium/Potassium:\n$bun/$urea/$creatinine/$sodium/$potassium $unit';
+    return '\nBun/Urea/Creatinine:\n$bun/$urea/$creatinine $unit \nSodium/Potassium: \n$sodium/$potassium $elunit';
   }
 
   Future<List<RenalFunction>> rftEntry(int entryid) async {

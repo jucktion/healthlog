@@ -938,16 +938,9 @@ class RFTHelper {
       items.content.creatinine,
       unit,
     ).toStringAsFixed(2);
-    String sodium = GlobalMethods.convertUnit(
-      fromUnit,
-      items.content.elements.sodium,
-      unit,
-    ).toStringAsFixed(2);
-    String potassium = GlobalMethods.convertUnit(
-      fromUnit,
-      items.content.elements.potassium,
-      unit,
-    ).toStringAsFixed(2);
+    String sodium = items.content.elements.sodium.toStringAsFixed(2);
+    String potassium = items.content.elements.potassium.toStringAsFixed(2);
+    String elunit = items.content.elements.unit;
     return ListTile(
       trailing: Text(
         '${DateTime.parse(items.date).year}-${DateTime.parse(items.date).month}-${DateTime.parse(items.date).day} ${DateTime.parse(items.date).hour}:${DateTime.parse(items.date).minute}',
@@ -962,7 +955,7 @@ class RFTHelper {
               children: [
             TextSpan(
                 text:
-                    'Bun/Urea/Creatinine/Sodium/Potassium:\n$bun/$urea/$creatinine/$sodium/$potassium $unit',
+                    '\nBun/Urea/Creatinine:\n$bun/$urea/$creatinine $unit \nSodium/Potassium: \n$sodium/$potassium $elunit',
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ])),
       subtitle: Text('Note: ${items.comments.toString()}'),

@@ -855,7 +855,7 @@ class CHLSTRLHelper {
               ),
               children: [
             TextSpan(
-                text: 'Total/HDL/LDL: \n$total/$hdl/$ldl $unit',
+                text: '\nTotal/HDL/LDL:\n$total/$hdl/$ldl $unit',
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ])),
       subtitle: Text('Note: ${items.comments.toString()}'),

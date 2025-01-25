@@ -93,8 +93,8 @@ class _UserScreenState extends State<UserScreen> {
       _prefs?.setDouble('creatinineHigh', 1.2);
       _prefs?.setDouble('sodiumLow', 135);
       _prefs?.setDouble('sodiumHigh', 145);
-      _prefs?.setDouble('potassiumLow', 135);
-      _prefs?.setDouble('pottasiumHigh', 145);
+      _prefs?.setDouble('potassiumLow', 3.5);
+      _prefs?.setDouble('pottasiumHigh', 5.0);
 
       _prefs?.setBool('firstRun', true);
     }
