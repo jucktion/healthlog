@@ -136,7 +136,7 @@ class _BPGraphState extends State<BPGraph> {
                                         snapshot.data!.reversed.toList();
                                     //List<dynamic> jsonList = jsonDecode(rawData);
                                     //print(rawData.toList().toString());
-                                    List<String> dateData = [];
+                                    Set<String> dateData = {};
                                     List<FlSpot> normalSystolic = [
                                       for (int i = 0; i <= range; i++)
                                         FlSpot(i.toDouble(), 120.toDouble())
@@ -200,16 +200,29 @@ class _BPGraphState extends State<BPGraph> {
                                                 showTitles: true,
                                                 getTitlesWidget:
                                                     ((value, meta) {
+                                                  // print(
+                                                  //     '$value, ${dateData.length}, ${(value >= dateData.length) ? '' : dateData.toList()[value.toInt()].toString()}');
                                                   return SideTitleWidget(
-                                                    axisSide: meta.axisSide,
-                                                    child: RotatedBox(
-                                                      quarterTurns: 3,
-                                                      child: (value >=
-                                                              dateData.length)
-                                                          ? const Text('')
-                                                          : Text(dateData[
-                                                              value.toInt()]),
-                                                    ),
+                                                    meta: TitleMeta(
+                                                        min: 0,
+                                                        max: 1,
+                                                        parentAxisSize: 1,
+                                                        axisPosition: 1,
+                                                        appliedInterval: 1,
+                                                        sideTitles: SideTitles(
+                                                            showTitles: true),
+                                                        formattedValue: '',
+                                                        axisSide:
+                                                            AxisSide.bottom,
+                                                        rotationQuarterTurns:
+                                                            3),
+                                                    child: Text((value >=
+                                                            dateData.length)
+                                                        ? ''
+                                                        : dateData
+                                                            .toList()[
+                                                                value.toInt()]
+                                                            .toString()),
                                                   );
                                                 }),
                                               ),

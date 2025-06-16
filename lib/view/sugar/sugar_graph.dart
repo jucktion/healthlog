@@ -256,16 +256,26 @@ class _SugarGraphState extends State<SugarGraph> {
                                                 getTitlesWidget:
                                                     ((value, meta) {
                                                   return SideTitleWidget(
-                                                    axisSide: meta.axisSide,
-                                                    child: RotatedBox(
-                                                      quarterTurns: 3,
-                                                      child: (value >=
-                                                              dateData.length)
-                                                          ? const Text('')
-                                                          : Text(dateData
-                                                                  .toList()[
-                                                              value.toInt()]),
-                                                    ),
+                                                    meta: TitleMeta(
+                                                        min: 0,
+                                                        max: 1,
+                                                        parentAxisSize: 1,
+                                                        axisPosition: 1,
+                                                        appliedInterval: 1,
+                                                        sideTitles: SideTitles(
+                                                            showTitles: true),
+                                                        formattedValue: '',
+                                                        axisSide:
+                                                            AxisSide.bottom,
+                                                        rotationQuarterTurns:
+                                                            3),
+                                                    child: Text((value >=
+                                                            dateData.length)
+                                                        ? ''
+                                                        : dateData
+                                                            .toList()[
+                                                                value.toInt()]
+                                                            .toString()),
                                                   );
                                                 }),
                                               ),

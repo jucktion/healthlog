@@ -1,0 +1,2 @@
+- Fix update logic for BloodPressure 
+- Update to most recent dependencies
