@@ -262,10 +262,10 @@ class CHLSTRLHelper {
 
     ch = getList();
 
-    double total = 0.00;
-    double tag = 0.00;
-    double hdl = 0.00;
-    double ldl = 0.00;
+    double total = 0.0;
+    double tag = 0.0;
+    double hdl = 0.0;
+    double ldl = 0.0;
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";

@@ -205,9 +205,9 @@ class BPHelper {
       return await handler.bpEntry(entryid);
     }
 
-    int systolic = 120;
-    int diastolic = 80;
-    int heartrate = 70;
+    int systolic = 0;
+    int diastolic = 0;
+    int heartrate = 0;
     String arm = "";
     String comment = "";
     bp = getList();
@@ -363,6 +363,8 @@ class BPHelper {
                               child: ElevatedButton(
                                 onPressed: () async {
                                   if (formKey.currentState!.validate()) {
+                                    // print(
+                                    //     'Systolic: $systolic , ${bpd.systolic}\nDiastolic: $diastolic , ${bpd.diastolic}\nHeartrate: $heartrate , ${bpd.heartrate}\nComment: $comment , ${entry.first.comments}');
                                     await DatabaseHandler.instance
                                         .updateBp(
                                             BloodPressure(
@@ -385,7 +387,9 @@ class BPHelper {
                                                                 bpd.heartrate
                                                         ? heartrate
                                                         : bpd.heartrate,
-                                                    arm: arm),
+                                                    arm: arm.isNotEmpty
+                                                        ? arm
+                                                        : bpd.arm),
                                                 date: entry.first.date,
                                                 comments: comment.isNotEmpty
                                                     ? comment

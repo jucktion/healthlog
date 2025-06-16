@@ -106,7 +106,7 @@ final ThemeData healthDark = ThemeData(
     tileColor: Colors.black54,
     leadingAndTrailingTextStyle: TextStyle(color: Colors.white),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: Colors.black87,
   ),
   radioTheme: RadioThemeData(

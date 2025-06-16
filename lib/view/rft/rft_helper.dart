@@ -309,11 +309,11 @@ class RFTHelper {
 
     rf = getList();
 
-    double bun = 0.00;
-    double urea = 0.00;
-    double creatinine = 0.00;
-    double sodium = 0.00;
-    double potassium = 0.00;
+    double bun = 0.0;
+    double urea = 0.0;
+    double creatinine = 0.0;
+    double sodium = 0.0;
+    double potassium = 0.0;
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
     String unit = "";
