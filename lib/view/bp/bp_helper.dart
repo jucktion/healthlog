@@ -13,7 +13,7 @@ class BPHelper {
     int diastolic = 80;
     int heartrate = 70;
     String arm = "";
-    String armGroup = "";
+
     String comment = "";
 
     showModalBottomSheet(
@@ -97,35 +97,32 @@ class BPHelper {
                                 () => heartrate = int.parse(value.toString()));
                           }),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 150,
-                          child: RadioListTile<String>(
-                              title: const Text("Left"),
-                              value: "left",
-                              groupValue: armGroup,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  arm = armGroup = value.toString();
-                                });
-                              }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: RadioGroup(
+                        groupValue: arm,
+                        onChanged: (String? value) {
+                          setState(() {
+                            arm = value.toString();
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'left',
+                                title: Text('Left'),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'right',
+                                title: Text('Right'),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 150,
-                          child: RadioListTile<String>(
-                            title: const Text("Right"),
-                            value: "right",
-                            groupValue: armGroup,
-                            onChanged: (String? value) {
-                              setState(() {
-                                arm = armGroup = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -308,37 +305,35 @@ class BPHelper {
                                         int.parse(value.toString()));
                                   }),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 150,
-                                  child: RadioListTile<String>(
-                                      title: const Text("Left"),
-                                      selected: bpd.arm == 'left',
-                                      value: "left",
-                                      groupValue: arm.isEmpty ? bpd.arm : arm,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          arm = value.toString();
-                                        });
-                                      }),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: RadioGroup(
+                                groupValue: arm.isEmpty ? bpd.arm : arm,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    arm = value.toString();
+                                  });
+                                },
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: RadioListTile(
+                                        selected: bpd.arm == 'left',
+                                        value: 'left',
+                                        title: Text('Left'),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: RadioListTile(
+                                        selected: bpd.arm == 'right',
+                                        value: 'right',
+                                        title: Text('Right'),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                SizedBox(
-                                  width: 150,
-                                  child: RadioListTile<String>(
-                                    title: const Text("Right"),
-                                    selected: bpd.arm == 'right',
-                                    value: "right",
-                                    groupValue: arm.isEmpty ? bpd.arm : arm,
-                                    onChanged: (String? value) {
-                                      setState(() {
-                                        arm = value.toString();
-                                      });
-                                    },
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                             Padding(
                               padding:
