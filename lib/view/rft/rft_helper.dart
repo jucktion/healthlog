@@ -52,36 +52,32 @@ class RFTHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 165,
-                          child: RadioListTile<String>(
-                              title: const Text("mmol/L"),
-                              value: "mmol/L",
-                              groupValue: unit,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  unit = value.toString();
-                                });
-                              }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: RadioGroup(
+                        groupValue: unit,
+                        onChanged: (String? value) {
+                          setState(() {
+                            unit = value.toString();
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mmol/L',
+                                title: Text('mmol/L'),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mg/dL',
+                                title: Text('mg/dL'),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 160,
-                          child: RadioListTile<String>(
-                            title: const Text("mg/dL"),
-                            selected: true,
-                            value: "mg/dL",
-                            groupValue: unit,
-                            onChanged: (String? value) {
-                              setState(() {
-                                unit = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -149,36 +145,32 @@ class RFTHelper {
                                 creatinine = double.parse(value.toString()));
                           }),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 165,
-                          child: RadioListTile<String>(
-                              title: const Text("mmol/L"),
-                              value: "mmol/L",
-                              selected: true,
-                              groupValue: elunit,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  elunit = value.toString();
-                                });
-                              }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: RadioGroup(
+                        groupValue: elunit,
+                        onChanged: (String? value) {
+                          setState(() {
+                            elunit = value.toString();
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mmol/L',
+                                title: Text('mmol/L'),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mg/dL',
+                                title: Text('mg/dL'),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 160,
-                          child: RadioListTile<String>(
-                            title: const Text("mEq/L"),
-                            value: "mEq/L",
-                            groupValue: elunit,
-                            onChanged: (String? value) {
-                              setState(() {
-                                elunit = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -232,13 +224,7 @@ class RFTHelper {
                               label: Text('Comments')),
                           onChanged: (String? value) {
                             setState(() => comment = value.toString());
-                          }
-                          // (value) {
-                          //   setState(() {
-                          //     comment = value;
-                          //   });
-                          // },
-                          ),
+                          }),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -358,39 +344,35 @@ class RFTHelper {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 160,
-                                    child: RadioListTile<String>(
-                                        title: const Text("mmol/L"),
-                                        selected: rfd.unit == 'mmol/L',
-                                        value: "mmol/L",
-                                        groupValue:
-                                            unit.isEmpty ? rfd.unit : unit,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            unit = value.toString();
-                                          });
-                                        }),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: RadioGroup(
+                                  groupValue: unit.isEmpty ? rfd.unit : unit,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      unit = value.toString();
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: rfd.unit == 'mmol/L',
+                                          value: 'mmol/L',
+                                          title: Text('mmol/L'),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: rfd.unit == 'mg/dL',
+                                          value: 'mg/dL',
+                                          title: Text('mg/dL'),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 150,
-                                    child: RadioListTile<String>(
-                                      title: const Text("mg/dL"),
-                                      selected: rfd.unit == 'mg/dL',
-                                      value: "mg/dL",
-                                      groupValue:
-                                          unit.isEmpty ? rfd.unit : unit,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          unit = value.toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               Padding(
                                 padding:
@@ -465,40 +447,37 @@ class RFTHelper {
                                           double.parse(value.toString()));
                                     }),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 165,
-                                    child: RadioListTile<String>(
-                                        title: const Text("mmol/L"),
-                                        value: "mmol/L",
-                                        selected: true,
-                                        groupValue: elunit.isEmpty
-                                            ? rfd.elements.unit
-                                            : elunit,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            elunit = value.toString();
-                                          });
-                                        }),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: RadioGroup(
+                                  groupValue: elunit.isEmpty
+                                      ? rfd.elements.unit
+                                      : elunit,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      elunit = value.toString();
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: rfd.unit == 'mmol/L',
+                                          value: 'mmol/L',
+                                          title: Text('mmol/L'),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: rfd.unit == 'mg/dL',
+                                          value: 'mg/dL',
+                                          title: Text('mg/dL'),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 160,
-                                    child: RadioListTile<String>(
-                                      title: const Text("mEq/L"),
-                                      value: "mEq/L",
-                                      groupValue: elunit.isEmpty
-                                          ? rfd.elements.unit
-                                          : elunit,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          elunit = value.toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               Padding(
                                 padding:

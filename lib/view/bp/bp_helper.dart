@@ -132,13 +132,7 @@ class BPHelper {
                               label: Text('Comments')),
                           onChanged: (String? value) {
                             setState(() => comment = value.toString());
-                          }
-                          // (value) {
-                          //   setState(() {
-                          //     comment = value;
-                          //   });
-                          // },
-                          ),
+                          }),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),

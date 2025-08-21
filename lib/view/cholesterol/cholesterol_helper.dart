@@ -46,36 +46,32 @@ class CHLSTRLHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 165,
-                          child: RadioListTile<String>(
-                              title: const Text("mmol/L"),
-                              value: "mmol/L",
-                              groupValue: unit,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  unit = value.toString();
-                                });
-                              }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: RadioGroup(
+                        groupValue: unit,
+                        onChanged: (String? value) {
+                          setState(() {
+                            unit = value.toString();
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mmol/L',
+                                title: Text('mmol/L'),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mg/dL',
+                                title: Text('mg/dL'),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 160,
-                          child: RadioListTile<String>(
-                            title: const Text("mg/dL"),
-                            selected: true,
-                            value: "mg/dL",
-                            groupValue: unit,
-                            onChanged: (String? value) {
-                              setState(() {
-                                unit = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -305,39 +301,35 @@ class CHLSTRLHelper {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 165,
-                                    child: RadioListTile<String>(
-                                        title: const Text("mmol/L"),
-                                        selected: chd.unit == 'mmol/L',
-                                        value: "mmol/L",
-                                        groupValue:
-                                            unit.isEmpty ? chd.unit : unit,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            unit = value.toString();
-                                          });
-                                        }),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: RadioGroup(
+                                  groupValue: unit.isEmpty ? chd.unit : unit,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      unit = value.toString();
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: chd.unit == 'mmol/L',
+                                          value: 'mmol/L',
+                                          title: Text('mmol/L'),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: chd.unit == 'mg/dL',
+                                          value: 'mg/dL',
+                                          title: Text('mg/dL'),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 160,
-                                    child: RadioListTile<String>(
-                                      title: const Text("mg/dL"),
-                                      selected: chd.unit == 'mg/dL',
-                                      value: "mg/dL",
-                                      groupValue:
-                                          unit.isEmpty ? chd.unit : unit,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          unit = value.toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               Padding(
                                 padding:

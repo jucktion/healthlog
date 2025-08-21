@@ -15,7 +15,6 @@ class SGHelper {
     String beforeAfter = '';
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
-    String fastGroup = "";
     String unit = "mg/dL";
     String comment = "";
 
@@ -42,35 +41,32 @@ class SGHelper {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 155,
-                          child: RadioListTile<String>(
-                              title: const Text("Before"),
-                              value: "before",
-                              groupValue: fastGroup,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  beforeAfter = fastGroup = value.toString();
-                                });
-                              }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: RadioGroup(
+                        groupValue: beforeAfter,
+                        onChanged: (String? value) {
+                          setState(() {
+                            beforeAfter = value.toString();
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'before',
+                                title: Text('Before'),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'after',
+                                title: Text('After'),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 150,
-                          child: RadioListTile<String>(
-                            title: const Text("After"),
-                            value: "after",
-                            groupValue: fastGroup,
-                            onChanged: (String? value) {
-                              setState(() {
-                                beforeAfter = fastGroup = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -105,36 +101,32 @@ class SGHelper {
                                 () => reading = double.parse(value.toString()));
                           }),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 165,
-                          child: RadioListTile<String>(
-                              title: const Text("mmol/L"),
-                              value: "mmol/L",
-                              groupValue: unit,
-                              onChanged: (String? value) {
-                                setState(() {
-                                  unit = value.toString();
-                                });
-                              }),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: RadioGroup(
+                        groupValue: unit,
+                        onChanged: (String? value) {
+                          setState(() {
+                            unit = value.toString();
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mmol/L',
+                                title: Text('mmol/L'),
+                              ),
+                            ),
+                            Expanded(
+                              child: RadioListTile(
+                                value: 'mg/dL',
+                                title: Text('mg/dL'),
+                              ),
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          width: 160,
-                          child: RadioListTile<String>(
-                            title: const Text("mg/dL"),
-                            selected: true,
-                            value: "mg/dL",
-                            groupValue: unit,
-                            onChanged: (String? value) {
-                              setState(() {
-                                unit = value.toString();
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
@@ -220,7 +212,6 @@ class SGHelper {
     String beforeAfter = '';
     // String fastingNormalReading = '60 - 110';
     // String afterFastingNormalReading = '70 - 140';
-    String fastGroup = '';
     String unit = '';
     String comment = '';
 
@@ -257,43 +248,37 @@ class SGHelper {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 165,
-                                    child: RadioListTile<String>(
-                                        title: const Text("Before"),
-                                        selected: sgd.beforeAfter == 'before',
-                                        value: "before",
-                                        groupValue: fastGroup.isEmpty
-                                            ? sgd.beforeAfter
-                                            : fastGroup,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            beforeAfter =
-                                                fastGroup = value.toString();
-                                          });
-                                        }),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: RadioGroup(
+                                  groupValue: beforeAfter.isEmpty
+                                      ? sgd.beforeAfter
+                                      : beforeAfter,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      beforeAfter = value.toString();
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: sgd.beforeAfter == 'before',
+                                          value: 'before',
+                                          title: Text('Before'),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: sgd.beforeAfter == 'after',
+                                          value: 'after',
+                                          title: Text('After'),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 160,
-                                    child: RadioListTile<String>(
-                                      title: const Text("After"),
-                                      selected: sgd.beforeAfter == 'after',
-                                      value: "after",
-                                      groupValue: fastGroup.isEmpty
-                                          ? sgd.beforeAfter
-                                          : fastGroup,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          beforeAfter =
-                                              fastGroup = value.toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               Padding(
                                 padding:
@@ -332,39 +317,35 @@ class SGHelper {
                                           double.parse(value.toString()));
                                     }),
                               ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 160,
-                                    child: RadioListTile<String>(
-                                        title: const Text("mmol/L"),
-                                        selected: sgd.unit == 'mmol/L',
-                                        value: "mmol/L",
-                                        groupValue:
-                                            unit.isEmpty ? sgd.unit : unit,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            unit = value.toString();
-                                          });
-                                        }),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: RadioGroup(
+                                  groupValue: unit.isEmpty ? sgd.unit : unit,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      unit = value.toString();
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: sgd.unit == 'mmol/L',
+                                          value: 'mmol/L',
+                                          title: Text('mmol/L'),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: RadioListTile(
+                                          selected: sgd.unit == 'mg/dL',
+                                          value: 'mg/dL',
+                                          title: Text('mg/dL'),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 150,
-                                    child: RadioListTile<String>(
-                                      title: const Text("mg/dL"),
-                                      selected: sgd.unit == 'mg/dL',
-                                      value: "mg/dL",
-                                      groupValue:
-                                          unit.isEmpty ? sgd.unit : unit,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          unit = value.toString();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                               Padding(
                                 padding:
