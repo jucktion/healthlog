@@ -52,6 +52,14 @@ class GlobalMethods {
     return double.tryParse(input) != null;
   }
 
+  static bool isTextInt(String? input) {
+    return (input!.isEmpty || int.tryParse(input) == null);
+  }
+
+  static bool isTextDouble(String? input) {
+    return (input!.isEmpty || double.tryParse(input) == null);
+  }
+
   static double convertUnit(String from, double reading,
       [String to = 'mg/dL']) {
     if (to == 'mmol/L' && from == 'mg/dL') {

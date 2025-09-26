@@ -3,9 +3,9 @@ import 'package:healthlog/view/theme/colors.dart';
 import 'package:healthlog/view/profile/profile.dart';
 import 'package:healthlog/view/settings/settings.dart';
 import 'package:healthlog/view/theme/globals.dart';
-import 'package:healthlog/view/users/add_user.dart';
 import 'package:healthlog/data/db.dart';
 import 'package:healthlog/model/user.dart';
+import 'package:healthlog/view/users/user_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserScreen extends StatefulWidget {
@@ -156,10 +156,10 @@ class _UserScreenState extends State<UserScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddScreen()),
-          );
+          UserHelper.statefulUserBottomModal(context,
+              callback: () {},
+              refreshIndicatorKey: _refreshIndicatorKey,
+              prefs: _prefs);
         },
         backgroundColor: AppColors.floatingButton,
         child: const Icon(Icons.add),
@@ -252,6 +252,14 @@ class _UserScreenState extends State<UserScreen> {
                                         ),
                                       ),
                                     )
+                                  },
+                                  onLongPress: () => {
+                                    UserHelper.statefulUserUpdateModal(context,
+                                        userid: items[index].id,
+                                        callback: () {},
+                                        refreshIndicatorKey:
+                                            _refreshIndicatorKey,
+                                        prefs: _prefs)
                                   },
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.all(8.0),
