@@ -83,11 +83,9 @@ class RFTHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter BUN reading';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check BUN reading';
                             }
                             return null;
                           },
@@ -97,19 +95,19 @@ class RFTHelper {
                             label: const Text('BUN'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => bun = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(
+                                  () => bun = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter Urea reading';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check Urea reading';
                             }
                             return null;
                           },
@@ -119,19 +117,19 @@ class RFTHelper {
                             label: const Text('Urea'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => urea = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(
+                                  () => urea = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter creatinine reading';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check creatinine reading';
                             }
                             return null;
                           },
@@ -141,8 +139,10 @@ class RFTHelper {
                             label: const Text('Creatinine'),
                           ),
                           onChanged: (String? value) {
-                            setState(() =>
-                                creatinine = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(() =>
+                                  creatinine = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -176,10 +176,8 @@ class RFTHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
                               return 'Please enter Sodium reading';
                             }
                             return null;
@@ -190,19 +188,19 @@ class RFTHelper {
                             label: const Text('Sodium'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => sodium = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(() =>
+                                  sodium = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter Potassium reading';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check Potassium reading';
                             }
                             return null;
                           },
@@ -212,8 +210,10 @@ class RFTHelper {
                             label: const Text('Potassium'),
                           ),
                           onChanged: (String? value) {
-                            setState(() =>
-                                potassium = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(() =>
+                                  potassium = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -380,11 +380,9 @@ class RFTHelper {
                                 child: TextFormField(
                                     initialValue: rfd.bun.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter BUN reading';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check BUN reading';
                                       }
                                       return null;
                                     },
@@ -394,8 +392,10 @@ class RFTHelper {
                                       label: const Text('BUN'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          bun = double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => bun =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -404,11 +404,9 @@ class RFTHelper {
                                 child: TextFormField(
                                     initialValue: rfd.urea.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter Urea reading';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check Urea reading';
                                       }
                                       return null;
                                     },
@@ -418,8 +416,10 @@ class RFTHelper {
                                       label: const Text('Urea'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => urea =
-                                          double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => urea =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -428,11 +428,9 @@ class RFTHelper {
                                 child: TextFormField(
                                     initialValue: rfd.creatinine.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter Creatinine reading';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check Creatinine reading';
                                       }
                                       return null;
                                     },
@@ -443,8 +441,10 @@ class RFTHelper {
                                       label: const Text('Creatinine'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => creatinine =
-                                          double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => creatinine =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -486,11 +486,9 @@ class RFTHelper {
                                     initialValue:
                                         rfd.elements.sodium.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter Sodium reading';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check Sodium reading';
                                       }
                                       return null;
                                     },
@@ -500,8 +498,10 @@ class RFTHelper {
                                       label: const Text('Sodium'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => sodium =
-                                          double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => sodium =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -511,11 +511,9 @@ class RFTHelper {
                                     initialValue:
                                         rfd.elements.potassium.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter Potassium reading';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check Potassium reading';
                                       }
                                       return null;
                                     },
@@ -526,8 +524,10 @@ class RFTHelper {
                                       label: const Text('Potassium'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => potassium =
-                                          double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => potassium =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(

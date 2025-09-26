@@ -42,7 +42,7 @@ class UserHelper {
                         textCapitalization: TextCapitalization.words,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
+                            return 'Check some text';
                           }
                           return null;
                         },
@@ -63,7 +63,7 @@ class UserHelper {
                         textCapitalization: TextCapitalization.words,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter some text';
+                            return 'Check some text';
                           }
                           return null;
                         },
@@ -86,18 +86,16 @@ class UserHelper {
                         maxLength: 3,
                         validator: (value) {
                           if (GlobalMethods.isTextInt(value)) {
-                            return 'Please enter your age';
+                            return 'Check your age';
                           }
                           return null;
                         },
                         decoration: const InputDecoration(
                             hintText: '21', label: Text('Age')),
                         onChanged: (value) {
-                          setState(() {
-                            if (!GlobalMethods.isTextInt(value)) {
-                              age = int.parse(value);
-                            }
-                          });
+                          if (!GlobalMethods.isTextInt(value)) {
+                            setState(() => age = int.parse(value));
+                          }
                         },
                       ),
                     ),
@@ -109,7 +107,7 @@ class UserHelper {
                         maxLength: 5,
                         validator: (value) {
                           if (GlobalMethods.isTextDouble(value)) {
-                            return 'Please enter your weight';
+                            return 'Check your weight';
                           }
                           return null;
                         },
@@ -120,9 +118,7 @@ class UserHelper {
                         ),
                         onChanged: (value) {
                           if (!GlobalMethods.isTextDouble(value)) {
-                            setState(() {
-                              weight = double.parse(value);
-                            });
+                            setState(() => weight = double.parse(value));
                           }
                         },
                       ),
@@ -135,7 +131,7 @@ class UserHelper {
                         maxLength: 6,
                         validator: (value) {
                           if (GlobalMethods.isTextDouble(value)) {
-                            return 'Please enter your height';
+                            return 'Check your height';
                           }
                           return null;
                         },
@@ -146,9 +142,7 @@ class UserHelper {
                         ),
                         onChanged: (value) {
                           if (!GlobalMethods.isTextDouble(value)) {
-                            setState(() {
-                              height = double.parse(value);
-                            });
+                            setState(() => height = double.parse(value));
                           }
                         },
                       ),
@@ -299,18 +293,16 @@ class UserHelper {
                                   maxLength: 3,
                                   validator: (value) {
                                     if (GlobalMethods.isTextInt(value)) {
-                                      return 'Please enter your age';
+                                      return 'Check your age';
                                     }
                                     return null;
                                   },
                                   decoration: const InputDecoration(
                                       hintText: '21', label: Text('Age')),
                                   onChanged: (value) {
-                                    setState(() {
-                                      if (!GlobalMethods.isTextInt(value)) {
-                                        age = int.parse(value);
-                                      }
-                                    });
+                                    if (!GlobalMethods.isTextInt(value)) {
+                                      setState(() => age = int.parse(value));
+                                    }
                                   },
                                 ),
                               ),
@@ -335,9 +327,8 @@ class UserHelper {
                                   ),
                                   onChanged: (value) {
                                     if (!GlobalMethods.isTextDouble(value)) {
-                                      setState(() {
-                                        weight = double.parse(value);
-                                      });
+                                      setState(
+                                          () => weight = double.parse(value));
                                     }
                                   },
                                 ),
@@ -352,7 +343,7 @@ class UserHelper {
                                   maxLength: 6,
                                   validator: (value) {
                                     if (GlobalMethods.isTextDouble(value)) {
-                                      return 'Please enter your height';
+                                      return 'Check your height';
                                     }
                                     return null;
                                   },
@@ -363,9 +354,8 @@ class UserHelper {
                                   ),
                                   onChanged: (value) {
                                     if (!GlobalMethods.isTextDouble(value)) {
-                                      setState(() {
-                                        height = double.parse(value);
-                                      });
+                                      setState(
+                                          () => height = double.parse(value));
                                     }
                                   },
                                 ),

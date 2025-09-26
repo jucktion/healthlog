@@ -77,11 +77,9 @@ class CHLSTRLHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter total cholesterol result';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check total cholesterol result';
                             }
                             return null;
                           },
@@ -95,19 +93,19 @@ class CHLSTRLHelper {
                             label: const Text('Total Cholesterol'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => total = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(
+                                  () => total = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter Triacyglycerol result';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check Triacyglycerol result';
                             }
                             return null;
                           },
@@ -121,19 +119,19 @@ class CHLSTRLHelper {
                             label: const Text('Triacyglycerol (TAG)'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => tag = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(
+                                  () => tag = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter HDL Cholesterol result';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check HDL Cholesterol result';
                             }
                             return null;
                           },
@@ -147,19 +145,19 @@ class CHLSTRLHelper {
                             label: const Text('HDL Cholesterol'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => hdl = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(
+                                  () => hdl = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter LDL Cholesterol result';
+                          validator: (String? value) {
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check LDL Cholesterol result';
                             }
                             return null;
                           },
@@ -173,8 +171,10 @@ class CHLSTRLHelper {
                             label: const Text('LDL Cholesterol'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => ldl = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(
+                                  () => ldl = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -337,11 +337,9 @@ class CHLSTRLHelper {
                                 child: TextFormField(
                                     initialValue: chd.total.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter total cholesterol result';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check total cholesterol result';
                                       }
                                       return null;
                                     },
@@ -355,8 +353,10 @@ class CHLSTRLHelper {
                                       label: const Text('Total Cholesterol'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => total =
-                                          double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => total =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -365,11 +365,9 @@ class CHLSTRLHelper {
                                 child: TextFormField(
                                     initialValue: chd.tag.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter Triacyglycerol result';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check Triacyglycerol result';
                                       }
                                       return null;
                                     },
@@ -383,8 +381,10 @@ class CHLSTRLHelper {
                                       label: const Text('Triacyglycerol (TAG)'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          tag = double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => tag =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -393,11 +393,9 @@ class CHLSTRLHelper {
                                 child: TextFormField(
                                     initialValue: chd.hdl.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter HDL Cholesterol result';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check HDL Cholesterol result';
                                       }
                                       return null;
                                     },
@@ -411,8 +409,10 @@ class CHLSTRLHelper {
                                       label: const Text('HDL Cholesterol'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          hdl = double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => hdl =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
@@ -421,11 +421,9 @@ class CHLSTRLHelper {
                                 child: TextFormField(
                                     initialValue: chd.ldl.toString(),
                                     keyboardType: TextInputType.number,
-                                    validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter LDL Cholesterol result';
+                                    validator: (String? value) {
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check LDL Cholesterol result';
                                       }
                                       return null;
                                     },
@@ -439,8 +437,10 @@ class CHLSTRLHelper {
                                       label: const Text('LDL Cholesterol'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() =>
-                                          ldl = double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => ldl =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(

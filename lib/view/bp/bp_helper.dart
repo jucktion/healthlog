@@ -26,7 +26,7 @@ class BPHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 375,
+              height: 430,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -39,10 +39,8 @@ class BPHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isInt(value)) {
-                              return 'Please enter systolic value';
+                            if (GlobalMethods.isTextInt(value)) {
+                              return 'Check systolic value';
                             }
                             return null;
                           },
@@ -51,8 +49,10 @@ class BPHelper {
                             label: Text('Systolic'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => systolic = int.parse(value.toString()));
+                            if (!GlobalMethods.isTextInt(value)) {
+                              setState(
+                                  () => systolic = int.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -60,10 +60,8 @@ class BPHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isInt(value)) {
-                              return 'Please enter diastolic value';
+                            if (GlobalMethods.isTextInt(value)) {
+                              return 'Check diastolic value';
                             }
                             return null;
                           },
@@ -72,8 +70,10 @@ class BPHelper {
                             label: Text('Diastolic'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => diastolic = int.parse(value.toString()));
+                            if (!GlobalMethods.isTextInt(value)) {
+                              setState(() =>
+                                  diastolic = int.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -81,10 +81,8 @@ class BPHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isInt(value)) {
-                              return 'Please enter your heartrate';
+                            if (GlobalMethods.isTextInt(value)) {
+                              return 'Check your heartrate';
                             }
                             return null;
                           },
@@ -93,8 +91,10 @@ class BPHelper {
                             label: Text('Heartrate'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => heartrate = int.parse(value.toString()));
+                            if (!GlobalMethods.isTextInt(value)) {
+                              setState(() =>
+                                  heartrate = int.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -213,7 +213,7 @@ class BPHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 375,
+              height: 430,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<BloodPressure>>(
                 future: bp,
@@ -237,10 +237,8 @@ class BPHelper {
                                   initialValue: bpd.systolic.toString(),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    if (value == null ||
-                                        value.isEmpty ||
-                                        !GlobalMethods.isInt(value)) {
-                                      return 'Please enter systolic value';
+                                    if (GlobalMethods.isTextInt(value)) {
+                                      return 'Check systolic value';
                                     }
                                     return null;
                                   },
@@ -249,8 +247,10 @@ class BPHelper {
                                     label: Text('Systolic'),
                                   ),
                                   onChanged: (String? value) {
-                                    setState(() =>
-                                        systolic = int.parse(value.toString()));
+                                    if (!GlobalMethods.isTextInt(value)) {
+                                      setState(() => systolic =
+                                          int.parse(value.toString()));
+                                    }
                                   }),
                             ),
                             Padding(
@@ -260,10 +260,8 @@ class BPHelper {
                                   initialValue: bpd.diastolic.toString(),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    if (value == null ||
-                                        value.isEmpty ||
-                                        !GlobalMethods.isInt(value)) {
-                                      return 'Please enter diastolic value';
+                                    if (GlobalMethods.isTextInt(value)) {
+                                      return 'Check diastolic value';
                                     }
                                     return null;
                                   },
@@ -272,8 +270,10 @@ class BPHelper {
                                     label: Text('Diastolic'),
                                   ),
                                   onChanged: (String? value) {
-                                    setState(() => diastolic =
-                                        int.parse(value.toString()));
+                                    if (!GlobalMethods.isTextInt(value)) {
+                                      setState(() => diastolic =
+                                          int.parse(value.toString()));
+                                    }
                                   }),
                             ),
                             Padding(
@@ -283,9 +283,7 @@ class BPHelper {
                                   initialValue: bpd.heartrate.toString(),
                                   keyboardType: TextInputType.number,
                                   validator: (value) {
-                                    if (value == null ||
-                                        value.isEmpty ||
-                                        !GlobalMethods.isInt(value)) {
+                                    if (GlobalMethods.isTextInt(value)) {
                                       return 'Please enter your heartrate';
                                     }
                                     return null;
@@ -295,8 +293,10 @@ class BPHelper {
                                     label: Text('Heartrate'),
                                   ),
                                   onChanged: (String? value) {
-                                    setState(() => heartrate =
-                                        int.parse(value.toString()));
+                                    if (!GlobalMethods.isTextInt(value)) {
+                                      setState(() => heartrate =
+                                          int.parse(value.toString()));
+                                    }
                                   }),
                             ),
                             Padding(

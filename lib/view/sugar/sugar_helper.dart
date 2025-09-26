@@ -73,10 +73,8 @@ class SGHelper {
                       child: TextFormField(
                           keyboardType: TextInputType.number,
                           validator: (value) {
-                            if (value == null ||
-                                value.isEmpty ||
-                                !GlobalMethods.isDouble(value)) {
-                              return 'Please enter blood sugar reading';
+                            if (GlobalMethods.isTextDouble(value)) {
+                              return 'Check blood sugar reading';
                             }
                             return null;
                           },
@@ -97,8 +95,10 @@ class SGHelper {
                             label: const Text('Blood Sugar'),
                           ),
                           onChanged: (String? value) {
-                            setState(
-                                () => reading = double.parse(value.toString()));
+                            if (!GlobalMethods.isTextDouble(value)) {
+                              setState(() =>
+                                  reading = double.parse(value.toString()));
+                            }
                           }),
                     ),
                     Padding(
@@ -287,10 +287,8 @@ class SGHelper {
                                     initialValue: sgd.reading.toString(),
                                     keyboardType: TextInputType.number,
                                     validator: (value) {
-                                      if (value == null ||
-                                          value.isEmpty ||
-                                          !GlobalMethods.isDouble(value)) {
-                                        return 'Please enter blood sugar reading';
+                                      if (GlobalMethods.isTextDouble(value)) {
+                                        return 'Check blood sugar reading';
                                       }
                                       return null;
                                     },
@@ -313,8 +311,10 @@ class SGHelper {
                                       label: const Text('Blood Sugar'),
                                     ),
                                     onChanged: (String? value) {
-                                      setState(() => reading =
-                                          double.parse(value.toString()));
+                                      if (!GlobalMethods.isTextDouble(value)) {
+                                        setState(() => reading =
+                                            double.parse(value.toString()));
+                                      }
                                     }),
                               ),
                               Padding(
