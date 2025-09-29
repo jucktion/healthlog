@@ -26,7 +26,7 @@ class BPHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 430,
+              height: 400,
               width: MediaQuery.of(context).size.width / 1.25,
               child: Form(
                 key: formKey,
@@ -38,7 +38,7 @@ class BPHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
+                          validator: (String? value) {
                             if (GlobalMethods.isTextInt(value)) {
                               return 'Check systolic value';
                             }
@@ -59,7 +59,7 @@ class BPHelper {
                       padding: const EdgeInsets.only(left: 40, right: 40),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
-                          validator: (value) {
+                          validator: (String? value) {
                             if (GlobalMethods.isTextInt(value)) {
                               return 'Check diastolic value';
                             }
@@ -213,7 +213,7 @@ class BPHelper {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: SizedBox(
-              height: 430,
+              height: 400,
               width: MediaQuery.of(context).size.width / 1.25,
               child: FutureBuilder<List<BloodPressure>>(
                 future: bp,
@@ -236,7 +236,7 @@ class BPHelper {
                               child: TextFormField(
                                   initialValue: bpd.systolic.toString(),
                                   keyboardType: TextInputType.number,
-                                  validator: (value) {
+                                  validator: (String? value) {
                                     if (GlobalMethods.isTextInt(value)) {
                                       return 'Check systolic value';
                                     }
@@ -259,7 +259,7 @@ class BPHelper {
                               child: TextFormField(
                                   initialValue: bpd.diastolic.toString(),
                                   keyboardType: TextInputType.number,
-                                  validator: (value) {
+                                  validator: (String? value) {
                                     if (GlobalMethods.isTextInt(value)) {
                                       return 'Check diastolic value';
                                     }
@@ -282,7 +282,7 @@ class BPHelper {
                               child: TextFormField(
                                   initialValue: bpd.heartrate.toString(),
                                   keyboardType: TextInputType.number,
-                                  validator: (value) {
+                                  validator: (String? value) {
                                     if (GlobalMethods.isTextInt(value)) {
                                       return 'Please enter your heartrate';
                                     }

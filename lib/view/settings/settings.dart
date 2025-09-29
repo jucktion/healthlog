@@ -137,36 +137,45 @@ class _SettingScreenState extends State<SettingScreen> {
     );
   }
 
+  Widget textRange() {
+    return Text(
+      'Set the acceptable ranges',
+      style: TextStyle(fontSize: 20),
+    );
+  }
+
   Widget sugarSettings() {
     return SizedBox(
       child: Column(
         children: [
           heading('Blood Glucose/Sugar'),
           setUnit('sugarUnit'),
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                setRange(
-                    header: 'Glucose Range (fasting):',
-                    range: sugarBeforeRange,
-                    step: 1.0,
-                    min: 1,
-                    max: sugarMax,
-                    setLow: 'sugarBeforeLow',
-                    setHigh: 'sugarBeforeHigh'),
-                setRange(
-                    header: 'Glucose Range (PP):',
-                    range: sugarAfterRange,
-                    step: 1.0,
-                    min: 1,
-                    max: sugarMax,
-                    setLow: 'sugarAfterLow',
-                    setHigh: 'sugarAfterHigh')
-              ],
-            ),
-          )
+          ExpansionTile(title: textRange(), children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  setRange(
+                      header: 'Glucose Range (fasting):',
+                      range: sugarBeforeRange,
+                      step: 1.0,
+                      min: 1,
+                      max: sugarMax,
+                      setLow: 'sugarBeforeLow',
+                      setHigh: 'sugarBeforeHigh'),
+                  setRange(
+                      header: 'Glucose Range (PP):',
+                      range: sugarAfterRange,
+                      step: 1.0,
+                      min: 1,
+                      max: sugarMax,
+                      setLow: 'sugarAfterLow',
+                      setHigh: 'sugarAfterHigh')
+                ],
+              ),
+            )
+          ])
         ],
       ),
     );
@@ -178,51 +187,53 @@ class _SettingScreenState extends State<SettingScreen> {
         children: [
           heading('Cholesterol'),
           setUnit('chlstrlUnit'),
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                setHigh(
-                  header: 'Total Cholesterol High Limit:',
-                  high: totalCholesterolHigh,
-                  step: 1.0,
-                  min: 150,
-                  max: totalCholesterolMax,
-                  setHigh: 'totalCholesterolHigh',
-                ),
-                setHigh(
-                    header: 'Triacyglycerol High Limit:',
-                    high: tagHigh,
+          ExpansionTile(title: textRange(), children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  setHigh(
+                    header: 'Total Cholesterol High Limit:',
+                    high: totalCholesterolHigh,
                     step: 1.0,
-                    min: 100,
-                    max: tagMax,
-                    setHigh: 'tagHigh'),
-                setRange(
-                    header: 'HDL Range:',
-                    range: hdlRange,
-                    step: 1.0,
-                    min: 1,
-                    max: hdlMax,
-                    setLow: 'hdlLow',
-                    setHigh: 'hdlHigh'),
-                setHigh(
-                    header: 'LDL High Limit:',
-                    high: ldlHigh,
-                    step: 1.0,
-                    min: 90,
-                    max: ldlMax,
-                    setHigh: 'ldlHigh'),
-                setHigh(
-                    header: 'Non-HDL High Limit:',
-                    high: nonHdlHigh,
-                    step: 1.0,
-                    min: 100,
-                    max: nonHdlMax,
-                    setHigh: 'nonHdlHigh'),
-              ],
-            ),
-          )
+                    min: 150,
+                    max: totalCholesterolMax,
+                    setHigh: 'totalCholesterolHigh',
+                  ),
+                  setHigh(
+                      header: 'Triacyglycerol High Limit:',
+                      high: tagHigh,
+                      step: 1.0,
+                      min: 100,
+                      max: tagMax,
+                      setHigh: 'tagHigh'),
+                  setRange(
+                      header: 'HDL Range:',
+                      range: hdlRange,
+                      step: 1.0,
+                      min: 1,
+                      max: hdlMax,
+                      setLow: 'hdlLow',
+                      setHigh: 'hdlHigh'),
+                  setHigh(
+                      header: 'LDL High Limit:',
+                      high: ldlHigh,
+                      step: 1.0,
+                      min: 90,
+                      max: ldlMax,
+                      setHigh: 'ldlHigh'),
+                  setHigh(
+                      header: 'Non-HDL High Limit:',
+                      high: nonHdlHigh,
+                      step: 1.0,
+                      min: 100,
+                      max: nonHdlMax,
+                      setHigh: 'nonHdlHigh'),
+                ],
+              ),
+            )
+          ])
         ],
       ),
     );
@@ -234,54 +245,56 @@ class _SettingScreenState extends State<SettingScreen> {
         children: [
           heading('Renal Function'),
           setUnit('rftUnit'),
-          Padding(
-            padding: const EdgeInsets.only(left: 15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                setRange(
-                    header: 'BUN:',
-                    range: bunRange,
-                    step: .1,
-                    min: 1,
-                    max: bunMax,
-                    setLow: 'bunLow',
-                    setHigh: 'bunHigh'),
-                setRange(
-                    header: 'Urea:',
-                    range: ureaRange,
-                    step: 1.0,
-                    min: 1,
-                    max: ureaMax,
-                    setLow: 'ureaLow',
-                    setHigh: 'ureaHigh'),
-                setRange(
-                    header: 'Creatinine:',
-                    range: creatinineRange,
-                    step: .1,
-                    min: .1,
-                    max: creatinineMax,
-                    setLow: 'creatinineLow',
-                    setHigh: 'creatinineHigh'),
-                setRange(
-                    header: 'Sodium (mmol/L or mEq/L):',
-                    range: sodiumRange,
-                    step: 1.0,
-                    min: 75,
-                    max: sodiumMax,
-                    setLow: 'sodiumLow',
-                    setHigh: 'sodiumHigh'),
-                setRange(
-                    header: 'Potassium (mmol/L or mEq/L):',
-                    range: potassiumRange,
-                    step: .1,
-                    min: 1,
-                    max: potassiumMax,
-                    setLow: 'potassiumLow',
-                    setHigh: 'potassiumHigh')
-              ],
-            ),
-          )
+          ExpansionTile(title: textRange(), children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  setRange(
+                      header: 'BUN:',
+                      range: bunRange,
+                      step: .1,
+                      min: 1,
+                      max: bunMax,
+                      setLow: 'bunLow',
+                      setHigh: 'bunHigh'),
+                  setRange(
+                      header: 'Urea:',
+                      range: ureaRange,
+                      step: 1.0,
+                      min: 1,
+                      max: ureaMax,
+                      setLow: 'ureaLow',
+                      setHigh: 'ureaHigh'),
+                  setRange(
+                      header: 'Creatinine:',
+                      range: creatinineRange,
+                      step: .1,
+                      min: .1,
+                      max: creatinineMax,
+                      setLow: 'creatinineLow',
+                      setHigh: 'creatinineHigh'),
+                  setRange(
+                      header: 'Sodium (mmol/L or mEq/L):',
+                      range: sodiumRange,
+                      step: 1.0,
+                      min: 75,
+                      max: sodiumMax,
+                      setLow: 'sodiumLow',
+                      setHigh: 'sodiumHigh'),
+                  setRange(
+                      header: 'Potassium (mmol/L or mEq/L):',
+                      range: potassiumRange,
+                      step: .1,
+                      min: 1,
+                      max: potassiumMax,
+                      setLow: 'potassiumLow',
+                      setHigh: 'potassiumHigh')
+                ],
+              ),
+            )
+          ])
         ],
       ),
     );

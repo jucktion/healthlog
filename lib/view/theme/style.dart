@@ -106,6 +106,8 @@ final ThemeData healthDark = ThemeData(
     tileColor: Colors.black54,
     leadingAndTrailingTextStyle: TextStyle(color: Colors.white),
   ),
+  expansionTileTheme: ExpansionTileThemeData(
+      textColor: Colors.white, collapsedTextColor: Colors.white),
   dialogTheme: DialogThemeData(
     backgroundColor: Colors.black87,
   ),
