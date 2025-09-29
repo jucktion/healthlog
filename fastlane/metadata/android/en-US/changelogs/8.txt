@@ -1,0 +1,6 @@
+- Add users through a bottom modal for easy access
+- Automatic user list refresh after user addition
+- Update users by long pressing user tiles
+- Fix logic to not check empty text field for validation during input, only on submit
+- Hide acceptable range sliders in a collapsible to prevent accidental taps
+- Update to most recent dependencies
